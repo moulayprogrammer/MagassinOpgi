@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane nodeOrientation="LEFT_TO_RIGHT" prefHeight="600.0" prefWidth="950.0" stylesheets="@../../resources/bootstrap3.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.ConfigurationControllers.MainController">
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+   <center>
+      <TabPane fx:id="tabPane" style="-fx-background-color: #FFF;" tabClosingPolicy="UNAVAILABLE" tabMinWidth="120.0" BorderPane.alignment="CENTER">
+        <tabs>
+          <Tab fx:id="tabProviders" text="FORNISSEUR" />
+            <Tab fx:id="tabCategory" text="CATEGORIE" />
+            <Tab fx:id="tabUnite" text="UNITE DE MESURE" />
+          <Tab fx:id="tabEmployee" text="EMPLOYEE" />
+        </tabs>
+      </TabPane>
+   </center>
+</BorderPane>

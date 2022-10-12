@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane nodeOrientation="LEFT_TO_RIGHT" stylesheets="@../../resources/bootstrap3.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.InputControllers.AddController">
+   <top>
+      <AnchorPane prefHeight="50.0" prefWidth="100.0" style="-fx-background-color: #EFF;" styleClass="bar" BorderPane.alignment="CENTER">
+         <children>
+            <Label layoutX="26.0" layoutY="19.0" style="-fx-font-size: 25;" text="Bon de Réception" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="10.0">
+               <font>
+                  <Font size="21.0" />
+               </font>
+            </Label>
+            <HBox layoutX="920.0" layoutY="-36.0" spacing="10.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="10.0">
+               <children>
+                  <JFXButton fx:id="btnInsert" buttonType="RAISED" defaultButton="true" onAction="#ActionInsert" prefWidth="120.0" ripplerFill="#0cc333" styleClass="primary" text="ENREGISTRER" textFill="#e10bbd">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </JFXButton>
+                  <JFXButton buttonType="RAISED" cancelButton="true" layoutX="130.0" layoutY="10.0" onAction="#ActionAnnulledAdd" prefWidth="120.0" ripplerFill="#0cc333" styleClass="danger" text="ANNULATION" textFill="#e10bbd">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </JFXButton>
+               </children>
+            </HBox>
+         </children>
+      </AnchorPane>
+   </top>
+   <center>
+      <AnchorPane minHeight="650.0" style="-fx-background-color: #FFF;" styleClass="container" BorderPane.alignment="CENTER">
+         <children>
+            <HBox prefHeight="110.0" spacing="20.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="10.0">
+               <children>
+                  <VBox prefHeight="90.0" prefWidth="250.0" spacing="5.0" styleClass="container-table">
+                     <children>
+                        <Label prefWidth="120.0" style="-fx-font-size: 13;" text="Bon de Réception">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets bottom="3.0" />
+                           </VBox.margin>
+                        </Label>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Label prefHeight="25.0" prefWidth="120.0" style="-fx-font-size: 13;" text="Date">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                              <DatePicker fx:id="dpBRDate" minHeight="32.0" prefWidth="220.0" HBox.hgrow="ALWAYS" />
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Label prefHeight="25.0" prefWidth="120.0" style="-fx-font-size: 13;" text="Numéro">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="tfNumBR" prefHeight="26.0" prefWidth="220.0" style="-fx-font-size: 15;" />
+                           </children>
+                        </HBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </VBox>
+                  <VBox layoutX="10.0" layoutY="10.0" prefHeight="90.0" prefWidth="250.0" spacing="5.0" styleClass="container-table">
+                     <children>
+                        <Label prefWidth="120.0" style="-fx-font-size: 13;" text="Facture">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets bottom="3.0" />
+                           </VBox.margin>
+                        </Label>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Label prefHeight="25.0" prefWidth="120.0" style="-fx-font-size: 13;" text="Date">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                              <DatePicker fx:id="dpFactDate" minHeight="32.0" prefWidth="220.0" HBox.hgrow="ALWAYS" />
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Label prefHeight="25.0" prefWidth="120.0" style="-fx-font-size: 13;" text="Numéro">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="tfNumFact" prefHeight="26.0" prefWidth="220.0" style="-fx-font-size: 15;" />
+                           </children>
+                        </HBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </VBox>
+                  <VBox layoutX="330.0" layoutY="10.0" prefHeight="90.0" prefWidth="250.0" spacing="5.0" styleClass="container-table">
+                     <children>
+                        <Label prefWidth="120.0" style="-fx-font-size: 13;" text="Bon de Commande">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets bottom="3.0" />
+                           </VBox.margin>
+                        </Label>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Label prefHeight="25.0" prefWidth="120.0" style="-fx-font-size: 13;" text="Date">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                              <DatePicker fx:id="dpBCDate" minHeight="32.0" prefWidth="220.0" HBox.hgrow="ALWAYS" />
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Label prefHeight="25.0" prefWidth="120.0" style="-fx-font-size: 13;" text="Numéro">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="tfNumBC" prefHeight="26.0" prefWidth="220.0" style="-fx-font-size: 15;" />
+                           </children>
+                        </HBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </VBox>
+                  <VBox layoutX="650.0" layoutY="10.0" prefHeight="90.0" prefWidth="250.0" spacing="5.0" styleClass="container-table">
+                     <children>
+                        <HBox alignment="CENTER">
+                           <VBox.margin>
+                              <Insets bottom="3.0" />
+                           </VBox.margin>
+                           <children>
+                              <Label maxWidth="1.7976931348623157E308" style="-fx-font-size: 15;" text="Fournisseur" HBox.hgrow="ALWAYS">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                              <ImageView fitHeight="26.0" fitWidth="31.0" onMouseClicked="#ActionSearchProvider" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../Icons/recherche.png.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                           <children>
+                              <ComboBox fx:id="cbProvider" minHeight="32.0" onAction="#ActionComboProvider" prefHeight="25.0" prefWidth="175.0" />
+                              <Button mnemonicParsing="false" onAction="#ActionAddProvider" style="-fx-min-width: 52;" styleClass="info" text="ADD" />
+                           </children>
+                        </HBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </VBox>
+                  <HBox alignment="CENTER" maxWidth="500.0" prefHeight="100.0" prefWidth="350.0" styleClass="container-table" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label fx:id="lbSumTotal" maxWidth="1.7976931348623157E308" nodeOrientation="LEFT_TO_RIGHT" style="-fx-font-size: 45;" text="0,00" textFill="#02e4c2" HBox.hgrow="ALWAYS" />
+                        <Label layoutX="10.0" layoutY="10.0" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="60.0" style="-fx-font-size: 45;" text="DA" textFill="#02e4c2" />
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </HBox>
+               </children>
+            </HBox>
+            <HBox layoutX="130.0" layoutY="96.0" spacing="10.0" styleClass="container-table" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="130.0">
+               <children>
+                  <VBox prefWidth="200.0" spacing="10.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="130.0" style="-fx-font-size: 20;" text="Les articles" HBox.hgrow="ALWAYS">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                              <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#ActionAddPorches" prefHeight="25.0" styleClass="info" text="Ajouter" />
+                           </children>
+                        </HBox>
+                        <TextField fx:id="tfRechercheArticle" prefHeight="25.0" promptText="RECHERCHE" style="-fx-font-size: 15;" />
+                        <TableView fx:id="tableArticle" maxHeight="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#tableProductClick" prefHeight="380.0" VBox.vgrow="ALWAYS">
+                          <columns>
+                              <TableColumn fx:id="tcIdArticle" prefWidth="54.0" text="ID" visible="false" />
+                              <TableColumn fx:id="tcNameArticle" prefWidth="150.0" text="NOM" />
+                              <TableColumn fx:id="tcCategoryArticle" prefWidth="150.0" text="CATEGORIE" />
+                          </columns>
+                        </TableView>
+                        <HBox prefWidth="200.0" spacing="5.0">
+                           <children>
+                              <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#ActionAddArticle" prefHeight="25.0" styleClass="info" text="Ajouter Articles" HBox.hgrow="ALWAYS" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <VBox maxWidth="1.7976931348623157E308" spacing="10.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label minHeight="-Infinity" prefHeight="32.0" prefWidth="130.0" style="-fx-font-size: 20;" text="Les achats">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                        <HBox prefWidth="200.0" spacing="5.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#ActionUpdateSales" prefHeight="25.0" prefWidth="150.0" styleClass="primary" text="Modifier" />
+                              <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#ActionDeleteSales" prefHeight="25.0" prefWidth="150.0" styleClass="warning" text="Supprimer" />
+                              <Button layoutX="165.0" layoutY="10.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="23.0" prefWidth="150.0" text="حذف سطر" visible="false" HBox.hgrow="ALWAYS" />
+                              <TextField fx:id="tfRecherche" prefHeight="26.0" prefWidth="182.0" promptText="RECHERCHE" style="-fx-font-size: 15;" />
+                              <ImageView fitHeight="30.0" fitWidth="100.0" onMouseClicked="#ActionSearch" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../Icons/recherche.png.png" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fitHeight="32.0" fitWidth="73.0" layoutX="1044.0" layoutY="10.0" onMouseClicked="#ActionRefresh" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../Icons/refresh.jpeg" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </HBox>
+                        <TableView fx:id="tablePorches" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="383.0" onMouseClicked="#tableSalesClick" prefHeight="380.0" VBox.vgrow="ALWAYS">
+                           <columns>
+                              <TableColumn fx:id="tcId" prefWidth="75.0" text="ID" visible="false" />
+                              <TableColumn fx:id="tcName" prefWidth="350.0" text="Désignation" />
+                              <TableColumn fx:id="tcUnit" prefWidth="120.0" text="Unité de Mesure" />
+                              <TableColumn fx:id="tcQte" prefWidth="100.0" text="Quantité" />
+                              <TableColumn fx:id="tcPriceU" prefWidth="260.0" text="Prix Unitaire" />
+                              <TableColumn fx:id="tcPriceTotal" prefWidth="260.0" text="Total" />
+                           </columns>
+                        </TableView>
+                        <HBox layoutX="10.0" layoutY="40.0" prefWidth="200.0" spacing="10.0">
+                           <children>
+                              <Label prefHeight="25.0" prefWidth="320.0" visible="false">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="10.0" layoutY="10.0" prefHeight="32.0" prefWidth="230.0" style="-fx-font-size: 17;">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="lbSumWeight" layoutX="340.0" layoutY="10.0" prefHeight="32.0" prefWidth="140.0" style="-fx-font-size: 17;">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+               <padding>
+                  <Insets bottom="10.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </HBox>
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>
