@@ -373,6 +373,9 @@ public class AddController implements Initializable {
                 int ins = insert(output);
                 if (ins != -1) {
                     insertComponent(ins);
+                    output.setId(ins);
+                    Print print = new Print(output);
+                    print.CreatePdfFacture();
                     closeDialog(this.btnInsert);
                 } else {
                     Alert alertWarning = new Alert(Alert.AlertType.WARNING);

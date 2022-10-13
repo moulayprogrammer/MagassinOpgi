@@ -234,6 +234,31 @@ public class MainController implements Initializable {
         }
     }
 
+    @FXML
+    private void ActionPrint(){
+
+        List<StringProperty> data  = table.getSelectionModel().getSelectedItem();
+        if (data != null){
+            try {
+                Output output = operation.get(Integer.parseInt(data.get(0).getValue()));
+
+                Print print = new Print(output);
+                print.CreatePdfFacture();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }else {
+            Alert alertWarning = new Alert(Alert.AlertType.WARNING);
+            alertWarning.setHeaderText("Attention ");
+            alertWarning.setContentText("Veuillez sélectionner une bonne à imprimmer");
+            alertWarning.initOwner(this.tfRecherche.getScene().getWindow());
+            alertWarning.getDialogPane().setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
+            Button okButton = (Button) alertWarning.getDialogPane().lookupButton(ButtonType.OK);
+            okButton.setText("D'ACCORD");
+            alertWarning.showAndWait();
+        }
+    }
+
     private void refresh(){
         try {
             if (conn.isClosed()) conn = connectBD.connect();

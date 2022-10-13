@@ -337,6 +337,7 @@ public class UpdateController implements Initializable {
         if (dataSelected != null) {
             int ex = exist(dataSelected);
             if ( ex == -1 ){
+
                try {
                    Article article = articlesOperation.get(Integer.parseInt(tableArticle.getSelectionModel().getSelectedItem().get(0).getValue()));
                    List<ComponentOutput> componentOutputs = new ArrayList<>();
@@ -507,8 +508,10 @@ public class UpdateController implements Initializable {
 
                     boolean update = update(output);
                     if (update) {
-//                    insertComponent(update);
                         closeDialog(this.btnInsert);
+                        output.setId(this.selectedOutput.getId());
+                        Print print = new Print(output);
+                        print.CreatePdfFacture();
                     } else {
                         Alert alertWarning = new Alert(Alert.AlertType.WARNING);
                         alertWarning.setHeaderText("ATTENTION ");
