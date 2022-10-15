@@ -184,7 +184,7 @@ public class AddController implements Initializable {
     @FXML
     private void ActionAddArticle(){
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/ArticlesViews/AddView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/ArticlesViews/ConsommablesViews/AddView.fxml"));
             DialogPane temp = loader.load();
             Dialog<ButtonType> dialog = new Dialog<>();
             dialog.setDialogPane(temp);

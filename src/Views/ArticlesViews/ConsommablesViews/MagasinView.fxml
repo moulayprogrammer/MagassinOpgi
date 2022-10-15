@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<DialogPane expanded="true" maxHeight="-Infinity" minHeight="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="500.0" prefWidth="600.0" style="-fx-background-color: #FFF;" stylesheets="@../../../resources/bootstrap3.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.ArticlesControllers.ConsommablesControllers.MagasinController">
+   <header>
+      <AnchorPane prefHeight="50.0" style="-fx-background-color: #EFF;">
+         <children>
+            <Label layoutX="14.0" layoutY="19.0" style="-fx-font-size: 25;" text="Stocke d' article :" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="lbName" layoutX="202.0" layoutY="10.0" style="-fx-font-size: 25;" text="Stocke d' article :">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+   </header>
+   <content>
+      <AnchorPane maxHeight="-Infinity" maxWidth="600.0" minHeight="-Infinity" minWidth="600.0" prefHeight="450.0" prefWidth="600.0" style="-fx-background-color: #FFF;">
+         <children>
+            <VBox layoutX="30.0" layoutY="30.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="385.0" prefWidth="560.0" spacing="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <TableView fx:id="table" styleClass="container-table" VBox.vgrow="ALWAYS">
+                     <columns>
+                        <TableColumn fx:id="clId" prefWidth="150.0" text="ID" visible="false" />
+                        <TableColumn fx:id="clDate" prefWidth="120.0" text="Date stockée" />
+                        <TableColumn fx:id="clQteRest" prefWidth="150.0" text="Quantité restante" />
+                        <TableColumn fx:id="clPrice" prefWidth="150.0" text="Prix Unit" />
+                        <TableColumn fx:id="clMontant" prefWidth="155.0" text="Montant" />
+
+                     </columns>
+                  </TableView>
+                  <HBox spacing="3.0">
+                     <children>
+                        <Label prefWidth="120.0" style="-fx-font-size: 18;" text="Qte Total">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                           <padding>
+                              <Insets left="5.0" />
+                           </padding>
+                        </Label>
+                        <Label fx:id="lbTotalQte" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefWidth="150.0" style="-fx-font-size: 18;" styleClass="container-table" text="Tot Qte ">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lbName111" layoutX="130.0" layoutY="10.0" prefWidth="150.0" style="-fx-font-size: 18;" text="Montant Total">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lbTotMontant" alignment="CENTER" layoutX="280.0" layoutY="10.0" prefWidth="155.0" style="-fx-font-size: 18;" styleClass="container-table" text="Tot Qte ">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <HBox spacing="30.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0">
+               <children>
+                  <Button defaultButton="true" minHeight="35.0" minWidth="150.0" mnemonicParsing="false" onAction="#ActionAnnuler" prefHeight="35.0" prefWidth="150.0" styleClass="primary" text="D'ACCORD" textFill="#2005a8">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+      </AnchorPane>
+   </content>
+</DialogPane>

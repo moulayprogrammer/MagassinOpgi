@@ -3,8 +3,12 @@ package Controllers.ArticlesControllers;
 import BddPackage.ArticlesOperation;
 import BddPackage.CategoryOperation;
 import BddPackage.ConnectBD;
+import BddPackage.GasolineCardOperation;
+import Controllers.ArticlesControllers.ConsommablesControllers.MagasinController;
+import Controllers.ArticlesControllers.ConsommablesControllers.UpdateController;
 import Models.Article;
 import Models.Category;
+import Models.GasolineCard;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -24,6 +28,7 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -33,26 +38,33 @@ import java.util.function.Predicate;
 public class MainController implements Initializable {
 
     @FXML
+    TabPane tabPane;
+    @FXML
+    Tab tabConsumed,tabGasoline;
+    @FXML
     TextField tfRecherche;
     @FXML
     ComboBox<String> cbCategory,cbFilter;
     @FXML
     Label lbCategory;
     @FXML
-    TableView<List<StringProperty>> table;
+    TableView<List<StringProperty>> table,tableGasoline;
     @FXML
     TableColumn<List<StringProperty>,String> clId,clName,clCategory,clUnit,clQte,clPrice,clQteAlert;
+    @FXML
+    TableColumn<List<StringProperty>,String> clIdCard,clNumberCard,clBalanceCard,clRechargeCard,clConsumedCard;
 
     private final ConnectBD connectBD = new ConnectBD();
     private Connection conn;
 
-    private final ArticlesOperation operation = new ArticlesOperation();
+    private final ArticlesOperation articlesOperation = new ArticlesOperation();
+    private final GasolineCardOperation gasolineCardOperation = new GasolineCardOperation();
     private final CategoryOperation categoryOperation = new CategoryOperation();
 
-    private final ObservableList<List<StringProperty>> dataTable = FXCollections.observableArrayList();
+    private final ObservableList<List<StringProperty>> dataTableArticles = FXCollections.observableArrayList();
+    private final ObservableList<List<StringProperty>> dataTableGasoline = FXCollections.observableArrayList();
     private final ObservableList<String> comboCategoryData = FXCollections.observableArrayList();
     private final ObservableList<String> comboFilterData = FXCollections.observableArrayList();
-    private final ObservableList<String> comboOrderData = FXCollections.observableArrayList();
 
     ArrayList<Category> categories;
 
@@ -68,12 +80,29 @@ public class MainController implements Initializable {
         clPrice.setCellValueFactory(data -> data.getValue().get(5));
         clQteAlert.setCellValueFactory(data -> data.getValue().get(6));
 
-        refresh();
+        clIdCard.setCellValueFactory(data -> data.getValue().get(0));
+        clNumberCard.setCellValueFactory(data -> data.getValue().get(1));
+        clBalanceCard.setCellValueFactory(data -> data.getValue().get(2));
+        clRechargeCard.setCellValueFactory(data -> data.getValue().get(3));
+        clConsumedCard.setCellValueFactory(data -> data.getValue().get(4));
+
+        refreshArticles();
         refreshComboCategory();
 
         comboFilterData.addAll("Tout","Catégorie","Article en Qte Alert","Article fini");
         cbFilter.setItems(comboFilterData);
         cbFilter.getSelectionModel().select(0);
+
+        tabPane.getSelectionModel().selectedItemProperty().addListener((ov, oldTab, newTab) -> {
+            switch (newTab.getId()){
+                case "tabConsumed":
+                    refreshArticles();
+                    break;
+                case "tabGasoline":
+                    refreshGasoline();
+                    break;
+            }
+        });
     }
 
     private void refreshComboCategory() {
@@ -94,22 +123,46 @@ public class MainController implements Initializable {
 
     @FXML
     private void ActionAdd(){
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/ArticlesViews/AddView.fxml"));
-            DialogPane temp = loader.load();
-            Dialog<ButtonType> dialog = new Dialog<>();
-            dialog.setDialogPane(temp);
-            dialog.resizableProperty().setValue(false);
-            dialog.initOwner(this.tfRecherche.getScene().getWindow());
-            dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
-            Node closeButton = dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
-            closeButton.setVisible(false);
-            dialog.showAndWait();
+        String idTab = tabPane.getSelectionModel().getSelectedItem().getId();
+        switch (idTab) {
+            case "tabConsumed":
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/ArticlesViews/ConsommablesViews/AddView.fxml"));
+                    DialogPane temp = loader.load();
+                    Dialog<ButtonType> dialog = new Dialog<>();
+                    dialog.setDialogPane(temp);
+                    dialog.resizableProperty().setValue(false);
+                    dialog.initOwner(this.tfRecherche.getScene().getWindow());
+                    dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
+                    Node closeButton = dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
+                    closeButton.setVisible(false);
+                    dialog.showAndWait();
 
-            refresh();
+                    refreshArticles();
 
-        } catch (IOException e) {
-            e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case "tabGasoline":
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/ArticlesViews/CarburantViews/AddView.fxml"));
+                    DialogPane temp = loader.load();
+                    Dialog<ButtonType> dialog = new Dialog<>();
+                    dialog.setDialogPane(temp);
+                    dialog.resizableProperty().setValue(false);
+                    dialog.initOwner(this.tfRecherche.getScene().getWindow());
+                    dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
+                    Node closeButton = dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
+                    closeButton.setVisible(false);
+                    dialog.showAndWait();
+
+                    refreshGasoline();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
         }
     }
 
@@ -121,9 +174,9 @@ public class MainController implements Initializable {
 
             if (data != null){
                 try {
-                    Article article = operation.get(Integer.parseInt(data.get(0).getValue()));
+                    Article article = articlesOperation.get(Integer.parseInt(data.get(0).getValue()));
 
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/ArticlesViews/MagasinView.fxml"));
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/ArticlesViews/ConsommablesViews/MagasinView.fxml"));
                     DialogPane temp = loader.load();
                     MagasinController controller = loader.getController();
                     controller.Init(article);
@@ -136,7 +189,7 @@ public class MainController implements Initializable {
                     closeButton.setVisible(false);
                     dialog.showAndWait();
 
-                    refresh();
+                    refreshArticles();
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -154,103 +207,272 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    private void ActionUpdate(){
+    private void ActionUpdate() {
 
-        List<StringProperty> data = table.getSelectionModel().getSelectedItem();
+        try {
+            String idTab = tabPane.getSelectionModel().getSelectedItem().getId();
+            switch (idTab) {
+                case "tabConsumed":
+                    List<StringProperty> data = table.getSelectionModel().getSelectedItem();
 
-        if (data != null){
-            try {
-                Article article = operation.get(Integer.parseInt(data.get(0).getValue()));
+                    if (data != null) {
+                        try {
+                            Article article = articlesOperation.get(Integer.parseInt(data.get(0).getValue()));
 
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/ArticlesViews/UpdateView.fxml"));
-                DialogPane temp = loader.load();
-                UpdateController controller = loader.getController();
-                controller.InitUpdate(article);
-                Dialog<ButtonType> dialog = new Dialog<>();
-                dialog.setDialogPane(temp);
-                dialog.resizableProperty().setValue(false);
-                dialog.initOwner(this.tfRecherche.getScene().getWindow());
-                dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
-                Node closeButton = dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
-                closeButton.setVisible(false);
-                dialog.showAndWait();
+                            updateArticle(article);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        Alert alertWarning = new Alert(Alert.AlertType.WARNING);
+                        alertWarning.setHeaderText("ATTENTION");
+                        alertWarning.setContentText("Veuillez sélectionner un élément à modifier");
+                        alertWarning.initOwner(this.tfRecherche.getScene().getWindow());
+                        Button okButton = (Button) alertWarning.getDialogPane().lookupButton(ButtonType.OK);
+                        okButton.setText("D'ACCORD");
+                        alertWarning.showAndWait();
+                    }
+                    break;
+                case "tabGasoline":
+                    List<StringProperty> dataG = tableGasoline.getSelectionModel().getSelectedItem();
 
-                refresh();
+                    if (dataG != null) {
+                        try {
+                            GasolineCard gasolineCard = gasolineCardOperation.get(Integer.parseInt(dataG.get(0).getValue()));
 
-            } catch (IOException e) {
-                e.printStackTrace();
+                            updateGasoline(gasolineCard);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        Alert alertWarning = new Alert(Alert.AlertType.WARNING);
+                        alertWarning.setHeaderText("ATTENTION");
+                        alertWarning.setContentText("Veuillez sélectionner un élément à modifier");
+                        alertWarning.initOwner(this.tfRecherche.getScene().getWindow());
+                        Button okButton = (Button) alertWarning.getDialogPane().lookupButton(ButtonType.OK);
+                        okButton.setText("D'ACCORD");
+                        alertWarning.showAndWait();
+                    }
+                    break;
             }
-        }else {
-            Alert alertWarning = new Alert(Alert.AlertType.WARNING);
-            alertWarning.setHeaderText("ATTENTION");
-            alertWarning.setContentText("Veuillez sélectionner un élément à modifier");
-            alertWarning.initOwner(this.tfRecherche.getScene().getWindow());
-            Button okButton = (Button) alertWarning.getDialogPane().lookupButton(ButtonType.OK);
-            okButton.setText("D'ACCORD");
-            alertWarning.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void updateArticle(Article article){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/ArticlesViews/ConsommablesViews/UpdateView.fxml"));
+            DialogPane temp = loader.load();
+            UpdateController controller = loader.getController();
+            controller.InitUpdate(article);
+            Dialog<ButtonType> dialog = new Dialog<>();
+            dialog.setDialogPane(temp);
+            dialog.resizableProperty().setValue(false);
+            dialog.initOwner(this.tfRecherche.getScene().getWindow());
+            dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
+            Node closeButton = dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
+            closeButton.setVisible(false);
+            dialog.showAndWait();
+
+            refreshArticles();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void tableGasClick(MouseEvent mouseEvent) {
+        if ( mouseEvent.getClickCount() == 2 && mouseEvent.getButton().equals(MouseButton.PRIMARY) ){
+
+            List<StringProperty> dataG = tableGasoline.getSelectionModel().getSelectedItem();
+
+            if (dataG != null) {
+                try {
+                    GasolineCard gasolineCard = gasolineCardOperation.get(Integer.parseInt(dataG.get(0).getValue()));
+
+                    updateGasoline(gasolineCard);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                Alert alertWarning = new Alert(Alert.AlertType.WARNING);
+                alertWarning.setHeaderText("ATTENTION");
+                alertWarning.setContentText("Veuillez sélectionner un élément à modifier");
+                alertWarning.initOwner(this.tfRecherche.getScene().getWindow());
+                Button okButton = (Button) alertWarning.getDialogPane().lookupButton(ButtonType.OK);
+                okButton.setText("D'ACCORD");
+                alertWarning.showAndWait();
+            }
+        }
+    }
+    private void updateGasoline(GasolineCard gasolineCard){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/ArticlesViews/CarburantViews/UpdateView.fxml"));
+            DialogPane temp = loader.load();
+            Controllers.ArticlesControllers.CarburantControllers.UpdateController controller = loader.getController();
+            controller.Init(gasolineCard);
+            Dialog<ButtonType> dialog = new Dialog<>();
+            dialog.setDialogPane(temp);
+            dialog.resizableProperty().setValue(false);
+            dialog.initOwner(this.tfRecherche.getScene().getWindow());
+            dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
+            Node closeButton = dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
+            closeButton.setVisible(false);
+            dialog.showAndWait();
+
+            refreshGasoline();
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
     @FXML
     private void ActionAddToArchive(){
-        List<StringProperty> data = table.getSelectionModel().getSelectedItem();
 
-        if (data != null){
+        String idTab = tabPane.getSelectionModel().getSelectedItem().getId();
+        switch (idTab) {
+            case "tabConsumed":
+                AddArticleToArchive();
+            case "tabGasoline":
+                AddGasolineToArchive();
+                break;
+        }
 
+    }
 
-            if (data.get(4).getValue().equals("0")) {
+    private void AddArticleToArchive(){
+        try {
+            List<StringProperty> data = table.getSelectionModel().getSelectedItem();
 
-                Article article = operation.get(Integer.parseInt(data.get(0).getValue()));
+            if (data != null){
 
-                try {
+                if (data.get(4).getValue().equals("0")) {
 
-                    Alert alertConfirmation = new Alert(Alert.AlertType.CONFIRMATION);
-                    alertConfirmation.setHeaderText("CONFIRMATION D'ARCHIVAGE");
-                    alertConfirmation.setContentText("Êtes-vous sûr d'avoir archivé l'article ?");
-                    alertConfirmation.initOwner(this.tfRecherche.getScene().getWindow());
-                    Button okButton = (Button) alertConfirmation.getDialogPane().lookupButton(ButtonType.OK);
+                    Article article = articlesOperation.get(Integer.parseInt(data.get(0).getValue()));
+
+                    try {
+
+                        Alert alertConfirmation = new Alert(Alert.AlertType.CONFIRMATION);
+                        alertConfirmation.setHeaderText("CONFIRMATION D'ARCHIVAGE");
+                        alertConfirmation.setContentText("Êtes-vous sûr d'avoir archivé l'article ?");
+                        alertConfirmation.initOwner(this.tfRecherche.getScene().getWindow());
+                        Button okButton = (Button) alertConfirmation.getDialogPane().lookupButton(ButtonType.OK);
+                        okButton.setText("D'ACCORD");
+
+                        Button cancel = (Button) alertConfirmation.getDialogPane().lookupButton(ButtonType.CANCEL);
+                        cancel.setText("ANNULATION");
+
+                        alertConfirmation.showAndWait().ifPresent(response -> {
+                            if (response == ButtonType.CANCEL) {
+                                alertConfirmation.close();
+                            } else if (response == ButtonType.OK) {
+                                articlesOperation.AddToArchive(article);
+                                refreshArticles();
+                            }
+                        });
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }else {
+                    Alert alertInformation = new Alert(Alert.AlertType.INFORMATION);
+                    alertInformation.setHeaderText("IMPOSSIBLE D'ARCHIVER ");
+                    alertInformation.setContentText("Vous ne pouvez pas archiver l'article actuel car il est laissé dans le stock");
+                    alertInformation.initOwner(this.tfRecherche.getScene().getWindow());
+                    Button okButton = (Button) alertInformation.getDialogPane().lookupButton(ButtonType.OK);
                     okButton.setText("D'ACCORD");
-
-                    Button cancel = (Button) alertConfirmation.getDialogPane().lookupButton(ButtonType.CANCEL);
-                    cancel.setText("ANNULATION");
-
-                    alertConfirmation.showAndWait().ifPresent(response -> {
-                        if (response == ButtonType.CANCEL) {
-                            alertConfirmation.close();
-                        } else if (response == ButtonType.OK) {
-                            operation.AddToArchive(article);
-                            refresh();
-                        }
-                    });
-
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    alertInformation.showAndWait();
                 }
             }else {
-                Alert alertInformation = new Alert(Alert.AlertType.INFORMATION);
-                alertInformation.setHeaderText("IMPOSSIBLE D'ARCHIVER ");
-                alertInformation.setContentText("Vous ne pouvez pas archiver l'article actuel car il est laissé dans le stock");
-                alertInformation.initOwner(this.tfRecherche.getScene().getWindow());
-                Button okButton = (Button) alertInformation.getDialogPane().lookupButton(ButtonType.OK);
+                Alert alertWarning = new Alert(Alert.AlertType.WARNING);
+                alertWarning.setHeaderText("ATTENTION ");
+                alertWarning.setContentText("Veuillez sélectionner un article à archiver");
+                alertWarning.initOwner(this.tfRecherche.getScene().getWindow());
+                Button okButton = (Button) alertWarning.getDialogPane().lookupButton(ButtonType.OK);
                 okButton.setText("D'ACCORD");
-                alertInformation.showAndWait();
+                alertWarning.showAndWait();
             }
-        }else {
-            Alert alertWarning = new Alert(Alert.AlertType.WARNING);
-            alertWarning.setHeaderText("ATTENTION ");
-            alertWarning.setContentText("Veuillez sélectionner un article à archiver");
-            alertWarning.initOwner(this.tfRecherche.getScene().getWindow());
-            Button okButton = (Button) alertWarning.getDialogPane().lookupButton(ButtonType.OK);
-            okButton.setText("D'ACCORD");
-            alertWarning.showAndWait();
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
+    private void AddGasolineToArchive(){
+        try {
+            List<StringProperty> data = tableGasoline.getSelectionModel().getSelectedItem();
+
+            if (data != null){
+
+                if (data.get(2).getValue().equals("0,00")) {
+
+                    GasolineCard gasolineCard = gasolineCardOperation.get(Integer.parseInt(data.get(0).getValue()));
+
+                    try {
+
+                        Alert alertConfirmation = new Alert(Alert.AlertType.CONFIRMATION);
+                        alertConfirmation.setHeaderText("CONFIRMATION D'ARCHIVAGE");
+                        alertConfirmation.setContentText("Êtes-vous sûr d'avoir archivé la carte ?");
+                        alertConfirmation.initOwner(this.tfRecherche.getScene().getWindow());
+                        Button okButton = (Button) alertConfirmation.getDialogPane().lookupButton(ButtonType.OK);
+                        okButton.setText("D'ACCORD");
+
+                        Button cancel = (Button) alertConfirmation.getDialogPane().lookupButton(ButtonType.CANCEL);
+                        cancel.setText("ANNULATION");
+
+                        alertConfirmation.showAndWait().ifPresent(response -> {
+                            if (response == ButtonType.CANCEL) {
+                                alertConfirmation.close();
+                            } else if (response == ButtonType.OK) {
+                                gasolineCardOperation.AddToArchive(gasolineCard);
+                                refreshGasoline();
+                            }
+                        });
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }else {
+                    Alert alertInformation = new Alert(Alert.AlertType.INFORMATION);
+                    alertInformation.setHeaderText("IMPOSSIBLE D'ARCHIVER ");
+                    alertInformation.setContentText("Vous ne pouvez pas archiver la carte actuelle car il reste un solde dessus");
+                    alertInformation.initOwner(this.tfRecherche.getScene().getWindow());
+                    Button okButton = (Button) alertInformation.getDialogPane().lookupButton(ButtonType.OK);
+                    okButton.setText("D'ACCORD");
+                    alertInformation.showAndWait();
+                }
+            }else {
+                Alert alertWarning = new Alert(Alert.AlertType.WARNING);
+                alertWarning.setHeaderText("ATTENTION ");
+                alertWarning.setContentText("Veuillez sélectionner un carte à archiver");
+                alertWarning.initOwner(this.tfRecherche.getScene().getWindow());
+                Button okButton = (Button) alertWarning.getDialogPane().lookupButton(ButtonType.OK);
+                okButton.setText("D'ACCORD");
+                alertWarning.showAndWait();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
     @FXML
     private void ActionDeleteFromArchive(){
+        String idTab = tabPane.getSelectionModel().getSelectedItem().getId();
+        switch (idTab) {
+            case "tabConsumed":
+                deleteArticleArchive();
+            case "tabGasoline":
+                deleteGasolineArchive();
+                break;
+        }
+    }
+
+    private void deleteArticleArchive(){
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/ArticlesViews/ArchiveView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/ArticlesViews/ConsommablesViews/ArchiveView.fxml"));
             DialogPane temp = loader.load();
             Dialog<ButtonType> dialog = new Dialog<>();
             dialog.setDialogPane(temp);
@@ -261,7 +483,26 @@ public class MainController implements Initializable {
             closeButton.setVisible(false);
             dialog.showAndWait();
 
-            refresh();
+            refreshArticles();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void deleteGasolineArchive(){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/ArticlesViews/CarburantViews/ArchiveView.fxml"));
+            DialogPane temp = loader.load();
+            Dialog<ButtonType> dialog = new Dialog<>();
+            dialog.setDialogPane(temp);
+            dialog.resizableProperty().setValue(false);
+            dialog.initOwner(this.tfRecherche.getScene().getWindow());
+            dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
+            Node closeButton = dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
+            closeButton.setVisible(false);
+            dialog.showAndWait();
+
+            refreshGasoline();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -273,7 +514,7 @@ public class MainController implements Initializable {
             int select  = cbFilter.getSelectionModel().getSelectedIndex();
             if (select != -1 ) {
                 if (conn.isClosed()) conn = connectBD.connect();
-                dataTable.clear();
+                dataTableArticles.clear();
 
                 cbCategory.setVisible(false);
                 lbCategory.setVisible(false);
@@ -281,7 +522,7 @@ public class MainController implements Initializable {
                 String query = "";
                 switch (select) {
                     case 0:
-                        refresh();
+                        refreshArticles();
 
                         break;
                     case 1:
@@ -322,12 +563,12 @@ public class MainController implements Initializable {
                         data.add(new SimpleStringProperty(String.format(Locale.FRANCE, "%,.2f", resultSet.getDouble("PRICE"))));
                         data.add(new SimpleStringProperty(String.valueOf(resultSet.getInt("QTE_ALERT"))));
 
-                        dataTable.add(data);
+                        dataTableArticles.add(data);
                     }
 
                     conn.close();
 
-                    table.setItems(dataTable);
+                    table.setItems(dataTableArticles);
                 }
             }
         }catch (Exception e){
@@ -343,7 +584,7 @@ public class MainController implements Initializable {
             if (select != -1 ) {
 
                 if (conn.isClosed()) conn = connectBD.connect();
-                dataTable.clear();
+                dataTableArticles.clear();
 
                 String query = "SELECT ARTICLE.ID, ARTICLE.NAME, CATEGORY.NAME AS NAME_CAT, UNIT.NAME AS NAME_UNIT, ARTICLE.QTE_ALERT,\n" +
                         "(SELECT SUM(STORE_CARD.QTE_STORED - STORE_CARD.QTE_CONSUMED) FROM STORE_CARD WHERE STORE_CARD.ID_ARTICLE = ARTICLE.ID) AS QTE,\n" +
@@ -365,12 +606,12 @@ public class MainController implements Initializable {
                     data.add(new SimpleStringProperty(String.format(Locale.FRANCE, "%,.2f", resultSet.getDouble("PRICE"))));
                     data.add(new SimpleStringProperty(String.valueOf(resultSet.getInt("QTE_ALERT"))));
 
-                    dataTable.add(data);
+                    dataTableArticles.add(data);
                 }
 
                 conn.close();
 
-                table.setItems(dataTable);
+                table.setItems(dataTableArticles);
 
             }
         }catch (Exception e){
@@ -378,10 +619,10 @@ public class MainController implements Initializable {
         }
     }
 
-    private void refresh(){
+    private void refreshArticles(){
         try {
             if (conn.isClosed()) conn = connectBD.connect();
-            dataTable.clear();
+            dataTableArticles.clear();
 
             String query = "SELECT ARTICLE.ID, ARTICLE.NAME, CATEGORY.NAME AS NAME_CAT, UNIT.NAME AS NAME_UNIT, ARTICLE.QTE_ALERT,\n" +
                     "(SELECT SUM(STORE_CARD.QTE_STORED - STORE_CARD.QTE_CONSUMED) FROM STORE_CARD WHERE STORE_CARD.ID_ARTICLE = ARTICLE.ID) AS QTE,\n" +
@@ -401,12 +642,40 @@ public class MainController implements Initializable {
                 data.add( new SimpleStringProperty(String.format(Locale.FRANCE, "%,.2f", resultSet.getDouble("PRICE") )));
                 data.add( new SimpleStringProperty(String.valueOf(resultSet.getInt("QTE_ALERT"))));
 
-                dataTable.add(data);
+                dataTableArticles.add(data);
             }
 
             conn.close();
 
-            table.setItems(dataTable);
+            table.setItems(dataTableArticles);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void refreshGasoline(){
+        try {
+            if (conn.isClosed()) conn = connectBD.connect();
+            dataTableGasoline.clear();
+
+            String query = "SELECT * FROM GASOLINE_CARD WHERE ARCHIVE = 0;";
+            PreparedStatement preparedStmt = conn.prepareStatement(query);
+            ResultSet resultSet = preparedStmt.executeQuery();
+            while (resultSet.next()){
+
+                List<StringProperty> data = new ArrayList<>();
+
+                data.add( new SimpleStringProperty(String.valueOf(resultSet.getInt("ID"))));
+                data.add( new SimpleStringProperty(resultSet.getString("NUMBER")));
+                data.add( new SimpleStringProperty(String.format(Locale.FRANCE, "%,.2f", resultSet.getDouble("BALANCE") )));
+                data.add( new SimpleStringProperty(resultSet.getDate("LAST_RECHARGE_DATE").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
+                data.add( new SimpleStringProperty(resultSet.getDate("LAST_CONSUMPTION_DATE").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
+                dataTableGasoline.add(data);
+            }
+
+            conn.close();
+
+            tableGasoline.setItems(dataTableGasoline);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -415,7 +684,14 @@ public class MainController implements Initializable {
     @FXML
     private void ActionRefresh(){
         clearRecherche();
-        refresh();
+        String idTab = tabPane.getSelectionModel().getSelectedItem().getId();
+        switch (idTab) {
+            case "tabConsumed":
+                refreshArticles();
+            case "tabGasoline":
+                refreshGasoline();
+                break;
+        }
     }
 
     private void clearRecherche(){
@@ -425,7 +701,19 @@ public class MainController implements Initializable {
     @FXML
     void ActionSearch() {
 
+        String idTab = tabPane.getSelectionModel().getSelectedItem().getId();
+        switch (idTab) {
+            case "tabConsumed":
+                SearchArticles();
+            case "tabGasoline":
+                SearchGasoline();
+                break;
+        }
         // filtrer les données
+
+    }
+
+    private void SearchArticles(){
         ObservableList<List<StringProperty>> items = table.getItems();
         FilteredList<List<StringProperty>> filteredData = new FilteredList<>(items, e -> true);
         String txtRecherche = tfRecherche.getText().trim();
@@ -450,5 +738,26 @@ public class MainController implements Initializable {
         table.setItems(sortedList);
     }
 
+    private void SearchGasoline(){
+        ObservableList<List<StringProperty>> items = tableGasoline.getItems();
+        FilteredList<List<StringProperty>> filteredData = new FilteredList<>(items, e -> true);
+        String txtRecherche = tfRecherche.getText().trim();
 
+        filteredData.setPredicate((Predicate<? super List<StringProperty>>) stringProperties -> {
+            if (txtRecherche.isEmpty()) {
+                ActionRefresh();
+                return true;
+            } else if (stringProperties.get(1).toString().contains(txtRecherche)) {
+                return true;
+            } else if (stringProperties.get(2).toString().contains(txtRecherche)) {
+                return true;
+            }else if (stringProperties.get(3).toString().contains(txtRecherche)) {
+                return true;
+            }  else return stringProperties.get(4).toString().contains(txtRecherche);
+        });
+
+        SortedList<List<StringProperty>> sortedList = new SortedList<>(filteredData);
+        sortedList.comparatorProperty().bind(tableGasoline.comparatorProperty());
+        tableGasoline.setItems(sortedList);
+    }
 }
