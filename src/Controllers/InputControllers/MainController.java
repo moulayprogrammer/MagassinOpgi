@@ -23,7 +23,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.Date;
@@ -39,20 +38,24 @@ public class MainController implements Initializable {
     @FXML
     TextField tfRecherche;
     @FXML
-    Label lbProvider;
+    Label lbProvider,lbProviderGazole;
     @FXML
-    ComboBox<String> cbProvider,cbFilter;
+    ComboBox<String> cbProvider,cbFilter,cbFilterGazole,cbProviderGazole;
     @FXML
     DatePicker dpFrom,dpTo;
     @FXML
-    TableView<List<StringProperty>> table;
+    TableView<List<StringProperty>> table,tableGazole;
     @FXML
     TableColumn<List<StringProperty>,String> clId,clProvider,clNumBR,clDateBR,clNumFact,clDateFact,clNumBC,clDateBC,clPrice,clConfirm;
+    @FXML
+    TableColumn<List<StringProperty>,String> clIdGazole,clProviderGazole,clNumBRGazole,clDateBRGazole,clNumFactGazole,clDateFactGazole,clNumBCGazole,clDateBCGazole,clPriceGazole;
 
     private final ConnectBD connectBD = new ConnectBD();
     private Connection conn;
     private final ObservableList<List<StringProperty>> dataTable = FXCollections.observableArrayList();
-    private final InputOperation operation = new InputOperation();
+    private final ObservableList<List<StringProperty>> dataTableGazole = FXCollections.observableArrayList();
+    private final InputOperation inputOperation = new InputOperation();
+    private final RechargeGasolineOperation rechargeGasolineOperation = new RechargeGasolineOperation();
     private final ComponentInputOperation componentInputOperation = new ComponentInputOperation();
     private final StoreCardOperation storeCardOperation = new StoreCardOperation();
     private final StoreCardTempOperation storeCardTempOperation = new StoreCardTempOperation();
@@ -66,7 +69,6 @@ public class MainController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         conn = connectBD.connect();
 
-
         clId.setCellValueFactory(data -> data.getValue().get(0));
         clProvider.setCellValueFactory(data -> data.getValue().get(1));
         clNumBR.setCellValueFactory(data -> data.getValue().get(2));
@@ -78,7 +80,17 @@ public class MainController implements Initializable {
         clPrice.setCellValueFactory(data -> data.getValue().get(8));
         clConfirm.setCellValueFactory(data -> data.getValue().get(9));
 
-        refresh();
+        clIdGazole.setCellValueFactory(data -> data.getValue().get(0));
+        clProviderGazole.setCellValueFactory(data -> data.getValue().get(1));
+        clNumBRGazole.setCellValueFactory(data -> data.getValue().get(2));
+        clDateBRGazole.setCellValueFactory(data -> data.getValue().get(3));
+        clNumFactGazole.setCellValueFactory(data -> data.getValue().get(4));
+        clDateFactGazole.setCellValueFactory(data -> data.getValue().get(5));
+        clNumBCGazole.setCellValueFactory(data -> data.getValue().get(6));
+        clDateBCGazole.setCellValueFactory(data -> data.getValue().get(7));
+        clPriceGazole.setCellValueFactory(data -> data.getValue().get(8));
+
+        refreshInput();
         refreshComboProviders();
 
         comboFilterData.addAll("Tout","Fournisseur","confirmé","Non confirmé");
@@ -116,7 +128,7 @@ public class MainController implements Initializable {
             stage.initOwner(this.tfRecherche.getScene().getWindow());
             stage.showAndWait();
 
-            refresh();
+            refreshInput();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -138,7 +150,7 @@ public class MainController implements Initializable {
 
         if (data != null){
             try {
-                Input input = operation.get(Integer.parseInt(data.get(0).getValue()));
+                Input input = inputOperation.get(Integer.parseInt(data.get(0).getValue()));
 
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/InputViews/UpdateView.fxml"));
                 DialogPane temp = loader.load();
@@ -153,7 +165,7 @@ public class MainController implements Initializable {
                 closeButton.setVisible(false);
                 dialog.showAndWait();
 
-                refresh();
+                refreshInput();
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -176,7 +188,7 @@ public class MainController implements Initializable {
         if (data != null) {
             if (data.get(9).getValue().equals("Non confirmé")) {
                 try {
-                    Input input = operation.get(Integer.parseInt(data.get(0).getValue()));
+                    Input input = inputOperation.get(Integer.parseInt(data.get(0).getValue()));
 
                     Alert alertConfirmation = new Alert(Alert.AlertType.CONFIRMATION);
                     alertConfirmation.setHeaderText("CONFIRMER LA SUPPRESSION");
@@ -197,7 +209,7 @@ public class MainController implements Initializable {
                             deleteComponentInput(input.getId());
                             deleteStoreCardTemp(input.getId());
 
-                            refresh();
+                            refreshInput();
                         }
                     });
 
@@ -227,7 +239,7 @@ public class MainController implements Initializable {
     private boolean delete(Input input) {
         boolean insert = false;
         try {
-            insert = operation.delete(input);
+            insert = inputOperation.delete(input);
             return insert;
         }catch (Exception e){
             e.printStackTrace();
@@ -264,7 +276,7 @@ public class MainController implements Initializable {
         if (data != null){
             if (data.get(9).getValue().equals("Non confirmé")) {
                 try {
-                    Input input = operation.get(Integer.parseInt(data.get(0).getValue()));
+                    Input input = inputOperation.get(Integer.parseInt(data.get(0).getValue()));
 
                     Alert alertConfirmation = new Alert(Alert.AlertType.CONFIRMATION);
                     alertConfirmation.setHeaderText("CONFIRMERMATION");
@@ -283,7 +295,7 @@ public class MainController implements Initializable {
 
                             insertStoreCardsFromTemp(input);
 
-                            refresh();
+                            refreshInput();
                         }
                     });
 
@@ -345,7 +357,7 @@ public class MainController implements Initializable {
                 switch (select) {
                     case 0:
                         if (dateFrom != null && dateTo != null) ActionSearchDate();
-                        else refresh();
+                        else refreshInput();
 
                         break;
                     case 1:
@@ -562,14 +574,14 @@ public class MainController implements Initializable {
     private void ActionRefreshDate(){
         try {
             clearRecherche();
-            refresh();
+            refreshInput();
         }catch (Exception e){
             e.printStackTrace();
 
         }
     }
 
-    private void refresh(){
+    private void refreshInput(){
         try {
             if (conn.isClosed()) conn = connectBD.connect();
             dataTable.clear();
@@ -625,7 +637,7 @@ public class MainController implements Initializable {
     @FXML
     private void ActionRefresh(){
         clearRecherche();
-        refresh();
+        refreshInput();
     }
 
     private void clearRecherche(){
