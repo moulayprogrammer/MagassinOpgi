@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane nodeOrientation="LEFT_TO_RIGHT" prefHeight="600.0" prefWidth="950.0" stylesheets="@../../../resources/bootstrap3.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.ConfigurationControllers.CarteGasolineControllers.MainController">
+   <top>
+      <HBox alignment="CENTER_LEFT" maxHeight="120.0" minHeight="120.0" prefHeight="120.0" spacing="20.0" style="-fx-background-color: #FFF;" styleClass="container-table" BorderPane.alignment="CENTER">
+         <children>
+            <VBox alignment="CENTER" spacing="20.0" HBox.hgrow="NEVER">
+               <children>
+                  <HBox spacing="25.0">
+                     <children>
+                        <ImageView fitHeight="22.0" fitWidth="27.0" onMousePressed="#ActionAdd" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../Icons/add.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fitHeight="26.0" fitWidth="26.0" onMousePressed="#ActionUpdate" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../Icons/config.jpg" />
+                           </image>
+                           <viewport>
+                              <Rectangle2D />
+                           </viewport>
+                        </ImageView>
+                     </children>
+                  </HBox>
+                  <HBox spacing="20.0">
+                     <children>
+                        <ImageView fitHeight="26.0" fitWidth="26.0" onMousePressed="#ActionAddToArchive" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../Icons/addArchive.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fitHeight="26.0" fitWidth="26.0" onMousePressed="#ActionDeleteFromArchive" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../Icons/deleteArchive.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <Separator maxHeight="100.0" maxWidth="5.0" minHeight="100.0" minWidth="5.0" orientation="VERTICAL" prefHeight="100.0" prefWidth="5.0" />
+            <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+            <Separator layoutX="103.0" layoutY="20.0" maxHeight="100.0" maxWidth="5.0" minHeight="100.0" minWidth="5.0" orientation="VERTICAL" prefHeight="100.0" prefWidth="5.0" />
+            <VBox alignment="CENTER" layoutX="10.0" layoutY="10.0" spacing="20.0">
+               <children>
+                  <HBox spacing="25.0">
+                     <children>
+                        <Label maxWidth="1.7976931348623157E308" text="RECHERCHE" HBox.hgrow="ALWAYS">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                        <ImageView fitHeight="20.0" fitWidth="23.0" onMousePressed="#ActionSearch" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../Icons/recherche.png.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fitHeight="19.0" fitWidth="19.0" onMousePressed="#ActionRefresh" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../Icons/refresh.jpeg" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </HBox>
+                  <HBox spacing="20.0">
+                     <children>
+                        <TextField fx:id="tfRecherche" maxWidth="25.0" minWidth="220.0" prefHeight="26.0" prefWidth="220.0">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </TextField>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
+         <padding>
+            <Insets left="10.0" right="10.0" />
+         </padding>
+      </HBox>
+   </top>
+   <center>
+      <VBox spacing="10.0" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets top="10.0" />
+         </BorderPane.margin>
+         <children>
+            <TableView fx:id="table" onMouseClicked="#tableClick" styleClass="container-table">
+               <columns>
+                  <TableColumn fx:id="clId" prefWidth="150.0" text="ID" visible="false" />
+                  <TableColumn fx:id="clNumber" prefWidth="300.0" text="NUMÉRO DE CARTE" />
+                  <TableColumn fx:id="clBalance" prefWidth="220.0" text="DERNIÈRE SOLDE" />
+                  <TableColumn fx:id="clRecharge" prefWidth="288.0" text="DERNIÈRE DATE DE RECHARGE" />
+               </columns>
+            </TableView>
+         </children>
+      </VBox>
+   </center>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</BorderPane>

@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane nodeOrientation="LEFT_TO_RIGHT" stylesheets="@../../../resources/bootstrap3.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.OutputControllers.OutputArticlesControllers.AddController">
+   <top>
+      <AnchorPane prefHeight="50.0" prefWidth="100.0" style="-fx-background-color: #EFF;" styleClass="bar" BorderPane.alignment="CENTER">
+         <children>
+            <Label layoutX="26.0" layoutY="19.0" style="-fx-font-size: 25;" text="Bon de Sortie" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="10.0">
+               <font>
+                  <Font size="21.0" />
+               </font>
+            </Label>
+            <HBox layoutX="920.0" layoutY="-36.0" spacing="10.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="10.0">
+               <children>
+                  <JFXButton fx:id="btnInsert" buttonType="RAISED" defaultButton="true" onAction="#ActionInsert" prefWidth="120.0" ripplerFill="#0cc333" styleClass="primary" text="ENREGISTRER" textFill="#e10bbd">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </JFXButton>
+                  <JFXButton buttonType="RAISED" cancelButton="true" layoutX="130.0" layoutY="10.0" onAction="#ActionAnnulledAdd" prefWidth="120.0" ripplerFill="#0cc333" styleClass="danger" text="ANNULATION" textFill="#e10bbd">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </JFXButton>
+               </children>
+            </HBox>
+         </children>
+      </AnchorPane>
+   </top>
+   <center>
+      <AnchorPane minHeight="650.0" style="-fx-background-color: #FFF;" styleClass="container" BorderPane.alignment="CENTER">
+         <children>
+            <HBox prefHeight="110.0" spacing="20.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="10.0">
+               <children>
+                  <VBox prefHeight="90.0" prefWidth="250.0" spacing="5.0" styleClass="container-table">
+                     <children>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Label prefHeight="25.0" prefWidth="120.0" style="-fx-font-size: 13;" text="Date">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                              <DatePicker fx:id="dpDate" minHeight="32.0" prefWidth="220.0" HBox.hgrow="ALWAYS" />
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Label prefHeight="25.0" prefWidth="120.0" style="-fx-font-size: 13;" text="Numéro">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="tfNumBR" prefHeight="26.0" prefWidth="220.0" style="-fx-font-size: 15;" />
+                           </children>
+                        </HBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </VBox>
+                  <VBox layoutX="650.0" layoutY="10.0" prefHeight="90.0" prefWidth="250.0" spacing="5.0" styleClass="container-table">
+                     <children>
+                        <HBox>
+                           <VBox.margin>
+                              <Insets bottom="3.0" />
+                           </VBox.margin>
+                           <children>
+                              <Label maxWidth="1.7976931348623157E308" prefWidth="120.0" style="-fx-font-size: 16;" text="Employée" HBox.hgrow="ALWAYS">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                              <ImageView fitHeight="22.0" fitWidth="29.0" onMouseClicked="#ActionSearchEmployee" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../Icons/recherche.png.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                           <children>
+                              <ComboBox fx:id="cbEmployee" maxWidth="1.7976931348623157E308" minHeight="32.0" onAction="#ActionComboEmployee" prefHeight="25.0" prefWidth="175.0" HBox.hgrow="ALWAYS" />
+                              <Button mnemonicParsing="false" onAction="#ActionAddEmployee" style="-fx-min-width: 52;" styleClass="info" text="ADD" />
+                           </children>
+                        </HBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </VBox>
+                  <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                  <HBox alignment="CENTER" maxWidth="380.0" prefHeight="100.0" prefWidth="350.0" styleClass="container-table" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label fx:id="lbSumTotal" maxWidth="1.7976931348623157E308" nodeOrientation="LEFT_TO_RIGHT" style="-fx-font-size: 45;" text="0,00" textFill="#02e4c2" HBox.hgrow="ALWAYS" />
+                        <Label layoutX="10.0" layoutY="10.0" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="60.0" style="-fx-font-size: 45;" text="DA" textFill="#02e4c2" />
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </HBox>
+               </children>
+            </HBox>
+            <HBox layoutX="130.0" layoutY="96.0" spacing="10.0" styleClass="container-table" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="130.0">
+               <children>
+                  <VBox prefWidth="200.0" spacing="10.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="130.0" style="-fx-font-size: 20;" text="Les articles" HBox.hgrow="ALWAYS">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                              <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="25.0" styleClass="info" text="Ajouter" HBox.hgrow="ALWAYS" />
+                           </children>
+                        </HBox>
+                        <TextField fx:id="tfRechercheArticle" prefHeight="25.0" promptText="RECHERCHE" style="-fx-font-size: 15;" />
+                        <TableView fx:id="tableArticle" maxHeight="1.7976931348623157E308" minHeight="390.0" minWidth="-Infinity" onMouseClicked="#tableProductClick" prefHeight="390.0" VBox.vgrow="ALWAYS">
+                          <columns>
+                              <TableColumn fx:id="tcIdArticle" prefWidth="54.0" text="ID" visible="false" />
+                              <TableColumn fx:id="tcNameArticle" prefWidth="150.0" text="NOM" />
+                              <TableColumn fx:id="tcCategoryArticle" prefWidth="100.0" text="CATEGORIE" />
+                              <TableColumn fx:id="tcQteArticle" prefWidth="100.0" text="QTE" />
+                          </columns>
+                        </TableView>
+                     </children>
+                  </VBox>
+                  <VBox maxWidth="1.7976931348623157E308" spacing="10.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" prefWidth="130.0" style="-fx-font-size: 20;" text="Les demandes">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                        <HBox prefWidth="200.0" spacing="5.0">
+                           <children>
+                              <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#ActionDeleteSales" prefHeight="25.0" prefWidth="150.0" styleClass="warning" text="Supprimer" />
+                              <Button layoutX="165.0" layoutY="10.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="23.0" prefWidth="150.0" text="حذف سطر" visible="false" HBox.hgrow="ALWAYS" />
+                              <TextField fx:id="tfRecherche" prefHeight="26.0" prefWidth="182.0" promptText="RECHERCHE" style="-fx-font-size: 15;" />
+                              <ImageView fitHeight="30.0" fitWidth="100.0" onMouseClicked="#ActionSearch" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../Icons/recherche.png.png" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fitHeight="32.0" fitWidth="73.0" layoutX="1044.0" layoutY="10.0" onMouseClicked="#ActionRefresh" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../Icons/refresh.jpeg" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </HBox>
+                        <TableView fx:id="tableDemands" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="390.0" prefHeight="390.0" VBox.vgrow="ALWAYS">
+                           <columns>
+                              <TableColumn fx:id="tcId" prefWidth="75.0" text="ID" visible="false" />
+                              <TableColumn fx:id="tcName" prefWidth="330.0" text="Désignation" />
+                              <TableColumn fx:id="tcQte" prefWidth="100.0" text="QUANTITIES">
+                                 <columns>
+                                    <TableColumn fx:id="tcQtDEM" prefWidth="100.0" text="DEM" />
+                                    <TableColumn fx:id="tcQteSERV" prefWidth="100.0" text="SERV" />
+                                 </columns>
+                              </TableColumn>
+                              <TableColumn fx:id="tcPriceUnit" prefWidth="120.0" text="PRIX UNITAIRE" />
+                              <TableColumn fx:id="tcPriceTotal" prefWidth="260.0" text="MONTANT" />
+                           </columns>
+                        </TableView>
+                     </children>
+                  </VBox>
+               </children>
+               <padding>
+                  <Insets bottom="10.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </HBox>
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>

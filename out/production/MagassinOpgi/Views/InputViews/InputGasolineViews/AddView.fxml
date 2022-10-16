@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<DialogPane expanded="true" minHeight="-Infinity" minWidth="-Infinity" prefHeight="410.0" prefWidth="400.0" stylesheets="@../../../resources/bootstrap3.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.InputControllers.InputGasolineControllers.AddController">
+   <header>
+      <AnchorPane prefHeight="50.0" prefWidth="100.0" style="-fx-background-color: #EFF;" styleClass="bar">
+         <children>
+            <Label layoutX="26.0" layoutY="19.0" style="-fx-font-size: 25;" text="Recharge Compte Carburant" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="10.0">
+               <font>
+                  <Font size="21.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+   </header>
+   <content>
+      <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="450.0" style="-fx-background-color: #FFF;" styleClass="container">
+         <children>
+            <VBox layoutX="10.0" layoutY="10.0" spacing="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0">
+               <children>
+                  <HBox alignment="CENTER" prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="25.0" prefWidth="190.0" style="-fx-font-size: 15;" text="Date Bon de Commande" HBox.hgrow="ALWAYS">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                        <DatePicker fx:id="dpBCDate" minHeight="32.0" prefWidth="220.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="25.0" prefWidth="190.0" style="-fx-font-size: 15;" text="Num Bon de Commande">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="tfNumBC" prefHeight="26.0" prefWidth="220.0" style="-fx-font-size: 15;" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="25.0" prefWidth="190.0" style="-fx-font-size: 15;" text="Date Facture" HBox.hgrow="ALWAYS">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                        <DatePicker fx:id="dpFactDate" minHeight="32.0" prefWidth="220.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" layoutX="10.0" layoutY="52.0" prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="25.0" prefWidth="190.0" style="-fx-font-size: 15;" text="Num Facture">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="tfNumFact" prefHeight="26.0" prefWidth="220.0" style="-fx-font-size: 15;" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" layoutX="10.0" layoutY="136.0" prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="25.0" prefWidth="190.0" style="-fx-font-size: 15;" text="Price Recharge">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="tfPrice" prefHeight="26.0" prefWidth="220.0" style="-fx-font-size: 15;" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <HBox spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="10.0">
+               <children>
+                  <JFXButton fx:id="btnInsert" buttonType="RAISED" defaultButton="true" onAction="#ActionInsert" prefWidth="120.0" ripplerFill="#0cc333" styleClass="primary" text="ENREGISTRER" textFill="#e10bbd">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </JFXButton>
+                  <JFXButton buttonType="RAISED" cancelButton="true" layoutX="130.0" layoutY="10.0" onAction="#ActionAnnul" prefWidth="120.0" ripplerFill="#0cc333" styleClass="danger" text="ANNULATION" textFill="#e10bbd">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </JFXButton>
+               </children>
+            </HBox>
+         </children>
+      </AnchorPane>
+   </content>
+</DialogPane>
