@@ -1,6 +1,8 @@
 package Controllers.OutputControllers;
 
 import BddPackage.*;
+import Controllers.OutputControllers.OutputArticlesControllers.Print;
+import Controllers.OutputControllers.OutputArticlesControllers.UpdateController;
 import Models.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -120,7 +122,7 @@ public class MainController implements Initializable {
     private void ActionAdd(){
         try {
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/OutputViews/AddView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/OutputViews/ArticlesOutputViews/AddView.fxml"));
             BorderPane temp = loader.load();
             Stage stage = new Stage();
             stage.setScene(new Scene(temp));
@@ -153,7 +155,7 @@ public class MainController implements Initializable {
             try {
                 Output output = operation.get(Integer.parseInt(data.get(0).getValue()));
 
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/OutputViews/UpdateView.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/OutputViews/ArticlesOutputViews/UpdateView.fxml"));
                 BorderPane temp = loader.load();
                 UpdateController controller = loader.getController();
                 controller.Init(output);

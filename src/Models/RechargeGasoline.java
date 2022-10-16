@@ -5,8 +5,6 @@ import java.time.LocalDate;
 public class RechargeGasoline {
 
     private int id;
-    private int idProvider;
-    private String number;
     private LocalDate date;
     private String numberBC;
     private LocalDate dateBC;
@@ -17,25 +15,25 @@ public class RechargeGasoline {
     public RechargeGasoline() {
     }
 
-    public RechargeGasoline(int id, int idProvider, String number, LocalDate date, String numberBC, LocalDate dateBC, String numberFact, LocalDate dateFact) {
-        this.id = id;
-        this.idProvider = idProvider;
-        this.number = number;
-        this.date = date;
+    public RechargeGasoline(String numberBC, LocalDate dateBC, String numberFact, LocalDate dateFact, Double price) {
         this.numberBC = numberBC;
         this.dateBC = dateBC;
         this.numberFact = numberFact;
         this.dateFact = dateFact;
+        this.price = price;
     }
 
-    public RechargeGasoline(int idProvider, String number, LocalDate date, String numberBC, LocalDate dateBC, String numberFact, LocalDate dateFact, Double price) {
-        this.idProvider = idProvider;
-        this.number = number;
+    public RechargeGasoline(LocalDate date, String numberBC, LocalDate dateBC, String numberFact, LocalDate dateFact, Double price) {
         this.date = date;
         this.numberBC = numberBC;
         this.dateBC = dateBC;
         this.numberFact = numberFact;
         this.dateFact = dateFact;
+        this.price = price;
+    }
+
+    public RechargeGasoline(int id, Double price) {
+        this.id = id;
         this.price = price;
     }
 
@@ -45,22 +43,6 @@ public class RechargeGasoline {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getIdProvider() {
-        return idProvider;
-    }
-
-    public void setIdProvider(int idProvider) {
-        this.idProvider = idProvider;
-    }
-
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
     }
 
     public LocalDate getDate() {

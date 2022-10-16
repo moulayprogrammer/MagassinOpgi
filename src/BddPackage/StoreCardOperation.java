@@ -186,6 +186,32 @@ public class StoreCardOperation extends BDD<StoreCard> {
         return storeCard;
     }
 
+    public StoreCard getByArticleQteNotNull(int idArticle) {
+        connectDatabase();
+        StoreCard storeCard = new StoreCard();
+        String query = "SELECT * FROM STORE_CARD  WHERE ID = ? ; ";
+        try {
+            PreparedStatement preparedStmt = conn.prepareStatement(query);
+            preparedStmt.setInt(1,idArticle);
+            ResultSet resultSet = preparedStmt.executeQuery();
+            while (resultSet.next()){
+
+                storeCard.setId(resultSet.getInt("ID"));
+                storeCard.setIdInput(resultSet.getInt("ID_INPUT"));
+                storeCard.setIdArticle(resultSet.getInt("ID_ARTICLE"));
+                storeCard.setDateStore(resultSet.getDate("DATE_STORE").toLocalDate());
+                storeCard.setQteStored(resultSet.getInt("QTE_STORED"));
+                storeCard.setQteConsumed(resultSet.getInt("QTE_CONSUMED"));
+                storeCard.setPrice(resultSet.getDouble("PRICE"));
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        closeDatabase();
+        return storeCard;
+    }
+
     public ArrayList<StoreCard> getAllByInput(int idInput) {
         connectDatabase();
         ArrayList<StoreCard> list = new ArrayList<>();

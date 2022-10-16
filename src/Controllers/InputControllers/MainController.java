@@ -1,8 +1,10 @@
 package Controllers.InputControllers;
 
 import BddPackage.*;
+import Controllers.InputControllers.InputArticlesControllers.UpdateController;
 import Models.Input;
 import Models.Provider;
+import Models.RechargeGasoline;
 import Models.StoreCard;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -36,24 +38,28 @@ import java.util.function.Predicate;
 public class MainController implements Initializable {
 
     @FXML
+    TabPane tabPane;
+    @FXML
+    Tab tabBon,tabGasoline;
+    @FXML
     TextField tfRecherche;
     @FXML
-    Label lbProvider,lbProviderGazole;
+    Label lbProvider;
     @FXML
-    ComboBox<String> cbProvider,cbFilter,cbFilterGazole,cbProviderGazole;
+    ComboBox<String> cbProvider,cbFilter;
     @FXML
     DatePicker dpFrom,dpTo;
     @FXML
-    TableView<List<StringProperty>> table,tableGazole;
+    TableView<List<StringProperty>> table,tableGasoline;
     @FXML
     TableColumn<List<StringProperty>,String> clId,clProvider,clNumBR,clDateBR,clNumFact,clDateFact,clNumBC,clDateBC,clPrice,clConfirm;
     @FXML
-    TableColumn<List<StringProperty>,String> clIdGazole,clProviderGazole,clNumBRGazole,clDateBRGazole,clNumFactGazole,clDateFactGazole,clNumBCGazole,clDateBCGazole,clPriceGazole;
+    TableColumn<List<StringProperty>,String> clIdGasoline, clNumFactGasoline, clDateFactGasoline, clNumBCGasoline, clDateBCGasoline, clPriceGasoline;
 
     private final ConnectBD connectBD = new ConnectBD();
     private Connection conn;
     private final ObservableList<List<StringProperty>> dataTable = FXCollections.observableArrayList();
-    private final ObservableList<List<StringProperty>> dataTableGazole = FXCollections.observableArrayList();
+    private final ObservableList<List<StringProperty>> dataTableGasoline = FXCollections.observableArrayList();
     private final InputOperation inputOperation = new InputOperation();
     private final RechargeGasolineOperation rechargeGasolineOperation = new RechargeGasolineOperation();
     private final ComponentInputOperation componentInputOperation = new ComponentInputOperation();
@@ -80,15 +86,12 @@ public class MainController implements Initializable {
         clPrice.setCellValueFactory(data -> data.getValue().get(8));
         clConfirm.setCellValueFactory(data -> data.getValue().get(9));
 
-        clIdGazole.setCellValueFactory(data -> data.getValue().get(0));
-        clProviderGazole.setCellValueFactory(data -> data.getValue().get(1));
-        clNumBRGazole.setCellValueFactory(data -> data.getValue().get(2));
-        clDateBRGazole.setCellValueFactory(data -> data.getValue().get(3));
-        clNumFactGazole.setCellValueFactory(data -> data.getValue().get(4));
-        clDateFactGazole.setCellValueFactory(data -> data.getValue().get(5));
-        clNumBCGazole.setCellValueFactory(data -> data.getValue().get(6));
-        clDateBCGazole.setCellValueFactory(data -> data.getValue().get(7));
-        clPriceGazole.setCellValueFactory(data -> data.getValue().get(8));
+        clIdGasoline.setCellValueFactory(data -> data.getValue().get(0));
+        clNumFactGasoline.setCellValueFactory(data -> data.getValue().get(1));
+        clDateFactGasoline.setCellValueFactory(data -> data.getValue().get(2));
+        clNumBCGasoline.setCellValueFactory(data -> data.getValue().get(3));
+        clDateBCGasoline.setCellValueFactory(data -> data.getValue().get(4));
+        clPriceGasoline.setCellValueFactory(data -> data.getValue().get(5));
 
         refreshInput();
         refreshComboProviders();
@@ -96,6 +99,17 @@ public class MainController implements Initializable {
         comboFilterData.addAll("Tout","Fournisseur","confirmé","Non confirmé");
         cbFilter.setItems(comboFilterData);
         cbFilter.getSelectionModel().select(0);
+
+        tabPane.getSelectionModel().selectedItemProperty().addListener((ov, oldTab, newTab) -> {
+            switch (newTab.getId()){
+                case "tabBon":
+                    refreshInput();
+                    break;
+                case "tabGasoline":
+                    refreshGasoline();
+                    break;
+            }
+        });
     }
 
     private void refreshComboProviders() {
@@ -117,22 +131,48 @@ public class MainController implements Initializable {
 
     @FXML
     private void ActionAdd(){
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/InputViews/AddView.fxml"));
-            BorderPane temp = loader.load();
-            Stage stage = new Stage();
-            stage.setScene(new Scene(temp));
-            stage.setMaximized(true);
-            stage.setTitle("Gestion de l'inventaire OPGI Tamanrasset");
-            stage.getIcons().add(new Image("/Images/logo.png"));
-            stage.initOwner(this.tfRecherche.getScene().getWindow());
-            stage.showAndWait();
 
-            refreshInput();
+        String tabId = tabPane.getSelectionModel().getSelectedItem().getId();
+        switch (tabId){
+            case "tabBon":
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/InputViews/InputArticlesViews/AddView.fxml"));
+                    BorderPane temp = loader.load();
+                    Stage stage = new Stage();
+                    stage.setScene(new Scene(temp));
+                    stage.setMaximized(true);
+                    stage.setTitle("Gestion de l'inventaire OPGI Tamanrasset");
+                    stage.getIcons().add(new Image("/Images/logo.png"));
+                    stage.initOwner(this.tfRecherche.getScene().getWindow());
+                    stage.showAndWait();
 
-        } catch (IOException e) {
-            e.printStackTrace();
+                    refreshInput();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case "tabGasoline":
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/InputViews/InputGasolineViews/AddView.fxml"));
+                    DialogPane temp = loader.load();
+                    Dialog<ButtonType> dialog = new Dialog<>();
+                    dialog.setDialogPane(temp);
+                    dialog.resizableProperty().setValue(false);
+                    dialog.initOwner(this.tfRecherche.getScene().getWindow());
+                    dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
+                    Node closeButton = dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
+                    closeButton.setVisible(false);
+                    dialog.showAndWait();
+
+                    refreshGasoline();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
         }
+
     }
 
     @FXML
@@ -146,94 +186,198 @@ public class MainController implements Initializable {
     @FXML
     private void ActionUpdate(){
 
-        List<StringProperty> data = table.getSelectionModel().getSelectedItem();
+        String tabId = tabPane.getSelectionModel().getSelectedItem().getId();
+        switch (tabId){
+            case "tabBon":
+                try {
+                    List<StringProperty> data = table.getSelectionModel().getSelectedItem();
 
-        if (data != null){
-            try {
-                Input input = inputOperation.get(Integer.parseInt(data.get(0).getValue()));
+                    if (data != null){
+                        try {
+                            Input input = inputOperation.get(Integer.parseInt(data.get(0).getValue()));
 
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/InputViews/UpdateView.fxml"));
-                DialogPane temp = loader.load();
-                UpdateController controller = loader.getController();
-                controller.Init(input);
-                Dialog<ButtonType> dialog = new Dialog<>();
-                dialog.setDialogPane(temp);
-                dialog.resizableProperty().setValue(false);
-                dialog.initOwner(this.tfRecherche.getScene().getWindow());
-                dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
-                Node closeButton = dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
-                closeButton.setVisible(false);
-                dialog.showAndWait();
+                            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/InputViews/InputArticlesViews/UpdateView.fxml"));
+                            DialogPane temp = loader.load();
+                            UpdateController controller = loader.getController();
+                            controller.Init(input);
+                            Dialog<ButtonType> dialog = new Dialog<>();
+                            dialog.setDialogPane(temp);
+                            dialog.resizableProperty().setValue(false);
+                            dialog.initOwner(this.tfRecherche.getScene().getWindow());
+                            dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
+                            Node closeButton = dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
+                            closeButton.setVisible(false);
+                            dialog.showAndWait();
 
-                refreshInput();
+                            refreshInput();
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }else {
-            Alert alertWarning = new Alert(Alert.AlertType.WARNING);
-            alertWarning.setHeaderText("ATTENTION");
-            alertWarning.setContentText("Veuillez sélectionner un Bon Réception à modifier");
-            alertWarning.initOwner(this.tfRecherche.getScene().getWindow());
-            Button okButton = (Button) alertWarning.getDialogPane().lookupButton(ButtonType.OK);
-            okButton.setText("D'ACCORD");
-            alertWarning.showAndWait();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }else {
+                        Alert alertWarning = new Alert(Alert.AlertType.WARNING);
+                        alertWarning.setHeaderText("ATTENTION");
+                        alertWarning.setContentText("Veuillez sélectionner un Bon Réception à modifier");
+                        alertWarning.initOwner(this.tfRecherche.getScene().getWindow());
+                        Button okButton = (Button) alertWarning.getDialogPane().lookupButton(ButtonType.OK);
+                        okButton.setText("D'ACCORD");
+                        alertWarning.showAndWait();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            case "tabGasoline":
+                try {
+                    List<StringProperty> data = tableGasoline.getSelectionModel().getSelectedItem();
+
+                    if (data != null){
+                        try {
+                            RechargeGasoline gasoline = rechargeGasolineOperation.get(Integer.parseInt(data.get(0).getValue()));
+
+                            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/InputViews/InputGasolineViews/UpdateView.fxml"));
+                            DialogPane temp = loader.load();
+                            Controllers.InputControllers.InputGasolineControllers.UpdateController controller = loader.getController();
+                            controller.Init(gasoline);
+                            Dialog<ButtonType> dialog = new Dialog<>();
+                            dialog.setDialogPane(temp);
+                            dialog.resizableProperty().setValue(false);
+                            dialog.initOwner(this.tfRecherche.getScene().getWindow());
+                            dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
+                            Node closeButton = dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
+                            closeButton.setVisible(false);
+                            dialog.showAndWait();
+
+                            refreshGasoline();
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }else {
+                        Alert alertWarning = new Alert(Alert.AlertType.WARNING);
+                        alertWarning.setHeaderText("ATTENTION");
+                        alertWarning.setContentText("Veuillez sélectionner un Bon de Recharge à modifier");
+                        alertWarning.initOwner(this.tfRecherche.getScene().getWindow());
+                        Button okButton = (Button) alertWarning.getDialogPane().lookupButton(ButtonType.OK);
+                        okButton.setText("D'ACCORD");
+                        alertWarning.showAndWait();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
         }
     }
 
     @FXML
     private void ActionDelete(){
-        List<StringProperty> data = table.getSelectionModel().getSelectedItem();
-
-        if (data != null) {
-            if (data.get(9).getValue().equals("Non confirmé")) {
+        String tabId = tabPane.getSelectionModel().getSelectedItem().getId();
+        switch (tabId){
+            case "tabBon":
                 try {
-                    Input input = inputOperation.get(Integer.parseInt(data.get(0).getValue()));
+                    List<StringProperty> data = table.getSelectionModel().getSelectedItem();
 
-                    Alert alertConfirmation = new Alert(Alert.AlertType.CONFIRMATION);
-                    alertConfirmation.setHeaderText("CONFIRMER LA SUPPRESSION");
-                    alertConfirmation.setContentText("Êtes-vous sûr de supprimer le Bonne ?");
-                    alertConfirmation.initOwner(this.tfRecherche.getScene().getWindow());
-                    Button okButton = (Button) alertConfirmation.getDialogPane().lookupButton(ButtonType.OK);
-                    okButton.setText("D'ACCORD");
+                    if (data != null) {
+                        if (data.get(9).getValue().equals("Non confirmé")) {
+                            try {
+                                Input input = inputOperation.get(Integer.parseInt(data.get(0).getValue()));
 
-                    Button cancel = (Button) alertConfirmation.getDialogPane().lookupButton(ButtonType.CANCEL);
-                    cancel.setText("ANNULATION");
+                                Alert alertConfirmation = new Alert(Alert.AlertType.CONFIRMATION);
+                                alertConfirmation.setHeaderText("CONFIRMER LA SUPPRESSION");
+                                alertConfirmation.setContentText("Êtes-vous sûr de supprimer le Bonne ?");
+                                alertConfirmation.initOwner(this.tfRecherche.getScene().getWindow());
+                                Button okButton = (Button) alertConfirmation.getDialogPane().lookupButton(ButtonType.OK);
+                                okButton.setText("D'ACCORD");
 
-                    alertConfirmation.showAndWait().ifPresent(response -> {
-                        if (response == ButtonType.CANCEL) {
-                            alertConfirmation.close();
-                        } else if (response == ButtonType.OK) {
+                                Button cancel = (Button) alertConfirmation.getDialogPane().lookupButton(ButtonType.CANCEL);
+                                cancel.setText("ANNULATION");
 
-                            delete(input);
-                            deleteComponentInput(input.getId());
-                            deleteStoreCardTemp(input.getId());
+                                alertConfirmation.showAndWait().ifPresent(response -> {
+                                    if (response == ButtonType.CANCEL) {
+                                        alertConfirmation.close();
+                                    } else if (response == ButtonType.OK) {
 
-                            refreshInput();
+                                        delete(input);
+                                        deleteComponentInput(input.getId());
+                                        deleteStoreCardTemp(input.getId());
+
+                                        refreshInput();
+                                    }
+                                });
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            Alert alertWarning = new Alert(Alert.AlertType.WARNING);
+                            alertWarning.setHeaderText("ATTENTION");
+                            alertWarning.setContentText("Le Bonne est confirmé et ne peut pas être supprimé");
+
+                            alertWarning.initOwner(this.tfRecherche.getScene().getWindow());
+                            Button okButton = (Button) alertWarning.getDialogPane().lookupButton(ButtonType.OK);
+                            okButton.setText("D'ACCORD");
+                            alertWarning.showAndWait();
                         }
-                    });
-
+                    }else {
+                        Alert alertWarning = new Alert(Alert.AlertType.WARNING);
+                        alertWarning.setHeaderText("ATTENTION");
+                        alertWarning.setContentText("Veuillez sélectionner un Bon Réception à supprimer");
+                        alertWarning.initOwner(this.tfRecherche.getScene().getWindow());
+                        Button okButton = (Button) alertWarning.getDialogPane().lookupButton(ButtonType.OK);
+                        okButton.setText("D'ACCORD");
+                        alertWarning.showAndWait();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            } else {
-                Alert alertWarning = new Alert(Alert.AlertType.WARNING);
-                alertWarning.setHeaderText("ATTENTION");
-                alertWarning.setContentText("Veuillez sélectionner un Bon Réception à supprimer");
-                alertWarning.initOwner(this.tfRecherche.getScene().getWindow());
-                Button okButton = (Button) alertWarning.getDialogPane().lookupButton(ButtonType.OK);
-                okButton.setText("D'ACCORD");
-                alertWarning.showAndWait();
-            }
-        }else {
-            Alert alertWarning = new Alert(Alert.AlertType.WARNING);
-            alertWarning.setHeaderText("ATTENTION");
-            alertWarning.setContentText("Le Bonne est confirmé et ne peut pas être supprimé");
-            alertWarning.initOwner(this.tfRecherche.getScene().getWindow());
-            Button okButton = (Button) alertWarning.getDialogPane().lookupButton(ButtonType.OK);
-            okButton.setText("D'ACCORD");
-            alertWarning.showAndWait();
+                break;
+            case "tabGasoline":
+                try {
+                    List<StringProperty> data = tableGasoline.getSelectionModel().getSelectedItem();
+
+                    if (data != null) {
+                        try {
+                            RechargeGasoline gasoline = rechargeGasolineOperation.get(Integer.parseInt(data.get(0).getValue()));
+
+                            Alert alertConfirmation = new Alert(Alert.AlertType.CONFIRMATION);
+                            alertConfirmation.setHeaderText("CONFIRMER LA SUPPRESSION");
+                            alertConfirmation.setContentText("Êtes-vous sûr de supprimer le Bonne ?");
+                            alertConfirmation.initOwner(this.tfRecherche.getScene().getWindow());
+                            Button okButton = (Button) alertConfirmation.getDialogPane().lookupButton(ButtonType.OK);
+                            okButton.setText("D'ACCORD");
+
+                            Button cancel = (Button) alertConfirmation.getDialogPane().lookupButton(ButtonType.CANCEL);
+                            cancel.setText("ANNULATION");
+
+                            alertConfirmation.showAndWait().ifPresent(response -> {
+                                if (response == ButtonType.CANCEL) {
+                                    alertConfirmation.close();
+                                } else if (response == ButtonType.OK) {
+
+                                    rechargeGasolineOperation.delete(gasoline);
+
+                                    refreshGasoline();
+                                }
+                            });
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }else {
+                        Alert alertWarning = new Alert(Alert.AlertType.WARNING);
+                        alertWarning.setHeaderText("ATTENTION");
+                        alertWarning.setContentText("Veuillez sélectionner un Bon de Recharge à supprimer");
+                        alertWarning.initOwner(this.tfRecherche.getScene().getWindow());
+                        Button okButton = (Button) alertWarning.getDialogPane().lookupButton(ButtonType.OK);
+                        okButton.setText("D'ACCORD");
+                        alertWarning.showAndWait();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
         }
+
     }
 
     private boolean delete(Input input) {
@@ -271,54 +415,65 @@ public class MainController implements Initializable {
 
     @FXML
     private void ActionConfirm(){
-        List<StringProperty> data = table.getSelectionModel().getSelectedItem();
-
-        if (data != null){
-            if (data.get(9).getValue().equals("Non confirmé")) {
+        String tabId = tabPane.getSelectionModel().getSelectedItem().getId();
+        switch (tabId){
+            case "tabBon":
                 try {
-                    Input input = inputOperation.get(Integer.parseInt(data.get(0).getValue()));
+                    List<StringProperty> data = table.getSelectionModel().getSelectedItem();
 
-                    Alert alertConfirmation = new Alert(Alert.AlertType.CONFIRMATION);
-                    alertConfirmation.setHeaderText("CONFIRMERMATION");
-                    alertConfirmation.setContentText("Êtes-vous sûr de Confirmer le Bonne ?");
-                    alertConfirmation.initOwner(this.tfRecherche.getScene().getWindow());
-                    Button okButton = (Button) alertConfirmation.getDialogPane().lookupButton(ButtonType.OK);
-                    okButton.setText("D'ACCORD");
+                    if (data != null){
+                        if (data.get(9).getValue().equals("Non confirmé")) {
+                            try {
+                                Input input = inputOperation.get(Integer.parseInt(data.get(0).getValue()));
 
-                    Button cancel = (Button) alertConfirmation.getDialogPane().lookupButton(ButtonType.CANCEL);
-                    cancel.setText("ANNULATION");
+                                Alert alertConfirmation = new Alert(Alert.AlertType.CONFIRMATION);
+                                alertConfirmation.setHeaderText("CONFIRMERMATION");
+                                alertConfirmation.setContentText("Êtes-vous sûr de Confirmer le Bonne ?");
+                                alertConfirmation.initOwner(this.tfRecherche.getScene().getWindow());
+                                Button okButton = (Button) alertConfirmation.getDialogPane().lookupButton(ButtonType.OK);
+                                okButton.setText("D'ACCORD");
 
-                    alertConfirmation.showAndWait().ifPresent(response -> {
-                        if (response == ButtonType.CANCEL) {
-                            alertConfirmation.close();
-                        } else if (response == ButtonType.OK) {
+                                Button cancel = (Button) alertConfirmation.getDialogPane().lookupButton(ButtonType.CANCEL);
+                                cancel.setText("ANNULATION");
 
-                            insertStoreCardsFromTemp(input);
+                                alertConfirmation.showAndWait().ifPresent(response -> {
+                                    if (response == ButtonType.CANCEL) {
+                                        alertConfirmation.close();
+                                    } else if (response == ButtonType.OK) {
 
-                            refreshInput();
+                                        insertStoreCardsFromTemp(input);
+
+                                        refreshInput();
+                                    }
+                                });
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }else {
+                            Alert alertWarning = new Alert(Alert.AlertType.WARNING);
+                            alertWarning.setHeaderText("ATTENTION");
+                            alertWarning.setContentText("Le Bonne est déja confirmé");
+                            alertWarning.initOwner(this.tfRecherche.getScene().getWindow());
+                            Button okButton = (Button) alertWarning.getDialogPane().lookupButton(ButtonType.OK);
+                            okButton.setText("D'ACCORD");
+                            alertWarning.showAndWait();
                         }
-                    });
-
-                } catch (Exception e) {
+                    }else {
+                        Alert alertWarning = new Alert(Alert.AlertType.WARNING);
+                        alertWarning.setHeaderText("ATTENTION");
+                        alertWarning.setContentText("Veuillez sélectionner un Bon Réception à Confirmer");
+                        alertWarning.initOwner(this.tfRecherche.getScene().getWindow());
+                        Button okButton = (Button) alertWarning.getDialogPane().lookupButton(ButtonType.OK);
+                        okButton.setText("D'ACCORD");
+                        alertWarning.showAndWait();
+                    }
+                }catch (Exception e){
                     e.printStackTrace();
                 }
-            }else {
-                Alert alertWarning = new Alert(Alert.AlertType.WARNING);
-                alertWarning.setHeaderText("ATTENTION");
-                alertWarning.setContentText("Le Bonne est déja confirmé");
-                alertWarning.initOwner(this.tfRecherche.getScene().getWindow());
-                Button okButton = (Button) alertWarning.getDialogPane().lookupButton(ButtonType.OK);
-                okButton.setText("D'ACCORD");
-                alertWarning.showAndWait();
-            }
-        }else {
-            Alert alertWarning = new Alert(Alert.AlertType.WARNING);
-            alertWarning.setHeaderText("ATTENTION");
-            alertWarning.setContentText("Veuillez sélectionner un Bon Réception à Confirmer");
-            alertWarning.initOwner(this.tfRecherche.getScene().getWindow());
-            Button okButton = (Button) alertWarning.getDialogPane().lookupButton(ButtonType.OK);
-            okButton.setText("D'ACCORD");
-            alertWarning.showAndWait();
+                break;
+            case "tabGasoline":
+                break;
         }
     }
 
@@ -629,6 +784,53 @@ public class MainController implements Initializable {
             conn.close();
 
             table.setItems(dataTable);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void refreshGasoline(){
+        try {
+            if (conn.isClosed()) conn = connectBD.connect();
+            dataTableGasoline.clear();
+            LocalDate dateFrom = dpFrom.getValue();
+            LocalDate dateTo = dpTo.getValue();
+
+            String query = "";
+            PreparedStatement preparedStmt;
+
+            if (dateFrom != null && dateTo != null) {
+                query = "SELECT RECHARGE_GASOLINE.ID, RECHARGE_GASOLINE.DATE, RECHARGE_GASOLINE.NUMBER_BC, RECHARGE_GASOLINE.DATE_BC,\n" +
+                        "RECHARGE_GASOLINE.NUMBER_FACTUR, RECHARGE_GASOLINE.DATE_FACTUR, RECHARGE_GASOLINE.PRICE FROM RECHARGE_GASOLINE\n" +
+                        "WHERE RECHARGE_GASOLINE.DATE BETWEEN ? AND ?;";
+                preparedStmt = conn.prepareStatement(query);
+                preparedStmt.setDate(1, Date.valueOf(dateFrom));
+                preparedStmt.setDate(2, Date.valueOf(dateTo));
+            }else {
+                query = "SELECT RECHARGE_GASOLINE.ID, RECHARGE_GASOLINE.DATE, RECHARGE_GASOLINE.NUMBER_BC, RECHARGE_GASOLINE.DATE_BC,\n" +
+                        "RECHARGE_GASOLINE.NUMBER_FACTUR, RECHARGE_GASOLINE.DATE_FACTUR, RECHARGE_GASOLINE.PRICE FROM RECHARGE_GASOLINE\n";
+
+                preparedStmt = conn.prepareStatement(query);
+            }
+            ResultSet resultSet = preparedStmt.executeQuery();
+            while (resultSet.next()){
+
+                List<StringProperty> data = new ArrayList<>();
+
+                data.add( new SimpleStringProperty(String.valueOf(resultSet.getInt("ID"))));
+                data.add( new SimpleStringProperty(resultSet.getDate("DATE").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
+                data.add( new SimpleStringProperty(resultSet.getString("NUMBER_BC")));
+                data.add( new SimpleStringProperty(resultSet.getDate("DATE_BC").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
+                data.add( new SimpleStringProperty(resultSet.getString("NUMBER_FACTUR")));
+                data.add( new SimpleStringProperty(resultSet.getDate("DATE_FACTUR").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
+                data.add( new SimpleStringProperty(String.format(Locale.FRANCE, "%,.2f", resultSet.getDouble("PRICE") )));
+
+                dataTableGasoline.add(data);
+            }
+
+            conn.close();
+
+            tableGasoline.setItems(dataTableGasoline);
         }catch (Exception e){
             e.printStackTrace();
         }

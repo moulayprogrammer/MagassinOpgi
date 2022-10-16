@@ -26,7 +26,7 @@ public class ComponentOutputOperation extends BDD<ComponentOutput> {
             preparedStmt.setInt(3,o.getIdStore());
             preparedStmt.setInt(4,o.getQteDem());
             preparedStmt.setInt(5,o.getQteServ());
-            System.out.println("insert = " + o.getIdArt());
+
             int insert = preparedStmt.executeUpdate();
             if(insert != -1) ins = true;
         } catch (SQLException e) {
@@ -85,7 +85,7 @@ public class ComponentOutputOperation extends BDD<ComponentOutput> {
         try {
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.setInt(1,o.getId());
-            System.out.println("delete = " + o.getId());
+
             int update = preparedStmt.executeUpdate();
             if(update != -1) del = true;
         } catch (SQLException e) {

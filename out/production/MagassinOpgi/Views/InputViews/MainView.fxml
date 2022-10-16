@@ -149,9 +149,9 @@
       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
    </padding>
    <center>
-      <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" tabMinWidth="300.0" BorderPane.alignment="CENTER">
+      <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" tabMinWidth="300.0" BorderPane.alignment="CENTER">
         <tabs>
-          <Tab text="LES BON DE RECEPTION D'ARTICLE CONSUMABLE">
+          <Tab fx:id="tabBon" text="BON DE RECEPTION">
                <content>
                   <VBox spacing="10.0">
                      <children>
@@ -193,41 +193,18 @@
                   </VBox>
                </content>
           </Tab>
-          <Tab text="RECHARGE DE CARTE GAZOLE">
+          <Tab fx:id="tabGasoline" text="RECHARGE DE CARBURANT">
                <content>
                   <VBox spacing="10.0">
                      <children>
-                        <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0" spacing="20.0" style="-fx-background-color: #FFF;" styleClass="container-table">
-                           <children>
-                              <Label layoutX="21.0" layoutY="22.0" maxWidth="1.7976931348623157E308" text="FILTRER PAR">
-                                 <font>
-                                    <Font name="System Bold" size="14.0" />
-                                 </font>
-                              </Label>
-                              <ComboBox fx:id="cbFilterGazole" layoutX="98.0" layoutY="15.0" onAction="#comboFilterAction" prefWidth="180.0" />
-                              <Label fx:id="lbProviderGazole" maxWidth="1.7976931348623157E308" style="-fx-font-size: 12;" text="FORNISSEUR" visible="false">
-                                 <font>
-                                    <Font name="System Bold" size="14.0" />
-                                 </font>
-                              </Label>
-                              <ComboBox fx:id="cbProviderGazole" layoutX="412.0" layoutY="15.0" onAction="#comboFilterProviderAction" prefWidth="180.0" visible="false" />
-                              <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                           </children>
-                           <padding>
-                              <Insets left="10.0" right="10.0" />
-                           </padding>
-                        </HBox>
-                        <TableView fx:id="tableGazole" onMouseClicked="#tableClick" styleClass="container-table" VBox.vgrow="ALWAYS">
+                        <TableView fx:id="tableGasoline" onMouseClicked="#tableClick" styleClass="container-table" VBox.vgrow="ALWAYS">
                            <columns>
-                              <TableColumn fx:id="clIdGazole" prefWidth="150.0" text="ID" visible="false" />
-                              <TableColumn fx:id="clProviderGazole" prefWidth="150.0" text="Fournisseur" />
-                              <TableColumn fx:id="clNumBRGazole" prefWidth="150.0" text="N° Bon de Réception" />
-                              <TableColumn fx:id="clDateBRGazole" prefWidth="150.0" text="Date Bon de Réception" />
-                              <TableColumn fx:id="clNumFactGazole" prefWidth="150.0" text="N° Facture" />
-                              <TableColumn fx:id="clDateFactGazole" prefWidth="150.0" text="Date Facture" />
-                              <TableColumn fx:id="clNumBCGazole" prefWidth="150.0" text="N° Bon de Commande" />
-                              <TableColumn fx:id="clDateBCGazole" prefWidth="150.0" text="Date Bon de Commande" />
-                              <TableColumn fx:id="clPriceGazole" prefWidth="180.0" text="PRIXE TOTAL" />
+                              <TableColumn fx:id="clIdGasoline" prefWidth="150.0" text="ID" visible="false" />
+                              <TableColumn fx:id="clNumBCGasoline" prefWidth="175.0" text="N° Bon de Commande" />
+                              <TableColumn fx:id="clDateBCGasoline" prefWidth="175.0" text="Date Bon de Commande" />
+                              <TableColumn fx:id="clNumFactGasoline" prefWidth="175.0" text="N° Facture" />
+                              <TableColumn fx:id="clDateFactGasoline" prefWidth="175.0" text="Date Facture" />
+                              <TableColumn fx:id="clPriceGasoline" prefWidth="220.0" text="PRIXE RECHARGE" />
                            </columns>
                         </TableView>
                      </children>
@@ -235,6 +212,9 @@
                </content>
           </Tab>
         </tabs>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
       </TabPane>
    </center>
 </BorderPane>

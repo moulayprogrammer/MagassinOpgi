@@ -14,13 +14,13 @@ public class GasolineCardOperation extends BDD<GasolineCard> {
     public boolean insert(GasolineCard o) {
         connectDatabase();
         boolean ins = false;
-        String query = "INSERT INTO GASOLINE_CARD (NUMBER,BALANCE,LAST_RECHARGE_DATE,LAST_CONSUMPTION_DATE) VALUES (?,?,?,?);";
+        String query = "INSERT INTO GASOLINE_CARD (NUMBER,LAST_BALANCE,LAST_RECHARGE_DATE) VALUES (?,?,?);";
         try {
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.setString(1,o.getNumber());
-            preparedStmt.setDouble(2,o.getBalance());
+            preparedStmt.setDouble(2,o.getLastBalance());
             preparedStmt.setDate(3, Date.valueOf(o.getLastRechargeDate()));
-            preparedStmt.setDate(4, Date.valueOf(o.getLastConsumptionDate()));
+            
             int insert = preparedStmt.executeUpdate();
             if(insert != -1) ins = true;
         } catch (SQLException e) {
@@ -34,13 +34,12 @@ public class GasolineCardOperation extends BDD<GasolineCard> {
     public int insertId(GasolineCard o) {
         connectDatabase();
         int ins = 0;
-        String query = "INSERT INTO GASOLINE_CARD (NUMBER,BALANCE,LAST_RECHARGE_DATE,LAST_CONSUMPTION_DATE) VALUES (?,?,?,?);";
+        String query = "INSERT INTO GASOLINE_CARD (NUMBER,LAST_BALANCE,LAST_RECHARGE_DATE) VALUES (?,?,?);";
         try {
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.setString(1,o.getNumber());
-            preparedStmt.setDouble(2,o.getBalance());
+            preparedStmt.setDouble(2,o.getLastBalance());
             preparedStmt.setDate(3, Date.valueOf(o.getLastRechargeDate()));
-            preparedStmt.setDate(4, Date.valueOf(o.getLastConsumptionDate()));
 
             int insert = preparedStmt.executeUpdate();
             if(insert != -1) ins = preparedStmt.getGeneratedKeys().getInt(1);
@@ -73,14 +72,15 @@ public class GasolineCardOperation extends BDD<GasolineCard> {
         return upd;
     }
 
-    public boolean addBalance(GasolineCard o) {
+    public boolean addLAST_BALANCE(GasolineCard o) {
         connectDatabase();
         boolean upd = false;
-        String query = "UPDATE GASOLINE_CARD SET BALANCE = BALANCE + ? WHERE ID = ? ;";
+        String query = "UPDATE GASOLINE_CARD SET LAST_BALANCE = LAST_BALANCE + ?, LAST_RECHARGE_DATE =  ? WHERE ID = ? ;";
         try {
             PreparedStatement preparedStmt = conn.prepareStatement(query);
-            preparedStmt.setDouble(1,o.getBalance());
-            preparedStmt.setInt(2,o.getId());
+            preparedStmt.setDouble(1,o.getLastBalance());
+            preparedStmt.setDate(2,Date.valueOf(o.getLastRechargeDate()));
+            preparedStmt.setInt(3,o.getId());
 
             int update = preparedStmt.executeUpdate();
             if(update != -1) upd = true;
@@ -92,14 +92,15 @@ public class GasolineCardOperation extends BDD<GasolineCard> {
         return upd;
     }
 
-    public boolean subBalance(GasolineCard o) {
+    public boolean setLAST_BALANCE(GasolineCard o) {
         connectDatabase();
         boolean upd = false;
-        String query = "UPDATE GASOLINE_CARD SET BALANCE = BALANCE - ? WHERE ID = ? ;";
+        String query = "UPDATE GASOLINE_CARD SET LAST_BALANCE = ?, LAST_RECHARGE_DATE =  ?  WHERE ID = ? ;";
         try {
             PreparedStatement preparedStmt = conn.prepareStatement(query);
-            preparedStmt.setDouble(1,o.getBalance());
-            preparedStmt.setInt(2,o.getId());
+            preparedStmt.setDouble(1,o.getLastBalance());
+            preparedStmt.setDate(2,Date.valueOf(o.getLastRechargeDate()));
+            preparedStmt.setInt(3,o.getId());
 
             int update = preparedStmt.executeUpdate();
             if(update != -1) upd = true;
@@ -148,10 +149,8 @@ public class GasolineCardOperation extends BDD<GasolineCard> {
                 GasolineCard gasolineCard = new GasolineCard();
                 gasolineCard.setId(resultSet.getInt("ID"));
                 gasolineCard.setNumber(resultSet.getString("NUMBER"));
-                gasolineCard.setBalance(resultSet.getDouble("BALANCE"));
+                gasolineCard.setLastBalance(resultSet.getDouble("LAST_BALANCE"));
                 gasolineCard.setLastRechargeDate(resultSet.getDate("LAST_RECHARGE_DATE").toLocalDate());
-                gasolineCard.setLastConsumptionDate(resultSet.getDate("LAST_CONSUMPTION_DATE").toLocalDate());
-
                 list.add(gasolineCard);
             }
         } catch (SQLException e) {
@@ -173,10 +172,10 @@ public class GasolineCardOperation extends BDD<GasolineCard> {
             while (resultSet.next()){
 
                 gasolineCard.setId(resultSet.getInt("ID"));
+                gasolineCard.setId(resultSet.getInt("ID"));
                 gasolineCard.setNumber(resultSet.getString("NUMBER"));
-                gasolineCard.setBalance(resultSet.getDouble("BALANCE"));
+                gasolineCard.setLastBalance(resultSet.getDouble("LAST_BALANCE"));
                 gasolineCard.setLastRechargeDate(resultSet.getDate("LAST_RECHARGE_DATE").toLocalDate());
-                gasolineCard.setLastConsumptionDate(resultSet.getDate("LAST_CONSUMPTION_DATE").toLocalDate());
 
             }
         } catch (SQLException e) {
@@ -235,9 +234,8 @@ public class GasolineCardOperation extends BDD<GasolineCard> {
                 GasolineCard gasolineCard = new GasolineCard();
                 gasolineCard.setId(resultSet.getInt("ID"));
                 gasolineCard.setNumber(resultSet.getString("NUMBER"));
-                gasolineCard.setBalance(resultSet.getDouble("BALANCE"));
+                gasolineCard.setLastBalance(resultSet.getDouble("LAST_BALANCE"));
                 gasolineCard.setLastRechargeDate(resultSet.getDate("LAST_RECHARGE_DATE").toLocalDate());
-                gasolineCard.setLastConsumptionDate(resultSet.getDate("LAST_CONSUMPTION_DATE").toLocalDate());
 
                 list.add(gasolineCard);
             }
@@ -260,10 +258,10 @@ public class GasolineCardOperation extends BDD<GasolineCard> {
             while (resultSet.next()){
 
                 gasolineCard.setId(resultSet.getInt("ID"));
+                gasolineCard.setId(resultSet.getInt("ID"));
                 gasolineCard.setNumber(resultSet.getString("NUMBER"));
-                gasolineCard.setBalance(resultSet.getDouble("BALANCE"));
+                gasolineCard.setLastBalance(resultSet.getDouble("LAST_BALANCE"));
                 gasolineCard.setLastRechargeDate(resultSet.getDate("LAST_RECHARGE_DATE").toLocalDate());
-                gasolineCard.setLastConsumptionDate(resultSet.getDate("LAST_CONSUMPTION_DATE").toLocalDate());
 
             }
         } catch (SQLException e) {

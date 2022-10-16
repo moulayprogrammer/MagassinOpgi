@@ -6,6 +6,8 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -51,11 +53,6 @@
                               <Image url="@../../Icons/print.png" />
                            </image>
                         </ImageView>
-                        <!--<ImageView fitHeight="26.0" fitWidth="26.0" layoutX="10.0" layoutY="10.0"  pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../Icons/delete.png" />
-                           </image>
-                        </ImageView>-->
                      </children>
                   </HBox>
                </children>
@@ -148,53 +145,92 @@
          </padding>
       </HBox>
    </top>
-   <center>
-      <VBox spacing="10.0" BorderPane.alignment="CENTER">
-         <BorderPane.margin>
-            <Insets top="10.0" />
-         </BorderPane.margin>
-         <children>
-            <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0" spacing="20.0" style="-fx-background-color: #FFF;" styleClass="container-table">
-               <children>
-                  <Label layoutX="21.0" layoutY="22.0" maxWidth="1.7976931348623157E308" text="FILTRER PAR">
-                     <font>
-                        <Font name="System Bold" size="14.0" />
-                     </font>
-                  </Label>
-                  <ComboBox fx:id="cbFilter" layoutX="98.0" layoutY="15.0" onAction="#comboFilterAction" prefWidth="180.0" />
-                  <Separator orientation="VERTICAL" prefHeight="200.0" />
-                  <Label fx:id="lbDep" maxWidth="1.7976931348623157E308" style="-fx-font-size: 12;" text="DEPARTEMENT" visible="false">
-                     <font>
-                        <Font name="System Bold" size="14.0" />
-                     </font>
-                  </Label>
-                  <ComboBox fx:id="cbDep" layoutX="412.0" layoutY="15.0" onAction="#comboFilterDepartmentAction" prefWidth="180.0" visible="false" />
-                  <Label fx:id="lbServ" layoutX="336.0" layoutY="22.0" maxWidth="1.7976931348623157E308" style="-fx-font-size: 12;" text="FORNISSEUR" visible="false">
-                     <font>
-                        <Font name="System Bold" size="14.0" />
-                     </font>
-                  </Label>
-                  <ComboBox fx:id="cbServ" layoutX="427.0" layoutY="15.0" onAction="#comboFilterServicesAction" prefWidth="180.0" visible="false" />
-               </children>
-               <padding>
-                  <Insets left="10.0" right="10.0" />
-               </padding>
-            </HBox>
-            <TableView fx:id="table" onMouseClicked="#tableClick" styleClass="container-table" VBox.vgrow="ALWAYS">
-              <columns>
-                  <TableColumn fx:id="clId" prefWidth="150.0" text="ID" visible="false" />
-                  <TableColumn fx:id="clNumBS" prefWidth="110.0" text="N° Bon de Sortie" />
-                  <TableColumn fx:id="clDateBS" prefWidth="130.0" text="Date Bon de Sortie" />
-                  <TableColumn fx:id="clName" prefWidth="200.0" text="Nom &amp; Prénom" />
-                  <TableColumn fx:id="clDep" prefWidth="200.0" text="Department" />
-                  <TableColumn fx:id="clServ" prefWidth="200.0" text="Service" />
-                  <TableColumn fx:id="clMontant" prefWidth="200.0" text="Montant" />
-              </columns>
-            </TableView>
-         </children>
-      </VBox>
-   </center>
    <padding>
       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
    </padding>
+   <center>
+      <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" tabMinWidth="250.0" BorderPane.alignment="CENTER">
+        <tabs>
+          <Tab text="Bone De Sortie">
+               <content>
+                  <VBox spacing="10.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0" spacing="20.0" style="-fx-background-color: #FFF;" styleClass="container-table">
+                           <children>
+                              <Label layoutX="21.0" layoutY="22.0" maxWidth="1.7976931348623157E308" text="FILTRER PAR">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                              <ComboBox fx:id="cbFilter" layoutX="98.0" layoutY="15.0" onAction="#comboFilterAction" prefWidth="180.0" />
+                              <Separator orientation="VERTICAL" prefHeight="200.0" />
+                              <Label fx:id="lbDep" maxWidth="1.7976931348623157E308" style="-fx-font-size: 12;" text="DEPARTEMENT" visible="false">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                              <ComboBox fx:id="cbDep" layoutX="412.0" layoutY="15.0" onAction="#comboFilterDepartmentAction" prefWidth="180.0" visible="false" />
+                              <Label fx:id="lbServ" layoutX="336.0" layoutY="22.0" maxWidth="1.7976931348623157E308" style="-fx-font-size: 12;" text="FORNISSEUR" visible="false">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                              <ComboBox fx:id="cbServ" layoutX="427.0" layoutY="15.0" onAction="#comboFilterServicesAction" prefWidth="180.0" visible="false" />
+                           </children>
+                           <padding>
+                              <Insets left="10.0" right="10.0" />
+                           </padding>
+                        </HBox>
+                        <TableView fx:id="table" onMouseClicked="#tableClick" styleClass="container-table" VBox.vgrow="ALWAYS">
+                          <columns>
+                              <TableColumn fx:id="clId" prefWidth="150.0" text="ID" visible="false" />
+                              <TableColumn fx:id="clNumBS" prefWidth="110.0" text="N° Bon de Sortie" />
+                              <TableColumn fx:id="clDateBS" prefWidth="130.0" text="Date Bon de Sortie" />
+                              <TableColumn fx:id="clName" prefWidth="200.0" text="Nom &amp; Prénom" />
+                              <TableColumn fx:id="clDep" prefWidth="200.0" text="Department" />
+                              <TableColumn fx:id="clServ" prefWidth="200.0" text="Service" />
+                              <TableColumn fx:id="clMontant" prefWidth="200.0" text="Montant" />
+                          </columns>
+                        </TableView>
+                     </children>
+                  </VBox>
+               </content>
+          </Tab>
+          <Tab text="Décharge">
+               <content>
+                  <VBox spacing="10.0">
+                     <children>
+                        <TableView fx:id="table1" onMouseClicked="#tableClick" styleClass="container-table" VBox.vgrow="ALWAYS">
+                           <columns>
+                              <TableColumn fx:id="clId1" prefWidth="150.0" text="ID" visible="false" />
+                              <TableColumn fx:id="clDateBS1" prefWidth="200.0" text="Date " />
+                              <TableColumn fx:id="clName1" prefWidth="220.0" text="Nom &amp; Prénom" />
+                              <TableColumn fx:id="clDep1" prefWidth="220.0" text="Department" />
+                              <TableColumn fx:id="clServ1" prefWidth="220.0" text="Service" />
+                           </columns>
+                        </TableView>
+                     </children>
+                  </VBox>
+               </content>
+          </Tab>
+            <Tab text="Recharge Carte Carburant">
+               <content>
+                  <VBox spacing="10.0">
+                     <children>
+                        <TableView fx:id="table2" onMouseClicked="#tableClick" styleClass="container-table" VBox.vgrow="ALWAYS">
+                           <columns>
+                              <TableColumn fx:id="clId2" prefWidth="150.0" text="ID" visible="false" />
+                              <TableColumn fx:id="clName2" prefWidth="250.0" text="Nom &amp; Prénom" />
+                              <TableColumn fx:id="clNumBS2" prefWidth="230.0" text="N° Carte" />
+                              <TableColumn fx:id="clDateBS2" prefWidth="230.0" text="N° Bonne Naftale " />
+                              <TableColumn fx:id="clMontant2" prefWidth="220.0" text="Montant" />
+                           </columns>
+                        </TableView>
+                     </children>
+                  </VBox>
+               </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+   </center>
 </BorderPane>
