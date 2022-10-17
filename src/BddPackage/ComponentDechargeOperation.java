@@ -4,7 +4,6 @@ package BddPackage;
 
 
 import Models.ComponentDecharge;
-import Models.ComponentOutput;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -118,25 +117,24 @@ public class ComponentDechargeOperation extends BDD<ComponentDecharge> {
         return del;
     }
 
-    public ArrayList<ComponentOutput> getAllByOutput(int idOutput) {
+    public ArrayList<ComponentDecharge> getAllByDecharge(int idDecharge) {
         connectDatabase();
-        ArrayList<ComponentOutput> list = new ArrayList<>();
+        ArrayList<ComponentDecharge> list = new ArrayList<>();
         String query = "SELECT * FROM COMPONENT_DECHARGE WHERE  ID_DECHARGE = ?;";
         try {
             PreparedStatement preparedStmt = conn.prepareStatement(query);
-            preparedStmt.setInt(1,idOutput);
+            preparedStmt.setInt(1,idDecharge);
             ResultSet resultSet = preparedStmt.executeQuery();
             while (resultSet.next()){
 
-                ComponentOutput componentOutput = new ComponentOutput();
-                componentOutput.setId(resultSet.getInt("ID"));
-                componentOutput.setIdOutput(resultSet.getInt("ID_DECHARGE"));
-                componentOutput.setIdArt(resultSet.getInt("ID_ART"));
-                componentOutput.setIdStore(resultSet.getInt("ID_STORE"));
-                componentOutput.setQteDem(resultSet.getInt("QTE_DEM"));
-                componentOutput.setQteServ(resultSet.getInt("QTE_SERV"));
+                ComponentDecharge componentDecharge = new ComponentDecharge();
+                componentDecharge.setId(resultSet.getInt("ID"));
+                componentDecharge.setIdArt(resultSet.getInt("ID_ART"));
+                componentDecharge.setIdDecharge(resultSet.getInt("ID_DECHARGE"));
+                componentDecharge.setIdStore(resultSet.getInt("ID_STORE"));
+                componentDecharge.setQte(resultSet.getInt("QTE"));
 
-                list.add(componentOutput);
+                list.add(componentDecharge);
             }
         } catch (SQLException e) {
             e.printStackTrace();

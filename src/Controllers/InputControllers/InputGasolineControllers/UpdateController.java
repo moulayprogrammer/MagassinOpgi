@@ -32,6 +32,13 @@ public class UpdateController implements Initializable {
 
     public void Init(RechargeGasoline gasoline){
         this.gasoline = gasoline;
+
+        tfNumBC.setText(gasoline.getNumberBC());
+        tfNumFact.setText(gasoline.getNumberFact());
+        tfPrice.setText(String.valueOf(gasoline.getPrice()));
+
+        dpBCDate.setValue(gasoline.getDateBC());
+        dpFactDate.setValue(gasoline.getDateFact());
     }
 
     @FXML

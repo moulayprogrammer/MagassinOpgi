@@ -200,6 +200,7 @@
                         <TableView fx:id="tableGasoline" onMouseClicked="#tableClick" styleClass="container-table" VBox.vgrow="ALWAYS">
                            <columns>
                               <TableColumn fx:id="clIdGasoline" prefWidth="150.0" text="ID" visible="false" />
+                              <TableColumn fx:id="clDateGasoline" prefWidth="175.0" text="Date de Recharge" />
                               <TableColumn fx:id="clNumBCGasoline" prefWidth="175.0" text="N° Bon de Commande" />
                               <TableColumn fx:id="clDateBCGasoline" prefWidth="175.0" text="Date Bon de Commande" />
                               <TableColumn fx:id="clNumFactGasoline" prefWidth="175.0" text="N° Facture" />

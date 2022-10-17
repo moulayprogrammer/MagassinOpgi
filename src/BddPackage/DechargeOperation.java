@@ -17,14 +17,15 @@ public class DechargeOperation extends BDD<Decharge> {
         return false;
     }
 
-    public int insertId(Output output) {
+    public int insertId(Decharge o) {
         connectDatabase();
         int ins = 0;
-        String query = "INSERT INTO DECHARGE  (ID_EMP, DATE) VALUES (?,?);";
+        String query = "INSERT INTO DECHARGE  (ID_EMP, ID_EMP_DECH, DATE) VALUES (?,?,?);";
         try {
             PreparedStatement preparedStmt = conn.prepareStatement(query);
-            preparedStmt.setInt(1,output.getIdEmp());
-            preparedStmt.setDate(2, Date.valueOf(output.getDate()));
+            preparedStmt.setInt(1,o.getIdEmp());
+            preparedStmt.setInt(2,o.getIdEmpDech());
+            preparedStmt.setDate(3, Date.valueOf(o.getDate()));
 
             int insert = preparedStmt.executeUpdate();
             if(insert != -1) ins = preparedStmt.getGeneratedKeys().getInt(1);
@@ -40,12 +41,13 @@ public class DechargeOperation extends BDD<Decharge> {
     public boolean update(Decharge o1, Decharge o2) {
         connectDatabase();
         boolean upd = false;
-        String query = "UPDATE DECHARGE SET ID_EMP = ?, DATE = ? WHERE ID = ?;";
+        String query = "UPDATE DECHARGE SET ID_EMP = ?, ID_EMP_DECH = ?, DATE = ? WHERE ID = ?;";
         try {
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.setInt(1,o1.getIdEmp());
-            preparedStmt.setDate(2,Date.valueOf(o1.getDate()));
-            preparedStmt.setInt(3,o2.getId());
+            preparedStmt.setInt(2,o1.getIdEmpDech());
+            preparedStmt.setDate(3,Date.valueOf(o1.getDate()));
+            preparedStmt.setInt(4,o2.getId());
             int update = preparedStmt.executeUpdate();
             if(update != -1) upd = true;
         } catch (SQLException e) {
@@ -91,6 +93,7 @@ public class DechargeOperation extends BDD<Decharge> {
                 Decharge decharge = new Decharge();
                 decharge.setId(resultSet.getInt("ID"));
                 decharge.setIdEmp(resultSet.getInt("ID_EMP"));
+                decharge.setIdEmpDech(resultSet.getInt("ID_EMP_DECH"));
                 decharge.setDate(resultSet.getDate("DATE").toLocalDate());
 
                 list.add(decharge);
@@ -113,6 +116,7 @@ public class DechargeOperation extends BDD<Decharge> {
 
                 decharge.setId(resultSet.getInt("ID"));
                 decharge.setIdEmp(resultSet.getInt("ID_EMP"));
+                decharge.setIdEmpDech(resultSet.getInt("ID_EMP_DECH"));
                 decharge.setDate(resultSet.getDate("DATE").toLocalDate());
 
             }
@@ -136,6 +140,7 @@ public class DechargeOperation extends BDD<Decharge> {
                 Decharge decharge = new Decharge();
                 decharge.setId(resultSet.getInt("ID"));
                 decharge.setIdEmp(resultSet.getInt("ID_EMP"));
+                decharge.setIdEmpDech(resultSet.getInt("ID_EMP_DECH"));
                 decharge.setDate(resultSet.getDate("DATE").toLocalDate());
 
                 list.add(decharge);

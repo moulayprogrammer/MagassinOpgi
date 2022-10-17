@@ -35,6 +35,8 @@ import java.util.function.Predicate;
 public class MainController implements Initializable {
 
     @FXML
+    TabPane tabPane;
+    @FXML
     TextField tfRecherche;
     @FXML
     Label lbDep,lbServ;
@@ -43,15 +45,21 @@ public class MainController implements Initializable {
     @FXML
     DatePicker dpFrom,dpTo;
     @FXML
-    TableView<List<StringProperty>> table;
+    TableView<List<StringProperty>> table,tableDecharge;
     @FXML
     TableColumn<List<StringProperty>,String> clId,clNumBS,clDateBS,clName,clDep,clServ,clMontant;
+    @FXML
+    TableColumn<List<StringProperty>,String> clIdDecharge,clDateDecharge,clNameDecharge ,clNameDechargeur,clDepDecharge,clServDecharge;
 
     private final ConnectBD connectBD = new ConnectBD();
     private Connection conn;
-    private final ObservableList<List<StringProperty>> dataTable = FXCollections.observableArrayList();
-    private final OutputOperation operation = new OutputOperation();
+    private final ObservableList<List<StringProperty>> dataTableOutput = FXCollections.observableArrayList();
+    private final ObservableList<List<StringProperty>> dataTableDecharge = FXCollections.observableArrayList();
+    private final OutputOperation outputOperation = new OutputOperation();
+    private final DechargeOperation dechargeOperation = new DechargeOperation();
+
     private final ComponentOutputOperation componentOutputOperation = new ComponentOutputOperation();
+    private final ComponentDechargeOperation componentDechargeOperation = new ComponentDechargeOperation();
     private final StoreCardOperation storeCardOperation = new StoreCardOperation();
     private final DepartmentOperation departmentOperation = new DepartmentOperation();
     private final ServiceOperation serviceOperation = new ServiceOperation();
@@ -75,13 +83,34 @@ public class MainController implements Initializable {
         clServ.setCellValueFactory(data -> data.getValue().get(5));
         clMontant.setCellValueFactory(data -> data.getValue().get(6));
 
-        refresh();
+        clIdDecharge.setCellValueFactory(data -> data.getValue().get(0));
+        clDateDecharge.setCellValueFactory(data -> data.getValue().get(1));
+        clNameDecharge.setCellValueFactory(data -> data.getValue().get(2));
+        clNameDechargeur.setCellValueFactory(data -> data.getValue().get(3));
+        clServDecharge.setCellValueFactory(data -> data.getValue().get(4));
+        clDepDecharge.setCellValueFactory(data -> data.getValue().get(5));
+
+        refreshSortie();
         refreshComboDepartment();
         refreshComboServices();
 
         comboFilterData.addAll("Tout","Department","Service");
         cbFilter.setItems(comboFilterData);
         cbFilter.getSelectionModel().select(0);
+
+        tabPane.getSelectionModel().selectedItemProperty().addListener((ov, oldTab, newTab) -> {
+            switch (newTab.getId()){
+                case "tabSortie":
+                    refreshSortie();
+                    break;
+                case "tabDecharge":
+                    refreshDecharge();
+                    break;
+                case "tabCarteGasoline":
+//                    refreshCarteGasoline();
+                    break;
+            }
+        });
     }
 
     private void refreshComboDepartment() {
@@ -121,21 +150,51 @@ public class MainController implements Initializable {
     @FXML
     private void ActionAdd(){
         try {
+            String tabId = tabPane.getSelectionModel().getSelectedItem().getId();
+            switch (tabId){
+                case "tabSortie":
+                    try {
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/OutputViews/ArticlesOutputViews/AddView.fxml"));
-            BorderPane temp = loader.load();
-            Stage stage = new Stage();
-            stage.setScene(new Scene(temp));
-            stage.setMaximized(true);
-            stage.setTitle("Gestion de l'inventaire OPGI Tamanrasset");
-            stage.getIcons().add(new Image("/Images/logo.png"));
-            stage.initOwner(this.tfRecherche.getScene().getWindow());
-            stage.showAndWait();
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/OutputViews/ArticlesOutputViews/AddView.fxml"));
+                        BorderPane temp = loader.load();
+                        Stage stage = new Stage();
+                        stage.setScene(new Scene(temp));
+                        stage.setMaximized(true);
+                        stage.setTitle("Gestion de l'inventaire OPGI Tamanrasset");
+                        stage.getIcons().add(new Image("/Images/logo.png"));
+                        stage.initOwner(this.tfRecherche.getScene().getWindow());
+                        stage.showAndWait();
 
-            refresh();
-        } catch (Exception e) {
+                        refreshSortie();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case "tabDecharge":
+                    try {
+
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/OutputViews/DechargeViews/AddView.fxml"));
+                        BorderPane temp = loader.load();
+                        Stage stage = new Stage();
+                        stage.setScene(new Scene(temp));
+                        stage.setMaximized(true);
+                        stage.setTitle("Gestion de l'inventaire OPGI Tamanrasset");
+                        stage.getIcons().add(new Image("/Images/logo.png"));
+                        stage.initOwner(this.tfRecherche.getScene().getWindow());
+                        stage.showAndWait();
+
+                        refreshDecharge();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }                    break;
+                case "tabCarteGasoline":
+//                    refreshCarteGasoline();
+                    break;
+            }
+        }catch (Exception e){
             e.printStackTrace();
         }
+
     }
 
     @FXML
@@ -148,91 +207,214 @@ public class MainController implements Initializable {
 
     @FXML
     private void ActionUpdate(){
+        try {
+            String tabId = tabPane.getSelectionModel().getSelectedItem().getId();
+            switch (tabId){
+                case "tabSortie":
+                    try {
+                        List<StringProperty> data = table.getSelectionModel().getSelectedItem();
+                        if (data != null) {
 
-        List<StringProperty> data  = table.getSelectionModel().getSelectedItem();
-        if (data != null){
+                            try {
+                                Output output = outputOperation.get(Integer.parseInt(data.get(0).getValue()));
 
-            try {
-                Output output = operation.get(Integer.parseInt(data.get(0).getValue()));
+                                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/OutputViews/ArticlesOutputViews/UpdateView.fxml"));
+                                BorderPane temp = loader.load();
+                                UpdateController controller = loader.getController();
+                                controller.Init(output);
+                                Stage stage = new Stage();
+                                stage.setScene(new Scene(temp));
+                                stage.setMaximized(true);
+                                stage.setTitle("Gestion de l'inventaire OPGI Tamanrasset");
+                                stage.getIcons().add(new Image("/Images/logo.png"));
+                                stage.initOwner(this.tfRecherche.getScene().getWindow());
+                                stage.showAndWait();
 
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/OutputViews/ArticlesOutputViews/UpdateView.fxml"));
-                BorderPane temp = loader.load();
-                UpdateController controller = loader.getController();
-                controller.Init(output);
-                Stage stage = new Stage();
-                stage.setScene(new Scene(temp));
-                stage.setMaximized(true);
-                stage.setTitle("Gestion de l'inventaire OPGI Tamanrasset");
-                stage.getIcons().add(new Image("/Images/logo.png"));
-                stage.initOwner(this.tfRecherche.getScene().getWindow());
-                stage.showAndWait();
+                                refreshSortie();
 
-                refresh();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            Alert alertWarning = new Alert(Alert.AlertType.WARNING);
+                            alertWarning.setHeaderText("ATTENTION");
+                            alertWarning.setContentText("Veuillez sélectionner une bon de recéption à modifier");
+                            alertWarning.initOwner(this.tfRecherche.getScene().getWindow());
+                            Button okButton = (Button) alertWarning.getDialogPane().lookupButton(ButtonType.OK);
+                            okButton.setText("D'ACCORD");
+                            alertWarning.showAndWait();
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    break;
+                case "tabDecharge":
+                    try {
 
-            } catch (Exception e) {
-                e.printStackTrace();
+                        List<StringProperty> data = tableDecharge.getSelectionModel().getSelectedItem();
+                        if (data != null) {
+
+                            try {
+                                Decharge decharge = dechargeOperation.get(Integer.parseInt(data.get(0).getValue()));
+
+                                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/OutputViews/DechargeViews/UpdateView.fxml"));
+                                BorderPane temp = loader.load();
+                                Controllers.OutputControllers.DechargeControllers.UpdateController controller = loader.getController();
+                                controller.Init(decharge);
+                                Stage stage = new Stage();
+                                stage.setScene(new Scene(temp));
+                                stage.setMaximized(true);
+                                stage.setTitle("Gestion de l'inventaire OPGI Tamanrasset");
+                                stage.getIcons().add(new Image("/Images/logo.png"));
+                                stage.initOwner(this.tfRecherche.getScene().getWindow());
+                                stage.showAndWait();
+
+                                refreshDecharge();
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            Alert alertWarning = new Alert(Alert.AlertType.WARNING);
+                            alertWarning.setHeaderText("ATTENTION");
+                            alertWarning.setContentText("Veuillez sélectionner un décharge à modifier");
+                            alertWarning.initOwner(this.tfRecherche.getScene().getWindow());
+                            Button okButton = (Button) alertWarning.getDialogPane().lookupButton(ButtonType.OK);
+                            okButton.setText("D'ACCORD");
+                            alertWarning.showAndWait();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }                    break;
+                case "tabCarteGasoline":
+//                    refreshCarteGasoline();
+                    break;
             }
-        }else {
-            Alert alertWarning = new Alert(Alert.AlertType.WARNING);
-            alertWarning.setHeaderText("ATTENTION");
-            alertWarning.setContentText("Veuillez sélectionner une bon de recéption à modifier");
-            alertWarning.initOwner(this.tfRecherche.getScene().getWindow());
-            Button okButton = (Button) alertWarning.getDialogPane().lookupButton(ButtonType.OK);
-            okButton.setText("D'ACCORD");
-            alertWarning.showAndWait();
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
     }
 
     @FXML
     private void ActionDelete(){
+        try {
+            String tabId = tabPane.getSelectionModel().getSelectedItem().getId();
+            switch (tabId){
+                case "tabSortie":
+                    try {
+                        List<StringProperty> data  = table.getSelectionModel().getSelectedItem();
+                        if (data != null){
+                            try {
+                                Output output = outputOperation.get(Integer.parseInt(data.get(0).getValue()));
 
-        List<StringProperty> data  = table.getSelectionModel().getSelectedItem();
-        if (data != null){
-            try {
-                Output output = operation.get(Integer.parseInt(data.get(0).getValue()));
+                                Alert alertConfirmation = new Alert(Alert.AlertType.CONFIRMATION);
+                                alertConfirmation.setHeaderText("supprimer le bonne sortée");
+                                alertConfirmation.setContentText("Voulez-vous vraiment supprimer le bonne?");
+                                alertConfirmation.initOwner(this.tfRecherche.getScene().getWindow());
+                                Button okButton = (Button) alertConfirmation.getDialogPane().lookupButton(ButtonType.OK);
+                                okButton.setText("D'ACCORD");
 
-                Alert alertConfirmation = new Alert(Alert.AlertType.CONFIRMATION);
-                alertConfirmation.setHeaderText("supprimer le bonne sortée");
-                alertConfirmation.setContentText("Voulez-vous vraiment supprimer le bonne?");
-                alertConfirmation.initOwner(this.tfRecherche.getScene().getWindow());
-                Button okButton = (Button) alertConfirmation.getDialogPane().lookupButton(ButtonType.OK);
-                okButton.setText("D'ACCORD");
+                                Button cancel = (Button) alertConfirmation.getDialogPane().lookupButton(ButtonType.CANCEL);
+                                cancel.setText("Annulation");
 
-                Button cancel = (Button) alertConfirmation.getDialogPane().lookupButton(ButtonType.CANCEL);
-                cancel.setText("Annulation");
+                                alertConfirmation.showAndWait().ifPresent(response -> {
+                                    if (response == ButtonType.CANCEL) {
+                                        alertConfirmation.close();
+                                    } else if (response == ButtonType.OK) {
 
-                alertConfirmation.showAndWait().ifPresent(response -> {
-                    if (response == ButtonType.CANCEL) {
-                        alertConfirmation.close();
-                    } else if (response == ButtonType.OK) {
+                                        ArrayList<ComponentOutput> componentOutputs = componentOutputOperation.getAllByOutput(output.getId());
+                                        for (ComponentOutput componentOutput : componentOutputs){
 
-                        ArrayList<ComponentOutput> componentOutputs = componentOutputOperation.getAllByOutput(output.getId());
-                        for (ComponentOutput componentOutput : componentOutputs){
+                                            StoreCard storeCard = storeCardOperation.get(componentOutput.getIdStore());
+                                            storeCard.setQteConsumed(componentOutput.getQteServ());
 
-                            StoreCard storeCard = storeCardOperation.get(componentOutput.getIdStore());
-                            storeCard.setQteConsumed(componentOutput.getQteServ());
+                                            storeCardOperation.subQteConsumed(storeCard);
+                                            componentOutputOperation.delete(componentOutput);
+                                        }
+                                        outputOperation.delete(output);
 
-                            storeCardOperation.subQteConsumed(storeCard);
-                            componentOutputOperation.delete(componentOutput);
+                                        refreshSortie();
+                                    }
+                                });
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }else {
+                            Alert alertWarning = new Alert(Alert.AlertType.WARNING);
+                            alertWarning.setHeaderText("Attention ");
+                            alertWarning.setContentText("Veuillez sélectionner une bonne à supprimer");
+                            alertWarning.initOwner(this.tfRecherche.getScene().getWindow());
+                            alertWarning.getDialogPane().setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
+                            Button okButton = (Button) alertWarning.getDialogPane().lookupButton(ButtonType.OK);
+                            okButton.setText("D'ACCORD");
+                            alertWarning.showAndWait();
                         }
-                        operation.delete(output);
-
-                        refresh();
+                    }catch (Exception e){
+                        e.printStackTrace();
                     }
-                });
+                    break;
+                case "tabDecharge":
+                    try {
 
-            } catch (Exception e) {
-                e.printStackTrace();
+                        List<StringProperty> data = tableDecharge.getSelectionModel().getSelectedItem();
+                        if (data != null) {
+
+                            try {
+                                Decharge decharge = dechargeOperation.get(Integer.parseInt(data.get(0).getValue()));
+
+                                Alert alertConfirmation = new Alert(Alert.AlertType.CONFIRMATION);
+                                alertConfirmation.setHeaderText("supprimer le décharge");
+                                alertConfirmation.setContentText("Voulez-vous vraiment supprimer le décharge?");
+                                alertConfirmation.initOwner(this.tfRecherche.getScene().getWindow());
+                                Button okButton = (Button) alertConfirmation.getDialogPane().lookupButton(ButtonType.OK);
+                                okButton.setText("D'ACCORD");
+
+                                Button cancel = (Button) alertConfirmation.getDialogPane().lookupButton(ButtonType.CANCEL);
+                                cancel.setText("Annulation");
+
+                                alertConfirmation.showAndWait().ifPresent(response -> {
+                                    if (response == ButtonType.CANCEL) {
+                                        alertConfirmation.close();
+                                    } else if (response == ButtonType.OK) {
+
+                                        ArrayList<ComponentDecharge> componentDecharges = componentDechargeOperation.getAllByDecharge(decharge.getId());
+                                        for (ComponentDecharge componentDecharge : componentDecharges){
+
+                                            StoreCard storeCard = storeCardOperation.get(componentDecharge.getIdStore());
+                                            storeCard.setQteConsumed(componentDecharge.getQte());
+
+                                            storeCardOperation.subQteConsumed(storeCard);
+                                            componentDechargeOperation.delete(componentDecharge);
+                                        }
+                                        dechargeOperation.delete(decharge);
+
+                                        refreshDecharge();
+                                    }
+                                });
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            Alert alertWarning = new Alert(Alert.AlertType.WARNING);
+                            alertWarning.setHeaderText("ATTENTION");
+                            alertWarning.setContentText("Veuillez sélectionner un décharge à supprimer");
+                            alertWarning.initOwner(this.tfRecherche.getScene().getWindow());
+                            Button okButton = (Button) alertWarning.getDialogPane().lookupButton(ButtonType.OK);
+                            okButton.setText("D'ACCORD");
+                            alertWarning.showAndWait();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }                    break;
+                case "tabCarteGasoline":
+//                    refreshCarteGasoline();
+                    break;
             }
-        }else {
-            Alert alertWarning = new Alert(Alert.AlertType.WARNING);
-            alertWarning.setHeaderText("Attention ");
-            alertWarning.setContentText("Veuillez sélectionner une bonne à supprimer");
-            alertWarning.initOwner(this.tfRecherche.getScene().getWindow());
-            alertWarning.getDialogPane().setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
-            Button okButton = (Button) alertWarning.getDialogPane().lookupButton(ButtonType.OK);
-            okButton.setText("D'ACCORD");
-            alertWarning.showAndWait();
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -242,7 +424,7 @@ public class MainController implements Initializable {
         List<StringProperty> data  = table.getSelectionModel().getSelectedItem();
         if (data != null){
             try {
-                Output output = operation.get(Integer.parseInt(data.get(0).getValue()));
+                Output output = outputOperation.get(Integer.parseInt(data.get(0).getValue()));
 
                 Print print = new Print(output);
                 print.CreatePdfFacture();
@@ -261,10 +443,10 @@ public class MainController implements Initializable {
         }
     }
 
-    private void refresh(){
+    private void refreshSortie(){
         try {
             if (conn.isClosed()) conn = connectBD.connect();
-            dataTable.clear();
+            dataTableOutput.clear();
 
             String query = "SELECT OUTPUT.ID, OUTPUT.NUMBER, OUTPUT.DATE, EMPLOYEE.FIRST_NAME, EMPLOYEE.LAST_NAME, SERVICE.NAME AS NAME_SERV , DEP.NAME AS NAME_DEP,\n" +
                     "(SELECT SUM(COMPONENT_OUTPUT.QTE_SERV * STORE_CARD.PRICE) FROM COMPONENT_OUTPUT,STORE_CARD \n" +
@@ -284,11 +466,74 @@ public class MainController implements Initializable {
                 data.add( new SimpleStringProperty(resultSet.getString("NAME_SERV")));
                 data.add(new SimpleStringProperty(String.format(Locale.FRANCE, "%,.2f", resultSet.getDouble("MONTANT"))));
 
-                dataTable.add(data);
+                dataTableOutput.add(data);
             }
             conn.close();
 
-            table.setItems(dataTable);
+            table.setItems(dataTableOutput);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void refreshDecharge(){
+        try {
+            if (conn.isClosed()) conn = connectBD.connect();
+            dataTableDecharge.clear();
+
+            String query = "SELECT DECHARGE.ID, DECHARGE.DATE, E.FIRST_NAME, E.LAST_NAME, SERVICE.NAME AS NAME_SERV, DEP.NAME AS NAME_DEP, ED.FIRST_NAME AS FIRST_NAME_ED, ED.LAST_NAME AS LAST_NAME_ED\n" +
+                    "FROM DECHARGE,EMPLOYEE E,EMPLOYEE ED,SERVICE,DEP WHERE DECHARGE.ID_EMP = E.ID AND E.ID_SERVICE = SERVICE.ID AND SERVICE.ID_DEP = DEP.ID AND ED.ID = DECHARGE.ID_EMP_DECH;";
+            PreparedStatement preparedStmt = conn.prepareStatement(query);
+            ResultSet resultSet = preparedStmt.executeQuery();
+            while (resultSet.next()){
+
+                List<StringProperty> data = new ArrayList<>();
+
+                data.add( new SimpleStringProperty(String.valueOf(resultSet.getInt("ID"))));
+                data.add(new SimpleStringProperty(resultSet.getDate("DATE").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
+                data.add( new SimpleStringProperty(resultSet.getString("FIRST_NAME_ED") + "   " + resultSet.getString("LAST_NAME_ED")));
+                data.add( new SimpleStringProperty(resultSet.getString("FIRST_NAME") + "   " + resultSet.getString("LAST_NAME")));
+                data.add( new SimpleStringProperty(resultSet.getString("NAME_SERV")));
+                data.add( new SimpleStringProperty(resultSet.getString("NAME_DEP")));
+
+                dataTableDecharge.add(data);
+            }
+            conn.close();
+
+            tableDecharge.setItems(dataTableDecharge);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void refreshCarteGasoline(){
+        try {
+            if (conn.isClosed()) conn = connectBD.connect();
+            dataTableOutput.clear();
+
+            String query = "SELECT OUTPUT.ID, OUTPUT.NUMBER, OUTPUT.DATE, EMPLOYEE.FIRST_NAME, EMPLOYEE.LAST_NAME, SERVICE.NAME AS NAME_SERV , DEP.NAME AS NAME_DEP,\n" +
+                    "(SELECT SUM(COMPONENT_OUTPUT.QTE_SERV * STORE_CARD.PRICE) FROM COMPONENT_OUTPUT,STORE_CARD \n" +
+                    "WHERE COMPONENT_OUTPUT.ID_OUTPUT = OUTPUT.ID AND COMPONENT_OUTPUT.ID_STORE = STORE_CARD.ID) AS MONTANT \n" +
+                    "FROM OUTPUT,EMPLOYEE,SERVICE,DEP WHERE OUTPUT.ID_EMP = EMPLOYEE.ID AND EMPLOYEE.ID_SERVICE = SERVICE.ID AND SERVICE.ID_DEP = DEP.ID;";
+            PreparedStatement preparedStmt = conn.prepareStatement(query);
+            ResultSet resultSet = preparedStmt.executeQuery();
+            while (resultSet.next()){
+
+                List<StringProperty> data = new ArrayList<>();
+
+                data.add( new SimpleStringProperty(String.valueOf(resultSet.getInt("ID"))));
+                data.add( new SimpleStringProperty(resultSet.getString("NUMBER")));
+                data.add(new SimpleStringProperty(resultSet.getDate("DATE").toLocalDate().format(DateTimeFormatter.ofPattern("MM-dd-yyyy"))));
+                data.add( new SimpleStringProperty(resultSet.getString("FIRST_NAME") + "   " + resultSet.getString("LAST_NAME")));
+                data.add( new SimpleStringProperty(resultSet.getString("NAME_DEP")));
+                data.add( new SimpleStringProperty(resultSet.getString("NAME_SERV")));
+                data.add(new SimpleStringProperty(String.format(Locale.FRANCE, "%,.2f", resultSet.getDouble("MONTANT"))));
+
+                dataTableOutput.add(data);
+            }
+            conn.close();
+
+            table.setItems(dataTableOutput);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -315,7 +560,7 @@ public class MainController implements Initializable {
                 switch (select) {
                     case 0:
                         if (dateFrom != null && dateTo != null) ActionSearchDate();
-                        else refresh();
+                        else refreshSortie();
 
                         break;
                     case 1:
@@ -352,7 +597,7 @@ public class MainController implements Initializable {
             if (select != -1 ) {
 
                 if (conn.isClosed()) conn = connectBD.connect();
-                dataTable.clear();
+                dataTableOutput.clear();
 
                 String query = "";
                 PreparedStatement preparedStmt;
@@ -391,12 +636,12 @@ public class MainController implements Initializable {
                     data.add( new SimpleStringProperty(resultSet.getString("NAME_SERV")));
                     data.add(new SimpleStringProperty(String.format(Locale.FRANCE, "%,.2f", resultSet.getDouble("MONTANT"))));
 
-                    dataTable.add(data);
+                    dataTableOutput.add(data);
                 }
 
                 conn.close();
 
-                table.setItems(dataTable);
+                table.setItems(dataTableOutput);
 
             }
         }catch (Exception e){
@@ -414,7 +659,7 @@ public class MainController implements Initializable {
             if (select != -1 ) {
 
                 if (conn.isClosed()) conn = connectBD.connect();
-                dataTable.clear();
+                dataTableOutput.clear();
 
                 String query = "";
                 PreparedStatement preparedStmt;
@@ -453,12 +698,12 @@ public class MainController implements Initializable {
                     data.add( new SimpleStringProperty(resultSet.getString("NAME_SERV")));
                     data.add(new SimpleStringProperty(String.format(Locale.FRANCE, "%,.2f", resultSet.getDouble("MONTANT"))));
 
-                    dataTable.add(data);
+                    dataTableOutput.add(data);
                 }
 
                 conn.close();
 
-                table.setItems(dataTable);
+                table.setItems(dataTableOutput);
 
             }
         }catch (Exception e){
@@ -476,7 +721,7 @@ public class MainController implements Initializable {
             else {
                 if (dateFrom != null && dateTo != null) {
                     if (conn.isClosed()) conn = connectBD.connect();
-                    dataTable.clear();
+                    dataTableOutput.clear();
 
                     String query = "SELECT OUTPUT.ID, OUTPUT.NUMBER, OUTPUT.DATE, EMPLOYEE.FIRST_NAME, EMPLOYEE.LAST_NAME, SERVICE.NAME AS NAME_SERV , DEP.NAME AS NAME_DEP,\n" +
                             "(SELECT SUM(COMPONENT_OUTPUT.QTE_SERV * STORE_CARD.PRICE) FROM COMPONENT_OUTPUT,STORE_CARD \n" +
@@ -499,12 +744,12 @@ public class MainController implements Initializable {
                         data.add( new SimpleStringProperty(resultSet.getString("NAME_SERV")));
                         data.add(new SimpleStringProperty(String.format(Locale.FRANCE, "%,.2f", resultSet.getDouble("MONTANT"))));
 
-                        dataTable.add(data);
+                        dataTableOutput.add(data);
                     }
 
                     conn.close();
 
-                    table.setItems(dataTable);
+                    table.setItems(dataTableOutput);
                 } else {
                     Alert alertWarning = new Alert(Alert.AlertType.WARNING);
                     alertWarning.setHeaderText("ATTENTION");
@@ -524,12 +769,12 @@ public class MainController implements Initializable {
     private void ActionRefreshDate(){
         clearRecherche();
         if (cbFilter.getSelectionModel().getSelectedIndex() != 0) comboFilterAction();
-        else refresh();
+        else refreshSortie();
     }
     @FXML
     private void ActionRefresh(){
         clearRecherche();
-        refresh();
+        refreshSortie();
     }
 
     private void clearRecherche(){

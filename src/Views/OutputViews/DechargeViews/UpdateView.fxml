@@ -17,18 +17,18 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane nodeOrientation="LEFT_TO_RIGHT" stylesheets="@../../../resources/bootstrap3.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.OutputControllers.DechargeControllers.AddController">
+<BorderPane nodeOrientation="LEFT_TO_RIGHT" stylesheets="@../../../resources/bootstrap3.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.OutputControllers.DechargeControllers.UpdateController">
    <top>
       <AnchorPane prefHeight="50.0" prefWidth="100.0" style="-fx-background-color: #EFF;" styleClass="bar" BorderPane.alignment="CENTER">
          <children>
-            <Label layoutX="26.0" layoutY="19.0" style="-fx-font-size: 25;" text="Décharge" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="10.0">
+            <Label layoutX="26.0" layoutY="19.0" style="-fx-font-size: 25;" text="Modifier Décharge" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="10.0">
                <font>
                   <Font size="21.0" />
                </font>
             </Label>
             <HBox layoutX="920.0" layoutY="-36.0" spacing="10.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="10.0">
                <children>
-                  <JFXButton fx:id="btnInsert" buttonType="RAISED" defaultButton="true" onAction="#ActionInsert" prefWidth="120.0" ripplerFill="#0cc333" styleClass="primary" text="ENREGISTRER" textFill="#e10bbd">
+                  <JFXButton fx:id="btnInsert" buttonType="RAISED" defaultButton="true" onAction="#ActionUpdate" prefWidth="120.0" ripplerFill="#0cc333" styleClass="primary" text="ENREGISTRER" textFill="#e10bbd">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -154,6 +154,7 @@
                         <HBox prefWidth="200.0" spacing="5.0">
                            <children>
                               <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#ActionDeleteSales" prefHeight="25.0" prefWidth="150.0" styleClass="warning" text="Supprimer" />
+                              <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#ActionUpdateDemand" prefHeight="25.0" prefWidth="150.0" styleClass="success" text="Modifier" />
                               <Button layoutX="165.0" layoutY="10.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="23.0" prefWidth="150.0" text="حذف سطر" visible="false" HBox.hgrow="ALWAYS" />
                               <TextField fx:id="tfRecherche" prefHeight="26.0" prefWidth="182.0" promptText="RECHERCHE" style="-fx-font-size: 15;" />
                               <ImageView fitHeight="30.0" fitWidth="100.0" onMouseClicked="#ActionSearch" pickOnBounds="true" preserveRatio="true">

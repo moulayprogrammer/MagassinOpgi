@@ -23,11 +23,14 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
-public class AddController implements Initializable {
+public class UpdateController implements Initializable {
 
     @FXML
     ImageView ivSelectEmployee,ivSelectEmployeeDech;
@@ -54,11 +57,14 @@ public class AddController implements Initializable {
     private final StoreCardOperation storeCardOperation = new StoreCardOperation();
 
     private final ArrayList<StoreCard> stores = new ArrayList<>();
-    private final ArrayList<ComponentDecharge> componentDecharges = new ArrayList<>();
+    private ArrayList<StoreCard> storesInit = new ArrayList<>();
+    private ArrayList<ComponentDecharge> componentDecharges = new ArrayList<>();
+    private ArrayList<ComponentDecharge> componentDechargesInit = new ArrayList<>();
     private final ObservableList<List<StringProperty>> dataTable = FXCollections.observableArrayList();
     private final ObservableList<String> comboEmployeeData = FXCollections.observableArrayList();
     private ArrayList<Employee> employees = new ArrayList<>();
     private Employee selectedEmployee,selectedEmployeeDech;
+    private Decharge selectDecharge;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -74,9 +80,6 @@ public class AddController implements Initializable {
 
         refreshProduct();
         refreshComboEmployee();
-
-        // set Date
-        dpDate.setValue(LocalDate.now());
 
         tfRechercheArticle.textProperty().addListener((observable, oldValue, newValue) -> {
 
@@ -101,6 +104,49 @@ public class AddController implements Initializable {
             }
         });
 
+    }
+
+    public void Init(Decharge decharge){
+        this.selectDecharge = decharge;
+
+        Employee employee = employeeOperation.get(decharge.getIdEmp());
+        cbEmployee.getSelectionModel().select(employee.getFirstName() + " " + employee.getLastName());
+        int index = cbEmployee.getSelectionModel().getSelectedIndex();
+        this.selectedEmployee = employees.get(index);
+
+        Employee employeeDech = employeeOperation.get(decharge.getIdEmpDech());
+        cbEmployeeDech.getSelectionModel().select(employeeDech.getFirstName() + " " + employeeDech.getLastName());
+        int indexDech = cbEmployeeDech.getSelectionModel().getSelectedIndex();
+        this.selectedEmployeeDech = employees.get(indexDech);
+
+        dpDate.setValue(decharge.getDate());
+
+        componentDecharges = componentDechargeOperation.getAllByDecharge(decharge.getId());
+        refreshDemandes();
+    }
+
+    private void refreshDemandes(){
+        try {
+            dataTable.clear();
+            for (ComponentDecharge decharge: componentDecharges){
+                StoreCard storeCard = storeCardOperation.get(decharge.getIdStore());
+                Article article = articlesOperation.get(decharge.getIdArt());
+
+                stores.add(storeCard);
+
+                List<StringProperty> data = new ArrayList<>();
+                data.add(0, new SimpleStringProperty(String.valueOf(article.getId())));
+                data.add(1, new SimpleStringProperty(article.getName()));
+                data.add(2, new SimpleStringProperty(String.valueOf(decharge.getQte())));
+
+                dataTable.add(data);
+            }
+            tableDemands.setItems(dataTable);
+            storesInit = new ArrayList<>(stores);
+            componentDechargesInit = new ArrayList<>(componentDecharges);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -355,7 +401,8 @@ public class AddController implements Initializable {
 
                 result.ifPresent(Q -> {
                     int qte = Integer.parseInt(Q);
-                    if (qte <= article.getQte()){
+                    int qteEx = Integer.parseInt(dataSelected.get(2).getValue());
+                    if (qte <= (article.getQte() + qteEx)){
                         StoreCard storeCard = storeCardOperation.getByArticleQteNotNull(article.getId());
                         ComponentDecharge componentDecharge = new ComponentDecharge();
 
@@ -413,7 +460,7 @@ public class AddController implements Initializable {
     private void ActionAnnulledAdd(){
         Alert alertConfirmation = new Alert(Alert.AlertType.CONFIRMATION);
         alertConfirmation.setHeaderText("CONFIRMER L'ANNULATION");
-        alertConfirmation.setContentText("Êtes-vous sûr d'annuler le décharge ?");
+        alertConfirmation.setContentText("Êtes-vous sûr d'annuler le modification de décharge ?");
         alertConfirmation.initOwner(this.tfRecherche.getScene().getWindow());
         Button okButton = (Button) alertConfirmation.getDialogPane().lookupButton(ButtonType.OK);
         okButton.setText("D'ACCORD");
@@ -432,7 +479,7 @@ public class AddController implements Initializable {
     }
 
     @FXML
-    void ActionInsert(ActionEvent event) {
+    void ActionUpdate(ActionEvent event) {
 
         try {
             LocalDate date = dpDate.getValue();
@@ -447,9 +494,10 @@ public class AddController implements Initializable {
                 decharge.setIdEmpDech(selectedEmployeeDech.getId());
                 decharge.setDate(date);
 
-                int ins = insert(decharge);
-                if (ins != -1) {
-                    insertComponent(ins);
+                boolean ins = update(decharge);
+                if (ins) {
+                    deleteComponent();
+                    insertComponent(this.selectDecharge.getId());
                     /*output.setId(ins);
                     Print print = new Print(output);
                     print.CreatePdfFacture();*/
@@ -478,6 +526,21 @@ public class AddController implements Initializable {
         }
     }
 
+    private void deleteComponent() {
+        try {
+            int size = componentDechargesInit.size();
+            for (int i = 0; i < size; i++) {
+                ComponentDecharge decharge = componentDechargesInit.get(i);
+                StoreCard storeCard = storesInit.get(i);
+
+                deleteComponentDecharge(decharge);
+                subQteConsumedStore(storeCard);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     private void insertComponent(int idDecharge) {
         try {
             int size = componentDecharges.size();
@@ -495,10 +558,10 @@ public class AddController implements Initializable {
         }
     }
 
-    private int insert(Decharge decharge) {
-        int insert = 0;
+    private boolean update(Decharge decharge) {
+        boolean insert = false;
         try {
-            insert = operation.insertId(decharge);
+            insert = operation.update(decharge,this.selectDecharge);
             return insert;
         }catch (Exception e){
             e.printStackTrace();
@@ -517,10 +580,32 @@ public class AddController implements Initializable {
         }
     }
 
+    private boolean deleteComponentDecharge(ComponentDecharge componentDecharge){
+        boolean insert = false;
+        try {
+            insert = componentDechargeOperation.delete(componentDecharge);
+            return insert;
+        }catch (Exception e){
+            e.printStackTrace();
+            return insert;
+        }
+    }
+
     private boolean addQteConsumedStore(StoreCard storeCard){
         boolean update = false;
         try {
             update = storeCardOperation.addQteConsumed(storeCard);
+            return update;
+        }catch (Exception e){
+            e.printStackTrace();
+            return update;
+        }
+    }
+
+    private boolean subQteConsumedStore(StoreCard storeCard){
+        boolean update = false;
+        try {
+            update = storeCardOperation.subQteConsumed(storeCard);
             return update;
         }catch (Exception e){
             e.printStackTrace();

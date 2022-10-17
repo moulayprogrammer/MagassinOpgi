@@ -189,7 +189,7 @@ public class StoreCardOperation extends BDD<StoreCard> {
     public StoreCard getByArticleQteNotNull(int idArticle) {
         connectDatabase();
         StoreCard storeCard = new StoreCard();
-        String query = "SELECT * FROM STORE_CARD  WHERE ID = ? ; ";
+        String query = "SELECT * FROM STORE_CARD  WHERE ID_ARTICLE = ? ; ";
         try {
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.setInt(1,idArticle);

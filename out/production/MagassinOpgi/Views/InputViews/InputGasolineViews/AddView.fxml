@@ -29,16 +29,6 @@
                <children>
                   <HBox alignment="CENTER" prefWidth="200.0">
                      <children>
-                        <Label prefHeight="25.0" prefWidth="190.0" style="-fx-font-size: 15;" text="Date Bon de Commande" HBox.hgrow="ALWAYS">
-                           <font>
-                              <Font name="System Bold" size="14.0" />
-                           </font>
-                        </Label>
-                        <DatePicker fx:id="dpBCDate" minHeight="32.0" prefWidth="220.0" HBox.hgrow="ALWAYS" />
-                     </children>
-                  </HBox>
-                  <HBox alignment="CENTER" prefWidth="200.0">
-                     <children>
                         <Label prefHeight="25.0" prefWidth="190.0" style="-fx-font-size: 15;" text="Num Bon de Commande">
                            <font>
                               <Font name="System Bold" size="14.0" />
@@ -47,14 +37,14 @@
                         <TextField fx:id="tfNumBC" prefHeight="26.0" prefWidth="220.0" style="-fx-font-size: 15;" />
                      </children>
                   </HBox>
-                  <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefWidth="200.0">
+                  <HBox alignment="CENTER" prefWidth="200.0">
                      <children>
-                        <Label prefHeight="25.0" prefWidth="190.0" style="-fx-font-size: 15;" text="Date Facture" HBox.hgrow="ALWAYS">
+                        <Label prefHeight="25.0" prefWidth="190.0" style="-fx-font-size: 15;" text="Date Bon de Commande" HBox.hgrow="ALWAYS">
                            <font>
                               <Font name="System Bold" size="14.0" />
                            </font>
                         </Label>
-                        <DatePicker fx:id="dpFactDate" minHeight="32.0" prefWidth="220.0" HBox.hgrow="ALWAYS" />
+                        <DatePicker fx:id="dpBCDate" minHeight="32.0" prefWidth="220.0" HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
                   <HBox alignment="CENTER" layoutX="10.0" layoutY="52.0" prefWidth="200.0">
@@ -65,6 +55,16 @@
                            </font>
                         </Label>
                         <TextField fx:id="tfNumFact" prefHeight="26.0" prefWidth="220.0" style="-fx-font-size: 15;" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="25.0" prefWidth="190.0" style="-fx-font-size: 15;" text="Date Facture" HBox.hgrow="ALWAYS">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                        <DatePicker fx:id="dpFactDate" minHeight="32.0" prefWidth="220.0" HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
                   <HBox alignment="CENTER" layoutX="10.0" layoutY="136.0" prefWidth="200.0">

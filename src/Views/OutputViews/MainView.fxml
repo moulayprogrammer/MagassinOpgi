@@ -149,9 +149,9 @@
       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
    </padding>
    <center>
-      <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" tabMinWidth="250.0" BorderPane.alignment="CENTER">
+      <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" tabMinWidth="250.0" BorderPane.alignment="CENTER">
         <tabs>
-          <Tab text="Bone De Sortie">
+          <Tab fx:id="tabSortie" text="Bone De Sortie">
                <content>
                   <VBox spacing="10.0">
                      <children>
@@ -196,24 +196,25 @@
                   </VBox>
                </content>
           </Tab>
-          <Tab text="Décharge">
+          <Tab fx:id="tabDecharge" text="Décharge">
                <content>
                   <VBox spacing="10.0">
                      <children>
-                        <TableView fx:id="table1" onMouseClicked="#tableClick" styleClass="container-table" VBox.vgrow="ALWAYS">
+                        <TableView fx:id="tableDecharge" onMouseClicked="#tableClick" styleClass="container-table" VBox.vgrow="ALWAYS">
                            <columns>
-                              <TableColumn fx:id="clId1" prefWidth="150.0" text="ID" visible="false" />
-                              <TableColumn fx:id="clDateBS1" prefWidth="200.0" text="Date " />
-                              <TableColumn fx:id="clName1" prefWidth="220.0" text="Nom &amp; Prénom" />
-                              <TableColumn fx:id="clDep1" prefWidth="220.0" text="Department" />
-                              <TableColumn fx:id="clServ1" prefWidth="220.0" text="Service" />
+                              <TableColumn fx:id="clIdDecharge" prefWidth="150.0" text="ID" visible="false" />
+                              <TableColumn fx:id="clDateDecharge" prefWidth="200.0" text="Date " />
+                              <TableColumn fx:id="clNameDecharge" prefWidth="220.0" text="Nom &amp; Prénom المسلم" />
+                              <TableColumn fx:id="clNameDechargeur" prefWidth="220.0" text="Nom &amp; Prénom المستلم" />
+                              <TableColumn fx:id="clDepDecharge" prefWidth="180.0" text="Department" />
+                              <TableColumn fx:id="clServDecharge" prefWidth="220.0" text="Service" />
                            </columns>
                         </TableView>
                      </children>
                   </VBox>
                </content>
           </Tab>
-            <Tab text="Recharge Carte Carburant">
+            <Tab fx:id="tabCarteGasoline" text="Recharge Carte Carburant">
                <content>
                   <VBox spacing="10.0">
                      <children>

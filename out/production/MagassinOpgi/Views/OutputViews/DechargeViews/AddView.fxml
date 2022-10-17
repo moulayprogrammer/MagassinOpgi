@@ -48,8 +48,32 @@
          <children>
             <HBox prefHeight="110.0" spacing="20.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="10.0">
                <children>
-                  <HBox layoutX="650.0" layoutY="10.0" prefHeight="90.0" prefWidth="500.0" spacing="20.0" styleClass="container-table">
+                  <HBox layoutX="650.0" layoutY="10.0" prefHeight="90.0" prefWidth="750.0" spacing="20.0" styleClass="container-table">
                      <children>
+                        <VBox layoutX="16.0" layoutY="16.0" prefWidth="250.0" spacing="10.0">
+                           <children>
+                              <HBox>
+                                 <children>
+                                    <Label maxWidth="1.7976931348623157E308" prefWidth="120.0" style="-fx-font-size: 16;" text="المسلم" HBox.hgrow="ALWAYS">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <ImageView fx:id="ivSelectEmployeeDech" fitHeight="22.0" fitWidth="29.0" onMouseClicked="#ActionSearchEmployee" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../../Icons/recherche.png.png" />
+                                       </image>
+                                    </ImageView>
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                                 <children>
+                                    <ComboBox fx:id="cbEmployeeDech" maxWidth="1.7976931348623157E308" minHeight="32.0" onAction="#ActionComboEmployeeDech" prefHeight="25.0" prefWidth="175.0" HBox.hgrow="ALWAYS" />
+                                    <Button mnemonicParsing="false" onAction="#ActionAddEmployee" style="-fx-min-width: 52;" styleClass="info" text="ADD" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
                         <VBox prefWidth="250.0" spacing="10.0">
                            <VBox.margin>
                               <Insets bottom="3.0" />
@@ -57,12 +81,12 @@
                            <children>
                               <HBox>
                                  <children>
-                                    <Label maxWidth="1.7976931348623157E308" prefWidth="120.0" style="-fx-font-size: 16;" text="Employée" HBox.hgrow="ALWAYS">
+                                    <Label maxWidth="1.7976931348623157E308" prefWidth="120.0" style="-fx-font-size: 16;" text="المستلم" HBox.hgrow="ALWAYS">
                                        <font>
                                           <Font name="System Bold" size="14.0" />
                                        </font>
                                     </Label>
-                                    <ImageView fitHeight="22.0" fitWidth="29.0" onMouseClicked="#ActionSearchEmployee" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fx:id="ivSelectEmployee" fitHeight="22.0" fitWidth="29.0" onMouseClicked="#ActionSearchEmployee" pickOnBounds="true" preserveRatio="true">
                                        <image>
                                           <Image url="@../../../Icons/recherche.png.png" />
                                        </image>
@@ -93,15 +117,6 @@
                      </padding>
                   </HBox>
                   <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                  <HBox alignment="CENTER" maxWidth="380.0" prefHeight="100.0" prefWidth="350.0" styleClass="container-table" HBox.hgrow="ALWAYS">
-                     <children>
-                        <Label fx:id="lbSumTotal" maxWidth="1.7976931348623157E308" nodeOrientation="LEFT_TO_RIGHT" style="-fx-font-size: 45;" text="0,00" textFill="#02e4c2" HBox.hgrow="ALWAYS" />
-                        <Label layoutX="10.0" layoutY="10.0" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="60.0" style="-fx-font-size: 45;" text="DA" textFill="#02e4c2" />
-                     </children>
-                     <padding>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </padding>
-                  </HBox>
                </children>
             </HBox>
             <HBox layoutX="130.0" layoutY="96.0" spacing="10.0" styleClass="container-table" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="130.0">
@@ -115,7 +130,7 @@
                                     <Font name="System Bold" size="14.0" />
                                  </font>
                               </Label>
-                              <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="25.0" styleClass="info" text="Ajouter" HBox.hgrow="ALWAYS" />
+                              <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#ActionAddDemand" prefHeight="25.0" styleClass="info" text="Ajouter" HBox.hgrow="ALWAYS" />
                            </children>
                         </HBox>
                         <TextField fx:id="tfRechercheArticle" prefHeight="25.0" promptText="RECHERCHE" style="-fx-font-size: 15;" />
@@ -153,7 +168,7 @@
                               </ImageView>
                            </children>
                         </HBox>
-                        <TableView fx:id="tableDemands" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="390.0" prefHeight="390.0" VBox.vgrow="ALWAYS">
+                        <TableView fx:id="tableDemands" onMouseClicked="#tableClick" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="390.0" prefHeight="390.0" VBox.vgrow="ALWAYS">
                            <columns>
                               <TableColumn fx:id="tcId" prefWidth="75.0" text="ID" visible="false" />
                               <TableColumn fx:id="tcName" prefWidth="330.0" text="Désignation" />

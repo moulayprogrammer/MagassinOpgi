@@ -54,7 +54,7 @@ public class MainController implements Initializable {
     @FXML
     TableColumn<List<StringProperty>,String> clId,clProvider,clNumBR,clDateBR,clNumFact,clDateFact,clNumBC,clDateBC,clPrice,clConfirm;
     @FXML
-    TableColumn<List<StringProperty>,String> clIdGasoline, clNumFactGasoline, clDateFactGasoline, clNumBCGasoline, clDateBCGasoline, clPriceGasoline;
+    TableColumn<List<StringProperty>,String> clIdGasoline,clDateGasoline, clNumFactGasoline, clDateFactGasoline, clNumBCGasoline, clDateBCGasoline, clPriceGasoline;
 
     private final ConnectBD connectBD = new ConnectBD();
     private Connection conn;
@@ -87,11 +87,12 @@ public class MainController implements Initializable {
         clConfirm.setCellValueFactory(data -> data.getValue().get(9));
 
         clIdGasoline.setCellValueFactory(data -> data.getValue().get(0));
-        clNumFactGasoline.setCellValueFactory(data -> data.getValue().get(1));
-        clDateFactGasoline.setCellValueFactory(data -> data.getValue().get(2));
-        clNumBCGasoline.setCellValueFactory(data -> data.getValue().get(3));
-        clDateBCGasoline.setCellValueFactory(data -> data.getValue().get(4));
-        clPriceGasoline.setCellValueFactory(data -> data.getValue().get(5));
+        clDateGasoline.setCellValueFactory(data -> data.getValue().get(1));
+        clNumBCGasoline.setCellValueFactory(data -> data.getValue().get(2));
+        clDateBCGasoline.setCellValueFactory(data -> data.getValue().get(3));
+        clNumFactGasoline.setCellValueFactory(data -> data.getValue().get(4));
+        clDateFactGasoline.setCellValueFactory(data -> data.getValue().get(5));
+        clPriceGasoline.setCellValueFactory(data -> data.getValue().get(6));
 
         refreshInput();
         refreshComboProviders();
@@ -818,10 +819,10 @@ public class MainController implements Initializable {
                 List<StringProperty> data = new ArrayList<>();
 
                 data.add( new SimpleStringProperty(String.valueOf(resultSet.getInt("ID"))));
-                data.add( new SimpleStringProperty(resultSet.getDate("DATE").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
                 data.add( new SimpleStringProperty(resultSet.getString("NUMBER_BC")));
-                data.add( new SimpleStringProperty(resultSet.getDate("DATE_BC").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
+                data.add( new SimpleStringProperty(resultSet.getDate("DATE").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
                 data.add( new SimpleStringProperty(resultSet.getString("NUMBER_FACTUR")));
+                data.add( new SimpleStringProperty(resultSet.getDate("DATE_BC").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
                 data.add( new SimpleStringProperty(resultSet.getDate("DATE_FACTUR").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
                 data.add( new SimpleStringProperty(String.format(Locale.FRANCE, "%,.2f", resultSet.getDouble("PRICE") )));
 
