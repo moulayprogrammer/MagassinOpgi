@@ -21,6 +21,10 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -46,6 +50,9 @@ public class AddController implements Initializable {
     @FXML
     Button btnInsert;
 
+    private final ConnectBD connectBD = new ConnectBD();
+    private Connection conn;
+
     private final InputOperation operation = new InputOperation();
     private final ComponentInputOperation componentInputOperation = new ComponentInputOperation();
     private final ProviderOperation providerOperation = new ProviderOperation();
@@ -61,6 +68,7 @@ public class AddController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        conn = connectBD.connect();
 
         tcIdArticle.setCellValueFactory(data -> data.getValue().get(0));
         tcNameArticle.setCellValueFactory(data -> data.getValue().get(1));
@@ -75,6 +83,7 @@ public class AddController implements Initializable {
 
         refreshArticles();
         refreshComboProviders();
+        getLastNumber();
 
         // set Date
         dpBRDate.setValue(LocalDate.now());
@@ -158,6 +167,25 @@ public class AddController implements Initializable {
         }
 
         tableArticle.setItems(componentDataTable);
+    }
+
+    private void getLastNumber(){
+        try {
+            if (this.conn.isClosed()) conn = connectBD.connect();
+
+            String query = "SELECT INPUT.NUMBER FROM INPUT ORDER BY INPUT.DATE DESC LIMIT 1;";
+            PreparedStatement preparedStmt = conn.prepareStatement(query);
+            ResultSet resultSet = preparedStmt.executeQuery();
+            if (resultSet.next()){
+                int nbr = Integer.parseInt(resultSet.getString("NUMBER"));
+                tfNumBR.setText("000" + (nbr+1));
+            }else{
+                tfNumBR.setText("0001");
+            }
+            conn.close();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML

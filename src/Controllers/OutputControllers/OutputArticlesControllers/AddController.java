@@ -22,7 +22,13 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.Month;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
@@ -49,6 +55,9 @@ public class AddController implements Initializable {
     @FXML
     Button btnInsert;
 
+    private final ConnectBD connectBD = new ConnectBD();
+    private Connection conn;
+
     private final OutputOperation operation = new OutputOperation();
     private final ArticlesOperation articlesOperation = new ArticlesOperation();
     private final EmployeeOperation employeeOperation = new EmployeeOperation();
@@ -65,6 +74,7 @@ public class AddController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        conn = connectBD.connect();
 
         tcIdArticle.setCellValueFactory(data -> data.getValue().get(0));
         tcNameArticle.setCellValueFactory(data -> data.getValue().get(1));
@@ -81,6 +91,7 @@ public class AddController implements Initializable {
 
         refreshProduct();
         refreshComboEmployee();
+        getLastNumber();
 
         // set Date
         dpDate.setValue(LocalDate.now());
@@ -162,6 +173,51 @@ public class AddController implements Initializable {
 
         tableArticle.setItems(componentDataTable);
 
+    }
+
+    private void getLastNumber(){
+        LocalDateTime dateTimeOutput = LocalDateTime.of(1990, Month.JANUARY, 1, 0, 0, 0);
+        LocalDateTime dateTimeCarte = LocalDateTime.of(1990, Month.JANUARY, 1, 0, 0, 0);
+        int nbrOutput = 0;
+        int nbrCarte = 0;
+
+        try {
+            if (this.conn.isClosed()) conn = connectBD.connect();
+
+            String query = "SELECT OUTPUT.NUMBER, OUTPUT.INSERT_DATE FROM OUTPUT ORDER BY OUTPUT.INSERT_DATE DESC LIMIT 1;";
+            PreparedStatement preparedStmt = conn.prepareStatement(query);
+            ResultSet resultSet = preparedStmt.executeQuery();
+            if (resultSet.next()){
+                nbrOutput = Integer.parseInt(resultSet.getString("NUMBER"));
+                dateTimeOutput = resultSet.getTimestamp("INSERT_DATE").toLocalDateTime();
+            }
+            conn.close();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            if (this.conn.isClosed()) conn = connectBD.connect();
+
+            String query = "SELECT RECHARGE_GASOLINE_CARD.NUMBER , RECHARGE_GASOLINE_CARD.INSERT_DATE FROM RECHARGE_GASOLINE_CARD ORDER BY RECHARGE_GASOLINE_CARD.INSERT_DATE DESC LIMIT 1;";
+            PreparedStatement preparedStmt = conn.prepareStatement(query);
+            ResultSet resultSet = preparedStmt.executeQuery();
+            if (resultSet.next()){
+                nbrCarte = Integer.parseInt(resultSet.getString("NUMBER"));
+                dateTimeCarte = resultSet.getTimestamp("INSERT_DATE").toLocalDateTime();
+            }
+            conn.close();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (dateTimeOutput.isAfter(dateTimeCarte)){
+            nbrOutput++;
+            tfNumBR.setText("000" + nbrOutput);
+        }else {
+            nbrCarte++;
+            tfNumBR.setText("000" + nbrCarte);
+        }
     }
 
     @FXML

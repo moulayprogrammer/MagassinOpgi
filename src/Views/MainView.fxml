@@ -15,10 +15,10 @@
             <Label layoutX="14.0" layoutY="77.0" style="-fx-font-size: 18;" text="Gestion de Magasin" textFill="WHITE" />
             <VBox layoutX="14.0" layoutY="124.0" prefHeight="200.0" prefWidth="100.0" spacing="25.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="180.0">
                <children>
-                  <Button id="side-bar-button" fx:id="btn" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#ShowArticlesScreen" text="MAGASIN" VBox.vgrow="ALWAYS" />
-                  <Button id="side-bar-button" layoutX="10.0" layoutY="10.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#ShowInputScreen" text="ENTRER" />
-                  <Button id="side-bar-button" layoutX="10.0" layoutY="70.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#ShowOutputScreen" text="SORTIE" />
-                  <Button id="side-bar-button" layoutX="10.0" layoutY="130.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#ShowConfigurationScreen" style="-fx-background-color: #A7FFE4;" text="CONFIGURATION" />
+                  <Button fx:id="btnArticles" id="side-bar-button" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#ShowArticlesScreen" text="MAGASIN" VBox.vgrow="ALWAYS" />
+                  <Button fx:id="btnInput" id="side-bar-button" layoutX="10.0" layoutY="10.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#ShowInputScreen" text="ENTRER" />
+                  <Button fx:id="btnOutput" id="side-bar-button" layoutX="10.0" layoutY="70.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#ShowOutputScreen" text="SORTIE" />
+                  <Button fx:id="btnConfiguration" id="side-bar-button-active" layoutX="10.0" layoutY="130.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#ShowConfigurationScreen" text="CONFIGURATION"/>
                </children>
             </VBox>
          </children>

@@ -14,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.NodeOrientation;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -45,18 +46,22 @@ public class MainController implements Initializable {
     @FXML
     DatePicker dpFrom,dpTo;
     @FXML
-    TableView<List<StringProperty>> table,tableDecharge;
+    TableView<List<StringProperty>> table,tableDecharge,tableCarteGasoline;
     @FXML
     TableColumn<List<StringProperty>,String> clId,clNumBS,clDateBS,clName,clDep,clServ,clMontant;
     @FXML
     TableColumn<List<StringProperty>,String> clIdDecharge,clDateDecharge,clNameDecharge ,clNameDechargeur,clDepDecharge,clServDecharge;
+    @FXML
+    TableColumn<List<StringProperty>,String> clIdBR,clNumBR,clDateBR ,clEmployee,clNumCN,clNumBN,clMontantBRG;
 
     private final ConnectBD connectBD = new ConnectBD();
     private Connection conn;
     private final ObservableList<List<StringProperty>> dataTableOutput = FXCollections.observableArrayList();
     private final ObservableList<List<StringProperty>> dataTableDecharge = FXCollections.observableArrayList();
+    private final ObservableList<List<StringProperty>> dataTableGasolineCard = FXCollections.observableArrayList();
     private final OutputOperation outputOperation = new OutputOperation();
     private final DechargeOperation dechargeOperation = new DechargeOperation();
+    private final RechargeGasolineCardOperation rechargeGasolineCardOperation = new RechargeGasolineCardOperation();
 
     private final ComponentOutputOperation componentOutputOperation = new ComponentOutputOperation();
     private final ComponentDechargeOperation componentDechargeOperation = new ComponentDechargeOperation();
@@ -90,6 +95,15 @@ public class MainController implements Initializable {
         clServDecharge.setCellValueFactory(data -> data.getValue().get(4));
         clDepDecharge.setCellValueFactory(data -> data.getValue().get(5));
 
+        clIdBR.setCellValueFactory(data -> data.getValue().get(0));
+        clNumBR.setCellValueFactory(data -> data.getValue().get(1));
+        clDateBR.setCellValueFactory(data -> data.getValue().get(2));
+        clEmployee.setCellValueFactory(data -> data.getValue().get(3));
+        clNumCN.setCellValueFactory(data -> data.getValue().get(4));
+        clNumBN.setCellValueFactory(data -> data.getValue().get(5));
+        clMontantBRG.setCellValueFactory(data -> data.getValue().get(6));
+
+
         refreshSortie();
         refreshComboDepartment();
         refreshComboServices();
@@ -107,7 +121,7 @@ public class MainController implements Initializable {
                     refreshDecharge();
                     break;
                 case "tabCarteGasoline":
-//                    refreshCarteGasoline();
+                    refreshCarteGasoline();
                     break;
             }
         });
@@ -188,7 +202,22 @@ public class MainController implements Initializable {
                         e.printStackTrace();
                     }                    break;
                 case "tabCarteGasoline":
-//                    refreshCarteGasoline();
+                    try {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/OutputViews/RechargeGasolineCardViews/AddView.fxml"));
+                        DialogPane temp = loader.load();
+                        Dialog<ButtonType> dialog = new Dialog<>();
+                        dialog.setDialogPane(temp);
+                        dialog.resizableProperty().setValue(false);
+                        dialog.initOwner(this.tfRecherche.getScene().getWindow());
+                        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
+                        Node closeButton = dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
+                        closeButton.setVisible(false);
+                        dialog.showAndWait();
+
+                        refreshCarteGasoline();
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                     break;
             }
         }catch (Exception e){
@@ -287,7 +316,43 @@ public class MainController implements Initializable {
                         e.printStackTrace();
                     }                    break;
                 case "tabCarteGasoline":
-//                    refreshCarteGasoline();
+                    try {
+                        List<StringProperty> data = tableCarteGasoline.getSelectionModel().getSelectedItem();
+                        if (data != null) {
+
+                            try {
+                                RechargeGasolineCard gasolineCard = rechargeGasolineCardOperation.get(Integer.parseInt(data.get(0).getValue()));
+
+                                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/OutputViews/RechargeGasolineCardViews/UpdateView.fxml"));
+                                DialogPane temp = loader.load();
+                                Controllers.OutputControllers.RechargeCarteGasolineControllers.UpdateController controller =  loader.getController();
+                                controller.Init(gasolineCard);
+                                Dialog<ButtonType> dialog = new Dialog<>();
+                                dialog.setDialogPane(temp);
+                                dialog.resizableProperty().setValue(false);
+                                dialog.initOwner(this.tfRecherche.getScene().getWindow());
+                                dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
+                                Node closeButton = dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
+                                closeButton.setVisible(false);
+                                dialog.showAndWait();
+
+                                refreshCarteGasoline();
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            Alert alertWarning = new Alert(Alert.AlertType.WARNING);
+                            alertWarning.setHeaderText("ATTENTION");
+                            alertWarning.setContentText("Veuillez sélectionner une bon de recéption à modifier");
+                            alertWarning.initOwner(this.tfRecherche.getScene().getWindow());
+                            Button okButton = (Button) alertWarning.getDialogPane().lookupButton(ButtonType.OK);
+                            okButton.setText("D'ACCORD");
+                            alertWarning.showAndWait();
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                     break;
             }
         }catch (Exception e){
@@ -408,9 +473,52 @@ public class MainController implements Initializable {
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                    }                    break;
+                    }
+                    break;
                 case "tabCarteGasoline":
-//                    refreshCarteGasoline();
+                    try {
+
+                        List<StringProperty> data = tableCarteGasoline.getSelectionModel().getSelectedItem();
+                        if (data != null) {
+
+                            try {
+                                RechargeGasolineCard gasolineCard = rechargeGasolineCardOperation.get(Integer.parseInt(data.get(0).getValue()));
+
+                                Alert alertConfirmation = new Alert(Alert.AlertType.CONFIRMATION);
+                                alertConfirmation.setHeaderText("supprimer le décharge");
+                                alertConfirmation.setContentText("Voulez-vous vraiment supprimer le consumation ?");
+                                alertConfirmation.initOwner(this.tfRecherche.getScene().getWindow());
+                                Button okButton = (Button) alertConfirmation.getDialogPane().lookupButton(ButtonType.OK);
+                                okButton.setText("D'ACCORD");
+
+                                Button cancel = (Button) alertConfirmation.getDialogPane().lookupButton(ButtonType.CANCEL);
+                                cancel.setText("Annulation");
+
+                                alertConfirmation.showAndWait().ifPresent(response -> {
+                                    if (response == ButtonType.CANCEL) {
+                                        alertConfirmation.close();
+                                    } else if (response == ButtonType.OK) {
+
+                                        rechargeGasolineCardOperation.delete(gasolineCard);
+                                        refreshCarteGasoline();
+                                    }
+                                });
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            Alert alertWarning = new Alert(Alert.AlertType.WARNING);
+                            alertWarning.setHeaderText("ATTENTION");
+                            alertWarning.setContentText("Veuillez sélectionner un consumation à supprimer");
+                            alertWarning.initOwner(this.tfRecherche.getScene().getWindow());
+                            Button okButton = (Button) alertWarning.getDialogPane().lookupButton(ButtonType.OK);
+                            okButton.setText("D'ACCORD");
+                            alertWarning.showAndWait();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     break;
             }
         }catch (Exception e){
@@ -509,12 +617,11 @@ public class MainController implements Initializable {
     private void refreshCarteGasoline(){
         try {
             if (conn.isClosed()) conn = connectBD.connect();
-            dataTableOutput.clear();
+            dataTableGasolineCard.clear();
 
-            String query = "SELECT OUTPUT.ID, OUTPUT.NUMBER, OUTPUT.DATE, EMPLOYEE.FIRST_NAME, EMPLOYEE.LAST_NAME, SERVICE.NAME AS NAME_SERV , DEP.NAME AS NAME_DEP,\n" +
-                    "(SELECT SUM(COMPONENT_OUTPUT.QTE_SERV * STORE_CARD.PRICE) FROM COMPONENT_OUTPUT,STORE_CARD \n" +
-                    "WHERE COMPONENT_OUTPUT.ID_OUTPUT = OUTPUT.ID AND COMPONENT_OUTPUT.ID_STORE = STORE_CARD.ID) AS MONTANT \n" +
-                    "FROM OUTPUT,EMPLOYEE,SERVICE,DEP WHERE OUTPUT.ID_EMP = EMPLOYEE.ID AND EMPLOYEE.ID_SERVICE = SERVICE.ID AND SERVICE.ID_DEP = DEP.ID;";
+            String query = "SELECT RECHARGE_GASOLINE_CARD.ID, RECHARGE_GASOLINE_CARD.NUMBER, RECHARGE_GASOLINE_CARD.DATE, EMPLOYEE.FIRST_NAME, EMPLOYEE.LAST_NAME,\n" +
+                    "GASOLINE_CARD.NUMBER AS CARD, RECHARGE_GASOLINE_CARD.NUMBER_NAFTAL, RECHARGE_GASOLINE_CARD.PRICE FROM RECHARGE_GASOLINE_CARD,EMPLOYEE,GASOLINE_CARD\n" +
+                    "WHERE RECHARGE_GASOLINE_CARD.ID_EMP = EMPLOYEE.ID AND RECHARGE_GASOLINE_CARD.ID_CARD_GASOLINE = GASOLINE_CARD.ID;\n";
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             ResultSet resultSet = preparedStmt.executeQuery();
             while (resultSet.next()){
@@ -523,17 +630,17 @@ public class MainController implements Initializable {
 
                 data.add( new SimpleStringProperty(String.valueOf(resultSet.getInt("ID"))));
                 data.add( new SimpleStringProperty(resultSet.getString("NUMBER")));
-                data.add(new SimpleStringProperty(resultSet.getDate("DATE").toLocalDate().format(DateTimeFormatter.ofPattern("MM-dd-yyyy"))));
+                data.add(new SimpleStringProperty(resultSet.getDate("DATE").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
                 data.add( new SimpleStringProperty(resultSet.getString("FIRST_NAME") + "   " + resultSet.getString("LAST_NAME")));
-                data.add( new SimpleStringProperty(resultSet.getString("NAME_DEP")));
-                data.add( new SimpleStringProperty(resultSet.getString("NAME_SERV")));
-                data.add(new SimpleStringProperty(String.format(Locale.FRANCE, "%,.2f", resultSet.getDouble("MONTANT"))));
+                data.add( new SimpleStringProperty(resultSet.getString("CARD")));
+                data.add( new SimpleStringProperty(resultSet.getString("NUMBER_NAFTAL")));
+                data.add(new SimpleStringProperty(String.format(Locale.FRANCE, "%,.2f", resultSet.getDouble("PRICE"))));
 
-                dataTableOutput.add(data);
+                dataTableGasolineCard.add(data);
             }
             conn.close();
 
-            table.setItems(dataTableOutput);
+            tableCarteGasoline.setItems(dataTableGasolineCard);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -689,6 +796,7 @@ public class MainController implements Initializable {
                 while (resultSet.next()) {
 
                     List<StringProperty> data = new ArrayList<>();
+
 
                     data.add( new SimpleStringProperty(String.valueOf(resultSet.getInt("ID"))));
                     data.add( new SimpleStringProperty(resultSet.getString("NUMBER")));

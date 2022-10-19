@@ -11,7 +11,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/Views/main-view.fxml")));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/Views/MainView.fxml")));
         primaryStage.setTitle("Gestion de l'inventaire OPGI Tamanrasset");
         primaryStage.setScene(new Scene(root));
         primaryStage.getIcons().add(new Image("/Images/logo.png"));

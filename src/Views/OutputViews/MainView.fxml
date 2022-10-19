@@ -196,6 +196,25 @@
                   </VBox>
                </content>
           </Tab>
+            <Tab fx:id="tabCarteGasoline" text="Consomation du Carburant">
+               <content>
+                  <VBox spacing="10.0">
+                     <children>
+                        <TableView fx:id="tableCarteGasoline" onMouseClicked="#tableClick" styleClass="container-table" VBox.vgrow="ALWAYS">
+                           <columns>
+                              <TableColumn fx:id="clIdBR" prefWidth="150.0" text="ID" visible="false" />
+                              <TableColumn fx:id="clNumBR" prefWidth="100.0" text="N°" />
+                              <TableColumn fx:id="clDateBR" prefWidth="150.0" text="DATE" />
+                              <TableColumn fx:id="clEmployee" prefWidth="250.0" text="Nom &amp; Prénom" />
+                              <TableColumn fx:id="clNumCN" prefWidth="180.0" text="N° Carte" />
+                              <TableColumn fx:id="clNumBN" prefWidth="150.0" text="N° Bonne Naftale " />
+                              <TableColumn fx:id="clMontantBRG" prefWidth="180.0" text="Montant" />
+                           </columns>
+                        </TableView>
+                     </children>
+                  </VBox>
+               </content>
+            </Tab>
           <Tab fx:id="tabDecharge" text="Décharge">
                <content>
                   <VBox spacing="10.0">
@@ -204,8 +223,8 @@
                            <columns>
                               <TableColumn fx:id="clIdDecharge" prefWidth="150.0" text="ID" visible="false" />
                               <TableColumn fx:id="clDateDecharge" prefWidth="200.0" text="Date " />
-                              <TableColumn fx:id="clNameDecharge" prefWidth="220.0" text="Nom &amp; Prénom المسلم" />
-                              <TableColumn fx:id="clNameDechargeur" prefWidth="220.0" text="Nom &amp; Prénom المستلم" />
+                              <TableColumn fx:id="clNameDecharge" prefWidth="220.0" text="Nom &amp; Prénom Doneur" />
+                              <TableColumn fx:id="clNameDechargeur" prefWidth="220.0" text="Nom &amp; Prénom Récepteur" />
                               <TableColumn fx:id="clDepDecharge" prefWidth="180.0" text="Department" />
                               <TableColumn fx:id="clServDecharge" prefWidth="220.0" text="Service" />
                            </columns>
@@ -214,23 +233,6 @@
                   </VBox>
                </content>
           </Tab>
-            <Tab fx:id="tabCarteGasoline" text="Recharge Carte Carburant">
-               <content>
-                  <VBox spacing="10.0">
-                     <children>
-                        <TableView fx:id="table2" onMouseClicked="#tableClick" styleClass="container-table" VBox.vgrow="ALWAYS">
-                           <columns>
-                              <TableColumn fx:id="clId2" prefWidth="150.0" text="ID" visible="false" />
-                              <TableColumn fx:id="clName2" prefWidth="250.0" text="Nom &amp; Prénom" />
-                              <TableColumn fx:id="clNumBS2" prefWidth="230.0" text="N° Carte" />
-                              <TableColumn fx:id="clDateBS2" prefWidth="230.0" text="N° Bonne Naftale " />
-                              <TableColumn fx:id="clMontant2" prefWidth="220.0" text="Montant" />
-                           </columns>
-                        </TableView>
-                     </children>
-                  </VBox>
-               </content>
-            </Tab>
         </tabs>
       </TabPane>
    </center>

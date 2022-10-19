@@ -25,5 +25,6 @@
     <orderEntry type="library" name="typography-3.0.1" level="project" />
     <orderEntry type="library" name="controlsfx-8.40.11" level="project" />
     <orderEntry type="library" name="commons-io-2.9.0" level="project" />
+    <orderEntry type="library" name="javafx-sdk-18.0" level="application" />
   </component>
 </module>

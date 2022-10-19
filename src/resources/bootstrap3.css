@@ -24,6 +24,19 @@
 	-fx-pref-height: 75;
 }
 
+#side-bar-button-active {
+	-fx-border-color :  #A7FFE4;
+	-fx-border-width : 1;
+	-fx-border-radius : 5 0 0 5;
+	-fx-background-color :  #A7FFE4;
+	-fx-background-radius : 5 0 0 5;
+	-fx-font-family: 'HSDream-Regular' ;
+	-fx-font-size: 18;
+	-fx-text-fill: #242F9B;
+
+	-fx-pref-height: 75;
+}
+
 .root {
 	-fx-body-color : #F5F5F5;
 	-fx-outer-border : #cecece;

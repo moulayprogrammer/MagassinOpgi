@@ -2,11 +2,9 @@ package BddPackage;
 
 import Models.Output;
 
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class OutputOperation extends BDD<Output> {
@@ -19,12 +17,13 @@ public class OutputOperation extends BDD<Output> {
     public int insertId(Output output) {
         connectDatabase();
         int ins = 0;
-        String query = "INSERT INTO OUTPUT  (ID_EMP, NUMBER, DATE) VALUES (?,?,?);";
+        String query = "INSERT INTO OUTPUT  (ID_EMP, NUMBER, DATE, INSERT_DATE) VALUES (?,?,?,?);";
         try {
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.setInt(1,output.getIdEmp());
             preparedStmt.setString(2,output.getNumber());
             preparedStmt.setDate(3, Date.valueOf(output.getDate()));
+            preparedStmt.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
 
             int insert = preparedStmt.executeUpdate();
             if(insert != -1) ins = preparedStmt.getGeneratedKeys().getInt(1);

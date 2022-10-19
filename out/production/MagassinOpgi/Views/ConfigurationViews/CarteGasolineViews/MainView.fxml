@@ -97,24 +97,20 @@
          </padding>
       </HBox>
    </top>
-   <center>
-      <VBox spacing="10.0" BorderPane.alignment="CENTER">
-         <BorderPane.margin>
-            <Insets top="10.0" />
-         </BorderPane.margin>
-         <children>
-            <TableView fx:id="table" onMouseClicked="#tableClick" styleClass="container-table">
-               <columns>
-                  <TableColumn fx:id="clId" prefWidth="150.0" text="ID" visible="false" />
-                  <TableColumn fx:id="clNumber" prefWidth="300.0" text="NUMÉRO DE CARTE" />
-                  <TableColumn fx:id="clBalance" prefWidth="220.0" text="DERNIÈRE SOLDE" />
-                  <TableColumn fx:id="clRecharge" prefWidth="288.0" text="DERNIÈRE DATE DE RECHARGE" />
-               </columns>
-            </TableView>
-         </children>
-      </VBox>
-   </center>
    <padding>
       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
    </padding>
+   <center>
+      <TableView fx:id="table" onMouseClicked="#tableClick" styleClass="container-table" BorderPane.alignment="CENTER">
+         <columns>
+            <TableColumn fx:id="clId" prefWidth="150.0" text="ID" visible="false" />
+            <TableColumn fx:id="clNumber" prefWidth="300.0" text="NUMÉRO DE CARTE" />
+            <TableColumn fx:id="clBalance" prefWidth="220.0" text="DERNIÈRE SOLDE" />
+            <TableColumn fx:id="clRecharge" prefWidth="288.0" text="DERNIÈRE DATE DE RECHARGE" />
+         </columns>
+         <BorderPane.margin>
+            <Insets top="10.0" />
+         </BorderPane.margin>
+      </TableView>
+   </center>
 </BorderPane>
