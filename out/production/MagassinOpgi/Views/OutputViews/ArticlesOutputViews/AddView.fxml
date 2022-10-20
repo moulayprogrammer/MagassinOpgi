@@ -128,7 +128,7 @@
                                     <Font name="System Bold" size="14.0" />
                                  </font>
                               </Label>
-                              <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="25.0" styleClass="info" text="Ajouter" HBox.hgrow="ALWAYS" />
+                              <Button onAction="#ActionAddDemand" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="25.0" styleClass="info" text="Ajouter" HBox.hgrow="ALWAYS" />
                            </children>
                         </HBox>
                         <TextField fx:id="tfRechercheArticle" prefHeight="25.0" promptText="RECHERCHE" style="-fx-font-size: 15;" />
