@@ -1,13 +1,12 @@
-package Controllers.OutputControllers.OutputArticlesControllers;
+package Controllers.OutputControllers.RechargeCarteGasolineControllers;
 
-import BddPackage.*;
+import BddPackage.ConnectBD;
+import BddPackage.GasolineCardOperation;
 import Models.*;
 import com.itextpdf.html2pdf.ConverterProperties;
 import com.itextpdf.html2pdf.HtmlConverter;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import org.apache.commons.io.FileUtils;
 
 import javax.swing.filechooser.FileSystemView;
@@ -20,7 +19,6 @@ import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -30,18 +28,16 @@ public class Print {
 
     private final ConnectBD connectBD = new ConnectBD();
     private Connection conn;
-    private Output output;
+    private final GasolineCardOperation gasolineCardOperation = new GasolineCardOperation();
+    private RechargeGasolineCard card;
 
-    public Print(Output output) {
-        this.output = output;
+
+    public Print(RechargeGasolineCard card) {
+        this.card = card;
         this.conn = connectBD.connect();
     }
 
-    public Print(Output output, HashMap<Integer,List<ComponentOutput>> outputs, HashMap<Integer,List<StoreCard>> stores) {
-        this.output = output;
-    }
-
-    public void CreatePdfFacture(){
+    public void CreatePdf(){
         try {
             final StringBuilder HTMLFacture = new StringBuilder();
 
@@ -97,7 +93,7 @@ public class Print {
                     .append("N° :\n" )
                     .append("</td>\n" )
                     .append("<td style=\"width: 15%; font-size: large;\">\n" )
-                    .append(output.getNumber())
+                    .append(card.getNumber())
                     .append("</td>\n" )
                     .append("</tr>\n" )
                     .append("</table>\n" )
@@ -111,7 +107,7 @@ public class Print {
                     .append("DATE :\n" )
                     .append("</td>\n" )
                     .append("<td style=\"width: 15%; font-size: large;\">\n" )
-                    .append(output.getDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")))
+                    .append(card.getDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")))
                     .append("</td>\n" )
                     .append("</tr>\n" )
                     .append("</table>\n" )
@@ -122,76 +118,51 @@ public class Print {
 
                     .append("<table class=\"table-art\">\n" )
                     .append("<tr>\n" )
-                    .append("<th rowspan=\"2\" class=\"th-art\">N°</th>\n" )
-                    .append("<th rowspan=\"2\" class=\"th-art\">DESIGNATION</th>\n" )
-                    .append("<th colspan=\"2\" class=\"th-art\">QUANTITIES</th>\n" )
-                    .append("<th rowspan=\"2\" class=\"th-art\">PRIX UNITAIRE</th>\n" )
-                    .append("<th rowspan=\"2\" class=\"th-art\">MONTANT</th>\n" )
-                    .append("<th rowspan=\"2\" class=\"th-art\">OBSERVATION</th>\n" )
-                    .append("</tr>\n" )
-                    .append("<tr>\n" )
-                    .append("<th class=\"th-art\">DEM</th>\n" )
-                    .append("<th class=\"th-art\">SERV</th>\n" )
+                    .append("<th class=\"th-art\">N°</th>\n" )
+                    .append("<th class=\"th-art\">DESIGNATION</th>\n" )
+                    .append("<th class=\"th-art\">N° Carte NAFTAL</th>\n" )
+                    .append("<th class=\"th-art\">N° Bon NAFTAL</th>\n" )
+                    .append("<th class=\"th-art\">MONTANT</th>\n" )
+                    .append("<th class=\"th-art\">OBSERVATION</th>\n" )
                     .append("</tr>\n" );
 
                     final int[] count = {1};
                     AtomicReference<Double> total = new AtomicReference<>(0.0);
 
                     try {
-                        if (conn.isClosed()) conn = connectBD.connect();
+                        GasolineCard gasolineCard = gasolineCardOperation.get(card.getIdGasolineCard());
 
-                        String query = "SELECT ARTICLE.NAME, COMPONENT_OUTPUT.QTE_DEM, COMPONENT_OUTPUT.QTE_SERV, STORE_CARD.PRICE FROM COMPONENT_OUTPUT,STORE_CARD,ARTICLE \n" +
-                                "WHERE COMPONENT_OUTPUT.ID_OUTPUT = ? AND COMPONENT_OUTPUT.ID_STORE = STORE_CARD.ID AND COMPONENT_OUTPUT.ID_ART = ARTICLE.ID;";
-                        PreparedStatement preparedStmt = conn.prepareStatement(query);
-                        preparedStmt.setInt(1,this.output.getId());
-                        ResultSet resultSet = preparedStmt.executeQuery();
+                        HTMLFacture.append("<tr>\n" )
+                                .append("<td class=\"td-art\" style=\"width: 3%\">")
+                                .append("0" + count[0])
+                                .append("</td>\n" )
 
-                        while (resultSet.next()){
+                                .append("<td class=\"td-art\">")
+                                .append("Recharge Carburant")
+                                .append("</td>\n" )
 
-                            double pr =  resultSet.getDouble("PRICE");
-                            int qte =  resultSet.getInt("QTE_SERV");
+                                .append("<td class=\"td-art\" style=\"width: 10%\">")
+                                .append(gasolineCard.getNumber())
+                                .append("</td>\n" )
 
-                            HTMLFacture.append("<tr>\n" )
-                                    .append("<td class=\"td-art\" style=\"width: 3%\">")
-                                    .append(count[0])
-                                    .append("</td>\n" )
+                                .append("<td class=\"td-art\" style=\"width: 10%\">")
+                                .append(card.getNumberNaftal())
+                                .append("</td>\n" )
 
-                                    .append("<td class=\"td-art\">")
-                                    .append(resultSet.getString("NAME"))
-                                    .append("</td>\n" )
+                                .append("<td class=\"td-art\" style=\"width: 10%\">")
+                                .append(String.format(Locale.FRANCE, "%,.2f", card.getPrice()))
+                                .append("</td>\n" )
 
-                                    .append("<td class=\"td-art\" style=\"width: 10%\">")
-                                    .append(resultSet.getInt("QTE_DEM"))
-                                    .append("</td>\n" )
-
-                                    .append("<td class=\"td-art\" style=\"width: 10%\">")
-                                    .append(resultSet.getInt("QTE_SERV"))
-                                    .append("</td>\n" )
-
-                                    .append("<td class=\"td-art\" style=\"width: 10%\">")
-                                    .append(String.format(Locale.FRANCE, "%,.2f", pr))
-                                    .append("</td>\n" )
-
-                                    .append("<td class=\"td-art\" style=\"width: 15%\">")
-                                    .append(String.format(Locale.FRANCE, "%,.2f", ( qte * pr )))
-                                    .append("</td>\n" )
-
-                                    .append("<td class=\"td-art\" style=\"width: 17%\">")
-                                    .append("</td>\n" );
-
-                            total.updateAndGet(v -> (v + ( qte * pr ) ));
-                            count[0]++;
-                        }
+                                .append("<td class=\"td-art\" style=\"width: 17%\">")
+                                .append("</td>\n" );
 
                     }catch (Exception e){
                         e.printStackTrace();
-                    }finally {
-                        conn.close();
                     }
 
-                    int rest = 10 - count[0];
+//                    int rest = 10 - count[0];
 
-                    for (int i = 0; i < rest + 1; i++) {
+                    for (int i = 0; i < 9; i++) {
                         HTMLFacture.append("<tr>\n" )
                                 .append("<td class=\"td-art\" style=\"width: 3%; padding: 15px 0;\">")
                                 .append("    ")
@@ -213,10 +184,6 @@ public class Print {
                                 .append("    ")
                                 .append("</td>\n" )
 
-                                .append("<td class=\"td-art\" style=\"width: 15%\">")
-                                .append("    ")
-                                .append("</td>\n" )
-
                                 .append("<td class=\"td-art\" style=\"width: 17%\">")
                                 .append("    ")
                                 .append("</td>\n" );
@@ -230,7 +197,7 @@ public class Print {
                     .append("Montant Total \n" )
                     .append("</td>\n" )
                     .append("<td class=\"td-art\" style=\"font-size: large;\">\n" )
-                    .append(String.format(Locale.FRANCE, "%,.2f", total.get()) )
+                    .append(String.format(Locale.FRANCE, "%,.2f", card.getPrice()) )
                     .append("</td>\n" )
                     .append("</tr>\n" )
                     .append("</table>\n" );
@@ -241,7 +208,7 @@ public class Print {
                 String query = "SELECT EMPLOYEE.ID, EMPLOYEE.FIRST_NAME, EMPLOYEE.LAST_NAME, DEP.NAME AS DEP_NAME, SERVICE.NAME AS SERV_NAME, EMPLOYEE.FUNCTION \n" +
                         "FROM EMPLOYEE,SERVICE,DEP WHERE EMPLOYEE.ARCHIVE = 0 AND EMPLOYEE.ID = ? AND EMPLOYEE.ID_SERVICE = SERVICE.ID AND SERVICE.ID_DEP = DEP.ID;";
                 PreparedStatement preparedStmt = conn.prepareStatement(query);
-                preparedStmt.setInt(1,this.output.getIdEmp());
+                preparedStmt.setInt(1,this.card.getIdEmp());
                 ResultSet resultSet = preparedStmt.executeQuery();
 
                 if (resultSet.next()){
@@ -328,7 +295,7 @@ public class Print {
 
                 if (!mainFile.exists()) FileUtils.forceMkdir(mainFile);
 
-                String outputDirectory = mainDirectoryPath + File.separator + "Bon Sortée" ;
+                String outputDirectory = mainDirectoryPath + File.separator + "Bon Sortée Carburant" ;
                 File invoiceFile = new File(outputDirectory);
                 if (!invoiceFile.exists()) FileUtils.forceMkdir(invoiceFile);
 

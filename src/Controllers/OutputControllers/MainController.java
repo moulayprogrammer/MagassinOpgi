@@ -529,26 +529,73 @@ public class MainController implements Initializable {
     @FXML
     private void ActionPrint(){
 
-        List<StringProperty> data  = table.getSelectionModel().getSelectedItem();
-        if (data != null){
-            try {
-                Output output = outputOperation.get(Integer.parseInt(data.get(0).getValue()));
+        try {
+            String tabId = tabPane.getSelectionModel().getSelectedItem().getId();
+            switch (tabId){
+                case "tabSortie":
+                    try {
+                        List<StringProperty> data  = table.getSelectionModel().getSelectedItem();
+                        if (data != null){
+                            try {
+                                Output output = outputOperation.get(Integer.parseInt(data.get(0).getValue()));
 
-                Print print = new Print(output);
-                print.CreatePdfFacture();
-            } catch (Exception e) {
-                e.printStackTrace();
+                                Print print = new Print(output);
+                                print.CreatePdfFacture();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }else {
+                            Alert alertWarning = new Alert(Alert.AlertType.WARNING);
+                            alertWarning.setHeaderText("Attention ");
+                            alertWarning.setContentText("Veuillez sélectionner une bonne à imprimmer");
+                            alertWarning.initOwner(this.tfRecherche.getScene().getWindow());
+                            alertWarning.getDialogPane().setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
+                            Button okButton = (Button) alertWarning.getDialogPane().lookupButton(ButtonType.OK);
+                            okButton.setText("D'ACCORD");
+                            alertWarning.showAndWait();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case "tabDecharge":
+                    try {
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }                    break;
+                case "tabCarteGasoline":
+                    try {
+                        List<StringProperty> data  = tableCarteGasoline.getSelectionModel().getSelectedItem();
+                        if (data != null){
+                            try {
+                                RechargeGasolineCard gasolineCard = rechargeGasolineCardOperation.get(Integer.parseInt(data.get(0).getValue()));
+
+                                Controllers.OutputControllers.RechargeCarteGasolineControllers.Print print = new Controllers.OutputControllers.RechargeCarteGasolineControllers.Print(gasolineCard);
+                                print.CreatePdf();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }else {
+                            Alert alertWarning = new Alert(Alert.AlertType.WARNING);
+                            alertWarning.setHeaderText("Attention ");
+                            alertWarning.setContentText("Veuillez sélectionner une bonne à imprimmer");
+                            alertWarning.initOwner(this.tfRecherche.getScene().getWindow());
+                            alertWarning.getDialogPane().setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
+                            Button okButton = (Button) alertWarning.getDialogPane().lookupButton(ButtonType.OK);
+                            okButton.setText("D'ACCORD");
+                            alertWarning.showAndWait();
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    break;
             }
-        }else {
-            Alert alertWarning = new Alert(Alert.AlertType.WARNING);
-            alertWarning.setHeaderText("Attention ");
-            alertWarning.setContentText("Veuillez sélectionner une bonne à imprimmer");
-            alertWarning.initOwner(this.tfRecherche.getScene().getWindow());
-            alertWarning.getDialogPane().setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
-            Button okButton = (Button) alertWarning.getDialogPane().lookupButton(ButtonType.OK);
-            okButton.setText("D'ACCORD");
-            alertWarning.showAndWait();
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
+
     }
 
     private void refreshSortie(){

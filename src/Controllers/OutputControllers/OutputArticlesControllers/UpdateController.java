@@ -509,9 +509,6 @@ public class UpdateController implements Initializable {
                     boolean update = update(output);
                     if (update) {
                         closeDialog(this.btnInsert);
-                        output.setId(this.selectedOutput.getId());
-                        Print print = new Print(output);
-                        print.CreatePdfFacture();
                     } else {
                         Alert alertWarning = new Alert(Alert.AlertType.WARNING);
                         alertWarning.setHeaderText("ATTENTION ");
