@@ -598,6 +598,26 @@ public class MainController implements Initializable {
 
     }
 
+    @FXML
+    private void ConsumptionStatus(){
+        try {
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/OutputViews/ConsumptionStatusView.fxml"));
+            DialogPane temp = loader.load();
+            Dialog<ButtonType> dialog = new Dialog<>();
+            dialog.setDialogPane(temp);
+            dialog.resizableProperty().setValue(false);
+            dialog.initOwner(this.tfRecherche.getScene().getWindow());
+            dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
+            Node closeButton = dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
+            closeButton.setVisible(false);
+            dialog.showAndWait();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void refreshSortie(){
         try {
             if (conn.isClosed()) conn = connectBD.connect();

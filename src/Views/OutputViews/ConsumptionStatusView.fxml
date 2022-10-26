@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+<?import org.controlsfx.control.ListSelectionView?>
+
+<DialogPane expanded="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="500.0" prefWidth="650.0" stylesheets="@../../resources/bootstrap3.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.OutputControllers.ConsumptionStatusController">
+   <header>
+      <AnchorPane minHeight="50.0" prefHeight="50.0" style="-fx-background-color: #EFF;">
+         <children>
+            <HBox layoutX="9.9169921875" layoutY="10.0" spacing="5.0" AnchorPane.bottomAnchor="19.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="15.0">
+               <children>
+                  <Label style="-fx-font-size: 17;" text="État de Consommation">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+         </children>
+      </AnchorPane>
+   </header>
+   <content>
+      <AnchorPane prefHeight="450.0" prefWidth="200.0" style="-fx-background-color: #FFF;">
+         <children>
+            <TabPane tabMinWidth="165.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="-10.0">
+               <tabs>
+                  <Tab closable="false" text="PAR JOUR">
+                     <content>
+                        <AnchorPane minHeight="-Infinity" prefHeight="360.0" style="-fx-background-color: #FFF;">
+                           <children>
+                              <HBox alignment="CENTER" layoutX="14.0" layoutY="26.0" spacing="30.0" AnchorPane.leftAnchor="14.0">
+                                 <children>
+                                    <Label style="-fx-font-size: 16;" text="JOUR" />
+                                    <DatePicker fx:id="dpDate" prefWidth="200.0" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" layoutX="14.0" layoutY="71.0" spacing="30.0" AnchorPane.leftAnchor="14.0">
+                                 <children>
+                                    <Label prefWidth="39.0" style="-fx-font-size: 16;" text="DEP" />
+                                    <ComboBox onAction="#ActionComboDepartment" fx:id="cbDep" prefWidth="200.0" />
+                                    <Label layoutX="10.0" layoutY="15.0" style="-fx-font-size: 16;" text="SERVICE" />
+                                    <ComboBox fx:id="cbServ" layoutX="79.0" layoutY="10.0" prefWidth="200.0" />
+                                 </children>
+                              </HBox>
+                              <ListSelectionView fx:id="lsCategory" layoutX="14.0" layoutY="112.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="30.0" />
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </Tab>
+                  <Tab closable="false" text="PAR MOIS" />
+                  <Tab closable="false" text="PAR PÉRIODE" />
+               </tabs>
+            </TabPane>
+            <HBox spacing="30.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0">
+               <children>
+                  <Button fx:id="btnConfirm" defaultButton="true" onAction="#ActionPrint" mnemonicParsing="false" prefWidth="80.0" style="-fx-font-size: 10;" styleClass="info" text="CONFIRMER" textFill="#2005a8">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </Button>
+                  <Button cancelButton="true" onAction="#ActionAnnul" mnemonicParsing="false" prefWidth="80.0" style="-fx-font-size: 10;" styleClass="warning" text="ANNULER" textFill="#dd0000">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+      </AnchorPane>
+   </content>
+</DialogPane>
