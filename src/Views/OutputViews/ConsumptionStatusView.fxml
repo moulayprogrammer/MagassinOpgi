@@ -46,7 +46,7 @@
                               <HBox alignment="CENTER" layoutX="14.0" layoutY="71.0" spacing="30.0" AnchorPane.leftAnchor="14.0">
                                  <children>
                                     <Label prefWidth="39.0" style="-fx-font-size: 16;" text="DEP" />
-                                    <ComboBox onAction="#ActionComboDepartment" fx:id="cbDep" prefWidth="200.0" />
+                                    <ComboBox fx:id="cbDep" onAction="#ActionComboDepartment" prefWidth="200.0" />
                                     <Label layoutX="10.0" layoutY="15.0" style="-fx-font-size: 16;" text="SERVICE" />
                                     <ComboBox fx:id="cbServ" layoutX="79.0" layoutY="10.0" prefWidth="200.0" />
                                  </children>
@@ -56,18 +56,38 @@
                         </AnchorPane>
                      </content>
                   </Tab>
-                  <Tab closable="false" text="PAR MOIS" />
+                  <Tab closable="false" text="PAR MOIS">
+                     <content>
+                        <AnchorPane minHeight="-Infinity" prefHeight="360.0" style="-fx-background-color: #FFF;">
+                           <children>
+                              <HBox fx:id="hBox" alignment="CENTER" layoutX="14.0" layoutY="26.0" spacing="30.0" AnchorPane.leftAnchor="14.0">
+                                 <children>
+                                    <Label style="-fx-font-size: 16;" text="JOUR" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" layoutX="14.0" layoutY="71.0" spacing="30.0" AnchorPane.leftAnchor="14.0">
+                                 <children>
+                                    <Label prefWidth="39.0" style="-fx-font-size: 16;" text="DEP" />
+                                    <ComboBox fx:id="cbDep1" onAction="#ActionComboDepartment" prefWidth="200.0" />
+                                    <Label layoutX="10.0" layoutY="15.0" style="-fx-font-size: 16;" text="SERVICE" />
+                                    <ComboBox fx:id="cbServ1" layoutX="79.0" layoutY="10.0" prefWidth="200.0" />
+                                 </children>
+                              </HBox>
+                              <ListSelectionView fx:id="lsCategory1" layoutX="14.0" layoutY="112.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="30.0" />
+                           </children>
+                        </AnchorPane>
+                     </content></Tab>
                   <Tab closable="false" text="PAR PÉRIODE" />
                </tabs>
             </TabPane>
             <HBox spacing="30.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0">
                <children>
-                  <Button fx:id="btnConfirm" defaultButton="true" onAction="#ActionPrint" mnemonicParsing="false" prefWidth="80.0" style="-fx-font-size: 10;" styleClass="info" text="CONFIRMER" textFill="#2005a8">
+                  <Button fx:id="btnConfirm" defaultButton="true" mnemonicParsing="false" onAction="#ActionPrint" prefWidth="80.0" style="-fx-font-size: 10;" styleClass="info" text="CONFIRMER" textFill="#2005a8">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
                   </Button>
-                  <Button cancelButton="true" onAction="#ActionAnnul" mnemonicParsing="false" prefWidth="80.0" style="-fx-font-size: 10;" styleClass="warning" text="ANNULER" textFill="#dd0000">
+                  <Button cancelButton="true" mnemonicParsing="false" onAction="#ActionAnnul" prefWidth="80.0" style="-fx-font-size: 10;" styleClass="warning" text="ANNULER" textFill="#dd0000">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
