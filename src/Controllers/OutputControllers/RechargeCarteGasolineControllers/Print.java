@@ -318,7 +318,7 @@ public class Print {
                     HtmlConverter.convertToPdf(HTMLFacture.toString(), pdf, converterProperties);
 
                     pdf.close();
-                    Desktop.getDesktop().print(new File(path));
+                    Desktop.getDesktop().open(new File(path));
 
                 }
             }catch (Exception e){

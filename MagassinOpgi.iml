@@ -26,5 +26,6 @@
     <orderEntry type="library" name="controlsfx-8.40.11" level="project" />
     <orderEntry type="library" name="commons-io-2.9.0" level="project" />
     <orderEntry type="library" name="javafx-sdk-18.0" level="application" />
+    <orderEntry type="library" name="pdfbox-3.0.0-alpha3" level="project" />
   </component>
 </module>
