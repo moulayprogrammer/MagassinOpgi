@@ -11,6 +11,7 @@ import com.itextpdf.html2pdf.ConverterProperties;
 import com.itextpdf.html2pdf.HtmlConverter;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
+import javafx.beans.property.SimpleSetProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -165,10 +166,15 @@ public class ConsumptionStatusController implements Initializable {
 
             if (date != null && lsCategorySelected.size() != 0){
 
+                ArrayList<Integer> idBons = new ArrayList<>();
                 int indexDep = cbDep.getSelectionModel().getSelectedIndex();
                 int indexServ = cbServ.getSelectionModel().getSelectedIndex();
+
                 carb = lsCategorySelected.contains("Carburants");
                 lsCategorySelected.remove("Carburants");
+                cons.clear();
+                consGas.clear();
+
 
                 if (indexDep != -1){
                     if (indexServ != -1){
@@ -181,7 +187,7 @@ public class ConsumptionStatusController implements Initializable {
                             ResultSet resultSet = preparedStmt.executeQuery();
 
                             while (resultSet.next()){
-                                cons.put(String.valueOf(resultSet.getInt("ID")),new ArrayList<>());
+                                idBons.add(resultSet.getInt("ID"));
                             }
                         }catch (Exception e){
                             e.printStackTrace();
@@ -197,7 +203,7 @@ public class ConsumptionStatusController implements Initializable {
                             ResultSet resultSet = preparedStmt.executeQuery();
 
                             while (resultSet.next()){
-                                cons.put(String.valueOf(resultSet.getInt("ID")),new ArrayList<>());
+                                idBons.add(resultSet.getInt("ID"));
                             }
                         }catch (Exception e){
                             e.printStackTrace();
@@ -212,32 +218,33 @@ public class ConsumptionStatusController implements Initializable {
                         ResultSet resultSet = preparedStmt.executeQuery();
 
                         while (resultSet.next()){
-                            cons.put(String.valueOf(resultSet.getInt("ID")),new ArrayList<>());
+                            idBons.add(resultSet.getInt("ID"));
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                 }
+
                 // select other cat not gasoline
-                if (cons.size() != 0){
-                    List<String> bsVide = new ArrayList<>();
-                    List<String> bsNotVide = new ArrayList<>();
-                    cons.forEach((s, stringProperties) -> {
+                if (idBons.size() != 0){
+
+                    for (Integer s : idBons){
                         try {
                             List<List<StringProperty>> data = new ArrayList<>();
                             double totBs = 0.0;
-                            String nbBs = "";
+                            String nbs = null;
 
                             for (String cat : lsCategorySelected) {
                                 int index = categoryList.indexOf(cat);
                                 int idCat = categories.get(index).getId();
+
 
                                 String query = "SELECT OUTPUT.NUMBER, SUM(STORE_CARD.PRICE * COMPONENT_OUTPUT.QTE_SERV) AS TOT FROM OUTPUT,STORE_CARD, COMPONENT_OUTPUT, ARTICLE \n" +
                                         "WHERE OUTPUT.ID = ? AND COMPONENT_OUTPUT.ID_OUTPUT = OUTPUT.ID AND ARTICLE.ID_CAT = ? AND COMPONENT_OUTPUT.ID_ART = ARTICLE.ID \n" +
                                         "AND COMPONENT_OUTPUT.ID_STORE = STORE_CARD.ID";
 
                                 PreparedStatement preparedStmt = conn.prepareStatement(query);
-                                preparedStmt.setInt(1, Integer.parseInt(s));
+                                preparedStmt.setInt(1, s);
                                 preparedStmt.setInt(2, idCat);
 
                                 ResultSet resultSet = preparedStmt.executeQuery();
@@ -247,35 +254,37 @@ public class ConsumptionStatusController implements Initializable {
 
                                     double tot = resultSet.getDouble("TOT");
                                     totBs += tot;
-                                    nbBs = resultSet.getString("NUMBER");
-                                    d.add(new SimpleStringProperty(nbBs));
+                                    if (resultSet.getString("NUMBER") != null ) nbs = resultSet.getString("NUMBER");
+
+//                                    d.add(new SimpleStringProperty(nbs));
                                     d.add(new SimpleStringProperty(categories.get(index).getName()));
                                     d.add(new SimpleStringProperty(String.valueOf(tot)));
 
                                     data.add(d);
                                 }
                             }
-                            if (totBs != 0) {
-                                cons.put(s,data);
-                                bsNotVide.add(s);
-                            }else bsVide.add(s);
+                            if (totBs != 0) cons.put(nbs,data);
+/*                            {
+
+//                                bsNotVide.add(s);
+                            }else bsVide.add(s);*/
                         }catch (Exception e){
                             e.printStackTrace();
                         }
-                    });
+                    }
 
                     // clean hashMap
-                    bsVide.forEach(cons::remove);
-                    bsNotVide.forEach(s -> {
+//                    bsVide.forEach(cons::remove);
+   /*                 bsNotVide.forEach(s -> {
                         List<List<StringProperty>> data = new ArrayList<>(cons.get(s));
-                        cons.remove(s);
                         String nb = data.get(0).get(0).get();
 
                         for (int i = 0; i < data.size(); i++) {
                             data.get(i).remove(0);
                         }
+                        System.out.println("nb = " + nb);
                         cons.put(nb,data);
-                    });
+                    });*/
                 }
 
                 // select gasoline
@@ -330,9 +339,9 @@ public class ConsumptionStatusController implements Initializable {
                     }
                 }
 
+                treeSet.clear();
                 if (cons.size() != 0) treeSet.addAll(cons.keySet());
                 if (consGas.size() != 0) treeSet.addAll(consGas.keySet());
-
 
                 Print(lsCategorySelected);
 
@@ -352,7 +361,6 @@ public class ConsumptionStatusController implements Initializable {
                         System.out.println();
                     }
                 });*/
-
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -433,6 +441,12 @@ public class ConsumptionStatusController implements Initializable {
                 .append("</th>\n");
         HTMLFacture.append("</tr>\n" );
 
+        HashMap<String,Double> totals  = new HashMap<>();
+        for (String ss : lsCategorySelected) {
+            totals.put(ss,0.0);
+        }
+        if (carb) totals.put("Carburants",0.0);
+
         treeSet.forEach(s -> {
             double total = 0.0;
             HTMLFacture.append("<tr>\n" );
@@ -455,7 +469,11 @@ public class ConsumptionStatusController implements Initializable {
                             HTMLFacture.append("<td class=\"td-art\" >")
                                     .append(list.get(1).getValue())
                                     .append("</td>\n");
-                            total += Double.parseDouble(list.get(1).getValue());
+                            double val = Double.parseDouble(list.get(1).getValue());
+                            total += val;
+                            double t = totals.get(ss);
+                            t += val;
+                            totals.put(ss,t);
                         }
                     }
                 }
@@ -466,15 +484,15 @@ public class ConsumptionStatusController implements Initializable {
                         .append(consGas.get(s))
                         .append("</td>\n");
                 total += consGas.get(s);
+                double t = totals.get("Carburants");
+                t += consGas.get(s);
+                totals.put("Carburants",t);
 
                 for (int i = 0; i < lsCategorySelected.size(); i++) {
                     HTMLFacture.append("<td class=\"td-art\" >")
                             .append(0.0)
                             .append("</td>\n");
                 }
-                /*System.out.print("gas = " + s);
-                System.out.print("     PRICE  = " + consGas.get(s));
-                total += consGas.get(s);*/
             }
             HTMLFacture.append("<td class=\"td-art\" >")
                     .append(total)
@@ -482,6 +500,28 @@ public class ConsumptionStatusController implements Initializable {
 
             HTMLFacture.append("</tr>\n" );
         });
+        // tot افقي
+        double totalGen = 0.0;
+        HTMLFacture.append("<tr>\n" );
+        HTMLFacture.append("<td class=\"td-art\" style=\"width: 3%\">")
+                .append("Totat")
+                .append("</td>\n");
+        if (carb) {
+            HTMLFacture.append("<td class=\"td-art\" >")
+                    .append(totals.get("Carburants"))
+                    .append("</td>\n");
+            totalGen += totals.get("Carburants");
+        }
+        for (String s : lsCategorySelected){
+            HTMLFacture.append("<td class=\"td-art\" >")
+                    .append(totals.get(s))
+                    .append("</td>\n");
+            totalGen += totals.get(s);
+        }
+        HTMLFacture.append("<td class=\"td-art\" >")
+                .append(totalGen)
+                .append("</td>\n");
+        HTMLFacture.append("</tr>\n" );
 
                 HTMLFacture.append("</table>\n" )
                         .append("\n" )
