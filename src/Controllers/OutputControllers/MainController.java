@@ -560,7 +560,26 @@ public class MainController implements Initializable {
                     break;
                 case "tabDecharge":
                     try {
+                        List<StringProperty> data  = tableDecharge.getSelectionModel().getSelectedItem();
+                        if (data != null){
+                            try {
+                                Decharge decharge = dechargeOperation.get(Integer.parseInt(data.get(0).getValue()));
 
+                                Controllers.OutputControllers.DechargeControllers.Print print = new Controllers.OutputControllers.DechargeControllers.Print(decharge);
+                                print.CreatePdfFacture();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }else {
+                            Alert alertWarning = new Alert(Alert.AlertType.WARNING);
+                            alertWarning.setHeaderText("Attention ");
+                            alertWarning.setContentText("Veuillez sélectionner une decharge à imprimmer");
+                            alertWarning.initOwner(this.tfRecherche.getScene().getWindow());
+                            alertWarning.getDialogPane().setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
+                            Button okButton = (Button) alertWarning.getDialogPane().lookupButton(ButtonType.OK);
+                            okButton.setText("D'ACCORD");
+                            alertWarning.showAndWait();
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }                    break;
