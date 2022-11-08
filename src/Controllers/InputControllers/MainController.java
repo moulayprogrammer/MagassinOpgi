@@ -1,6 +1,7 @@
 package Controllers.InputControllers;
 
 import BddPackage.*;
+import Controllers.InputControllers.InputArticlesControllers.Print;
 import Controllers.InputControllers.InputArticlesControllers.UpdateController;
 import Models.Input;
 import Models.Provider;
@@ -494,6 +495,42 @@ public class MainController implements Initializable {
     }
 
     @FXML
+    private void ActionPrint(){
+        String tabId = tabPane.getSelectionModel().getSelectedItem().getId();
+        switch (tabId){
+            case "tabBon":
+                try {
+                    List<StringProperty> data = table.getSelectionModel().getSelectedItem();
+
+                    if (data != null){
+                            try {
+                                Input input = inputOperation.get(Integer.parseInt(data.get(0).getValue()));
+
+                                Print print = new Print(input);
+                                print.CreatePdfFacture();
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                    }else {
+                        Alert alertWarning = new Alert(Alert.AlertType.WARNING);
+                        alertWarning.setHeaderText("ATTENTION");
+                        alertWarning.setContentText("Veuillez sélectionner un Bon Réception à imprimer");
+                        alertWarning.initOwner(this.tfRecherche.getScene().getWindow());
+                        Button okButton = (Button) alertWarning.getDialogPane().lookupButton(ButtonType.OK);
+                        okButton.setText("D'ACCORD");
+                        alertWarning.showAndWait();
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                break;
+            case "tabGasoline":
+                break;
+        }
+    }
+
+    @FXML
     private void comboFilterAction() {
         try {
             int select  = cbFilter.getSelectionModel().getSelectedIndex();
@@ -547,11 +584,11 @@ public class MainController implements Initializable {
                                 data.add(new SimpleStringProperty(String.valueOf(resultSet.getInt("ID"))));
                                 data.add(new SimpleStringProperty(resultSet.getString("NAME")));
                                 data.add(new SimpleStringProperty(resultSet.getString("NUMBER")));
-                                data.add(new SimpleStringProperty(resultSet.getDate("DATE").toLocalDate().format(DateTimeFormatter.ofPattern("MM-dd-yyyy"))));
+                                data.add(new SimpleStringProperty(resultSet.getDate("DATE").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
                                 data.add(new SimpleStringProperty(resultSet.getString("NUMBER_FACTUR")));
-                                data.add(new SimpleStringProperty(resultSet.getDate("DATE_FACTUR").toLocalDate().format(DateTimeFormatter.ofPattern("MM-dd-yyyy"))));
+                                data.add(new SimpleStringProperty(resultSet.getDate("DATE_FACTUR").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
                                 data.add(new SimpleStringProperty(resultSet.getString("NUMBER_BC")));
-                                data.add(new SimpleStringProperty(resultSet.getDate("DATE_FACTUR").toLocalDate().format(DateTimeFormatter.ofPattern("MM-dd-yyyy"))));
+                                data.add(new SimpleStringProperty(resultSet.getDate("DATE_FACTUR").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
                                 data.add(new SimpleStringProperty(String.format(Locale.FRANCE, "%,.2f", resultSet.getDouble("PRICE"))));
                                 data.add(new SimpleStringProperty("Confirmé"));
 
@@ -583,11 +620,11 @@ public class MainController implements Initializable {
                                 data.add(new SimpleStringProperty(String.valueOf(resultSet.getInt("ID"))));
                                 data.add(new SimpleStringProperty(resultSet.getString("NAME")));
                                 data.add(new SimpleStringProperty(resultSet.getString("NUMBER")));
-                                data.add(new SimpleStringProperty(resultSet.getDate("DATE").toLocalDate().format(DateTimeFormatter.ofPattern("MM-dd-yyyy"))));
+                                data.add(new SimpleStringProperty(resultSet.getDate("DATE").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
                                 data.add(new SimpleStringProperty(resultSet.getString("NUMBER_FACTUR")));
-                                data.add(new SimpleStringProperty(resultSet.getDate("DATE_FACTUR").toLocalDate().format(DateTimeFormatter.ofPattern("MM-dd-yyyy"))));
+                                data.add(new SimpleStringProperty(resultSet.getDate("DATE_FACTUR").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
                                 data.add(new SimpleStringProperty(resultSet.getString("NUMBER_BC")));
-                                data.add(new SimpleStringProperty(resultSet.getDate("DATE_FACTUR").toLocalDate().format(DateTimeFormatter.ofPattern("MM-dd-yyyy"))));
+                                data.add(new SimpleStringProperty(resultSet.getDate("DATE_FACTUR").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
                                 data.add(new SimpleStringProperty(String.format(Locale.FRANCE, "%,.2f", resultSet.getDouble("PRICE"))));
                                 data.add(new SimpleStringProperty("Non confirmé"));
 
@@ -647,11 +684,11 @@ public class MainController implements Initializable {
                     data.add(new SimpleStringProperty(String.valueOf(resultSet.getInt("ID"))));
                     data.add(new SimpleStringProperty(resultSet.getString("NAME")));
                     data.add(new SimpleStringProperty(resultSet.getString("NUMBER")));
-                    data.add(new SimpleStringProperty(resultSet.getDate("DATE").toLocalDate().format(DateTimeFormatter.ofPattern("MM-dd-yyyy"))));
+                    data.add(new SimpleStringProperty(resultSet.getDate("DATE").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
                     data.add(new SimpleStringProperty(resultSet.getString("NUMBER_FACTUR")));
-                    data.add(new SimpleStringProperty(resultSet.getDate("DATE_FACTUR").toLocalDate().format(DateTimeFormatter.ofPattern("MM-dd-yyyy"))));
+                    data.add(new SimpleStringProperty(resultSet.getDate("DATE_FACTUR").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
                     data.add(new SimpleStringProperty(resultSet.getString("NUMBER_BC")));
-                    data.add(new SimpleStringProperty(resultSet.getDate("DATE_FACTUR").toLocalDate().format(DateTimeFormatter.ofPattern("MM-dd-yyyy"))));
+                    data.add(new SimpleStringProperty(resultSet.getDate("DATE_FACTUR").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
                     data.add(new SimpleStringProperty(String.format(Locale.FRANCE, "%,.2f", resultSet.getDouble("PRICE"))));
                     if (resultSet.getInt("CONFIRM") != 0) data.add(new SimpleStringProperty("Confirmé"));
                     else data.add(new SimpleStringProperty("Non confirmé"));
@@ -696,11 +733,11 @@ public class MainController implements Initializable {
                         data.add(new SimpleStringProperty(String.valueOf(resultSet.getInt("ID"))));
                         data.add(new SimpleStringProperty(resultSet.getString("NAME")));
                         data.add(new SimpleStringProperty(resultSet.getString("NUMBER")));
-                        data.add(new SimpleStringProperty(resultSet.getDate("DATE").toLocalDate().format(DateTimeFormatter.ofPattern("MM-dd-yyyy"))));
+                        data.add(new SimpleStringProperty(resultSet.getDate("DATE").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
                         data.add(new SimpleStringProperty(resultSet.getString("NUMBER_FACTUR")));
-                        data.add(new SimpleStringProperty(resultSet.getDate("DATE_FACTUR").toLocalDate().format(DateTimeFormatter.ofPattern("MM-dd-yyyy"))));
+                        data.add(new SimpleStringProperty(resultSet.getDate("DATE_FACTUR").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
                         data.add(new SimpleStringProperty(resultSet.getString("NUMBER_BC")));
-                        data.add(new SimpleStringProperty(resultSet.getDate("DATE_FACTUR").toLocalDate().format(DateTimeFormatter.ofPattern("MM-dd-yyyy"))));
+                        data.add(new SimpleStringProperty(resultSet.getDate("DATE_FACTUR").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
                         data.add(new SimpleStringProperty(String.format(Locale.FRANCE, "%,.2f", resultSet.getDouble("PRICE"))));
                         if (resultSet.getInt("CONFIRM") != 0) data.add(new SimpleStringProperty("Confirmé"));
                         else data.add(new SimpleStringProperty("Non confirmé"));
@@ -770,11 +807,11 @@ public class MainController implements Initializable {
                 data.add( new SimpleStringProperty(String.valueOf(resultSet.getInt("ID"))));
                 data.add( new SimpleStringProperty(resultSet.getString("NAME")));
                 data.add( new SimpleStringProperty(resultSet.getString("NUMBER")));
-                data.add( new SimpleStringProperty(resultSet.getDate("DATE").toLocalDate().format(DateTimeFormatter.ofPattern("MM-dd-yyyy"))));
+                data.add( new SimpleStringProperty(resultSet.getDate("DATE").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
                 data.add( new SimpleStringProperty(resultSet.getString("NUMBER_FACTUR")));
-                data.add( new SimpleStringProperty(resultSet.getDate("DATE_FACTUR").toLocalDate().format(DateTimeFormatter.ofPattern("MM-dd-yyyy"))));
+                data.add( new SimpleStringProperty(resultSet.getDate("DATE_FACTUR").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
                 data.add( new SimpleStringProperty(resultSet.getString("NUMBER_BC")));
-                data.add( new SimpleStringProperty(resultSet.getDate("DATE_FACTUR").toLocalDate().format(DateTimeFormatter.ofPattern("MM-dd-yyyy"))));
+                data.add( new SimpleStringProperty(resultSet.getDate("DATE_FACTUR").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
                 data.add( new SimpleStringProperty(String.format(Locale.FRANCE, "%,.2f", resultSet.getDouble("PRICE") )));
                 if (resultSet.getInt("CONFIRM") != 0) data.add( new SimpleStringProperty("Confirmé"));
                 else data.add( new SimpleStringProperty("Non confirmé"));

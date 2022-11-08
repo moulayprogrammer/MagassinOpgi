@@ -654,7 +654,7 @@ public class MainController implements Initializable {
 
                 data.add( new SimpleStringProperty(String.valueOf(resultSet.getInt("ID"))));
                 data.add( new SimpleStringProperty(resultSet.getString("NUMBER")));
-                data.add(new SimpleStringProperty(resultSet.getDate("DATE").toLocalDate().format(DateTimeFormatter.ofPattern("MM-dd-yyyy"))));
+                data.add(new SimpleStringProperty(resultSet.getDate("DATE").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
                 data.add( new SimpleStringProperty(resultSet.getString("FIRST_NAME") + "   " + resultSet.getString("LAST_NAME")));
                 data.add( new SimpleStringProperty(resultSet.getString("NAME_DEP")));
                 data.add( new SimpleStringProperty(resultSet.getString("NAME_SERV")));
@@ -823,7 +823,7 @@ public class MainController implements Initializable {
 
                     data.add( new SimpleStringProperty(String.valueOf(resultSet.getInt("ID"))));
                     data.add( new SimpleStringProperty(resultSet.getString("NUMBER")));
-                    data.add(new SimpleStringProperty(resultSet.getDate("DATE").toLocalDate().format(DateTimeFormatter.ofPattern("MM-dd-yyyy"))));
+                    data.add(new SimpleStringProperty(resultSet.getDate("DATE").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
                     data.add( new SimpleStringProperty(resultSet.getString("FIRST_NAME") + "   " + resultSet.getString("LAST_NAME")));
                     data.add( new SimpleStringProperty(resultSet.getString("NAME_DEP")));
                     data.add( new SimpleStringProperty(resultSet.getString("NAME_SERV")));
@@ -886,7 +886,7 @@ public class MainController implements Initializable {
 
                     data.add( new SimpleStringProperty(String.valueOf(resultSet.getInt("ID"))));
                     data.add( new SimpleStringProperty(resultSet.getString("NUMBER")));
-                    data.add(new SimpleStringProperty(resultSet.getDate("DATE").toLocalDate().format(DateTimeFormatter.ofPattern("MM-dd-yyyy"))));
+                    data.add(new SimpleStringProperty(resultSet.getDate("DATE").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
                     data.add( new SimpleStringProperty(resultSet.getString("FIRST_NAME") + "   " + resultSet.getString("LAST_NAME")));
                     data.add( new SimpleStringProperty(resultSet.getString("NAME_DEP")));
                     data.add( new SimpleStringProperty(resultSet.getString("NAME_SERV")));
@@ -932,7 +932,7 @@ public class MainController implements Initializable {
 
                         data.add( new SimpleStringProperty(String.valueOf(resultSet.getInt("ID"))));
                         data.add( new SimpleStringProperty(resultSet.getString("NUMBER")));
-                        data.add(new SimpleStringProperty(resultSet.getDate("DATE").toLocalDate().format(DateTimeFormatter.ofPattern("MM-dd-yyyy"))));
+                        data.add(new SimpleStringProperty(resultSet.getDate("DATE").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
                         data.add( new SimpleStringProperty(resultSet.getString("FIRST_NAME") + "   " + resultSet.getString("LAST_NAME")));
                         data.add( new SimpleStringProperty(resultSet.getString("NAME_DEP")));
                         data.add( new SimpleStringProperty(resultSet.getString("NAME_SERV")));

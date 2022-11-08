@@ -93,45 +93,46 @@ public class Print {
                     .append("</div>")
 
                     .append("<div>\n")
-                    .append("<h6 >OFFICE DE PROMOTION ET DE GESTION</h6>\n")
-                    .append("<h6 style=\"margin-top: -20px;\">IMMOBILIER WILAYA DE TAMANRASSET</h6>\n")
-                    .append("<h6 style=\"margin-top: -20px;\">DEPARTEMENT RESSOURCES HUMAINES</h6>\n")
-                    .append("<h6 style=\"margin-top: -20px;\">ET MOYENS GÉNÉRAUX</h6>\n")
-                    .append("<h6 style=\"margin-top: -20px;\">SERVICE MOYENS GÉNÉRAUX</h6>\n")
+                    .append("<h5 >OFFICE DE PROMOTION ET DE GESTION</h5>\n")
+                    .append("<h5 style=\"margin-top: -20px;\">IMMOBILIER WILAYA DE TAMANRASSET</h5>\n")
+                    .append("<h5 style=\"margin-top: -20px;\">DEPARTEMENT RESSOURCES HUMAINES</h5>\n")
+                    .append("<h5 style=\"margin-top: -20px;\">ET MOYENS GÉNÉRAUX</h5>\n")
+                    .append("<h5 style=\"margin-top: -20px;\">SERVICE MOYENS GÉNÉRAUX</h5>\n")
                     .append("</div>")
 
-                    .append("<div style=\"text-align: center;\">\n")
+                    .append("<div style=\"text-align: center; margin-top: 70px;\">\n")
                     .append("<h1><u>DECHARGE</u></h1>\n")
                     .append("</div>")
 
-                    .append("<div style=\"margin-bottom: 10px;\">Je soussigné ")
-                    .append("<span>")
+                    .append("<div style=\"margin-bottom: 20px;\">Je soussigné ")
+                    .append("<span><b>")
                     .append(recept.getFirstName())
                     .append(" ")
                     .append(recept.getLastName())
-                    .append("</span>")
-                    .append("<span>")
+                    .append("</b></span>")
+                    .append("  <span><b>")
                     .append(recept.getFunction())
-                    .append("</span>")
+                    .append("</b></span>")
                     .append(" atteste avoir reçu de la part : ")
-                    .append("<span>")
+                    .append(" <span><b>")
                     .append(preneur.getFirstName())
                     .append(" ")
                     .append(preneur.getLastName())
-                    .append("</span>")
-                    .append("<span>")
+                    .append("</b></span>")
+                    .append("  <span><b>")
                     .append(preneur.getFunction())
-                    .append("</span> Le <span>")
+                    .append("</b></span>  en date du <span> <b>")
                     .append(decharge.getDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")))
-                    .append("</span> : </div>")
+                    .append("</b></span> : </div>")
 
 
 
                     .append("<table class=\"table-art\">\n" )
                     .append("<tr>\n" )
                     .append("<th class=\"th-art\">N°</th>\n" )
-                    .append("<th class=\"th-art\">DESIGNATION</th>\n" )
-                    .append("<th class=\"th-art\">QUANTITIES</th>\n" )
+                    .append("<th class=\"th-art\">DÉSIGNATION</th>\n" )
+                    .append("<th class=\"th-art\">QUANTITÉ</th>\n" )
+                    .append("<th class=\"th-art\" style=\"width: 30%\">OBSERVATION</th>\n" )
                     .append("</tr>\n" );
 
                     final int[] count = {1};
@@ -156,8 +157,12 @@ public class Print {
                                     .append(resultSet.getString("NAME"))
                                     .append("</td>\n" )
 
-                                    .append("<td class=\"td-art\" style=\"width: 10%\">")
+                                    .append("<td class=\"td-art\">")
                                     .append(resultSet.getInt("QTE"))
+                                    .append("</td>\n" )
+
+                                    .append("<td class=\"td-art\">")
+                                    .append(" ")
                                     .append("</td>\n" );
                             count[0]++;
                         }
@@ -172,15 +177,15 @@ public class Print {
 
 
             HTMLFacture.append("</table>\n" )
-                    .append("<table style=\"width: 100%; margin-left: 50px; margin-top: 100px\">\n" +
-                            "    <tr>\n" +
-                            "        <td>Signature du receveur</td>\n" +
-                            "        <td style=\"text-align: center;\">Signature du donateur</td>\n" +
-                            "    </tr>\n" +
-                            "</table>");
+                    .append("<table style=\"width: 100%; margin-left: 50px; margin-top: 100px\">\n" )
+                    .append("<tr>\n" )
+                    .append("<td>Récepteur</td>\n" )
+                    .append("<td style=\"text-align: center;\">Emetteur</td>\n" )
+                    .append("</tr>\n" )
+                    .append("</table>");
 
 
-            HTMLFacture.append("</body>\n" )
+            HTMLFacture.append("</body>\n")
                     .append("</html>\n");
 
             try {
@@ -190,11 +195,11 @@ public class Print {
 
                 if (!mainFile.exists()) FileUtils.forceMkdir(mainFile);
 
-                String outputDirectory = mainDirectoryPath + File.separator + "Bon Sortée" ;
+                String outputDirectory = mainDirectoryPath + File.separator + "Decharge" ;
                 File invoiceFile = new File(outputDirectory);
                 if (!invoiceFile.exists()) FileUtils.forceMkdir(invoiceFile);
 
-                String dayDirectory = outputDirectory + File.separator + "bons_" + LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) ;
+                String dayDirectory = outputDirectory + File.separator + "dechs_" + LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) ;
                 File dayFile = new File(dayDirectory);
                 if (!dayFile.exists()) FileUtils.forceMkdir(dayFile);
 
@@ -203,7 +208,7 @@ public class Print {
 
                     DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("_HH-mm-ss");
 
-                    String path = dayDirectory + File.separator + "bon_" + LocalDateTime.now().format(myFormatObj) + ".pdf";
+                    String path = dayDirectory + File.separator + "dech_" + LocalDateTime.now().format(myFormatObj) + ".pdf";
                     FileOutputStream file = new FileOutputStream(path);
 
                     ConverterProperties converterProperties = new ConverterProperties();

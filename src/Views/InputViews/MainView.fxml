@@ -39,6 +39,14 @@
                               <Rectangle2D />
                            </viewport>
                         </ImageView>
+                        <ImageView fitHeight="26.0" fitWidth="26.0" layoutX="57.0" layoutY="10.0" onMouseClicked="#ActionPrint" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../Icons/pdf.png" />
+                           </image>
+                           <viewport>
+                              <Rectangle2D />
+                           </viewport>
+                        </ImageView>
                      </children>
                   </HBox>
                   <HBox spacing="20.0">
@@ -52,6 +60,14 @@
                            <image>
                               <Image url="@../../Icons/delete.png" />
                            </image>
+                        </ImageView>
+                        <ImageView fitHeight="26.0" fitWidth="26.0" layoutX="56.0" layoutY="10.0" onMousePressed="#ActionDelete" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../Icons/print.png" />
+                           </image>
+                           <HBox.margin>
+                              <Insets left="5.0" />
+                           </HBox.margin>
                         </ImageView>
                      </children>
                   </HBox>

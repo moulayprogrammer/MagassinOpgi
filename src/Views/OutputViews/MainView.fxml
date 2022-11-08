@@ -91,12 +91,12 @@
                               <Font name="System Bold" size="14.0" />
                            </font>
                         </Label>
-                        <ImageView fitHeight="20.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView onMouseClicked="#ActionSearchDate" fitHeight="20.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../Icons/recherche.png.png" />
                            </image>
                         </ImageView>
-                        <ImageView fitHeight="19.0" fitWidth="19.0" onMousePressed="#ActionRefreshDate" pickOnBounds="true" preserveRatio="true">
+                        <ImageView onMouseClicked="#ActionRefreshDate" fitHeight="19.0" fitWidth="19.0" onMousePressed="#ActionRefreshDate" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../Icons/refresh.jpeg" />
                            </image>
