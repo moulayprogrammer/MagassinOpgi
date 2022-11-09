@@ -31,9 +31,9 @@
    <content>
       <AnchorPane prefHeight="450.0" prefWidth="200.0" style="-fx-background-color: #FFF;">
          <children>
-            <TabPane tabMinWidth="165.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="-10.0">
+            <TabPane fx:id="tabPane" tabMinWidth="270.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="-10.0">
                <tabs>
-                  <Tab closable="false" text="PAR JOUR">
+                  <Tab fx:id="PaneDay" closable="false" text="PAR JOUR">
                      <content>
                         <AnchorPane minHeight="-Infinity" prefHeight="360.0" style="-fx-background-color: #FFF;">
                            <children>
@@ -56,28 +56,34 @@
                         </AnchorPane>
                      </content>
                   </Tab>
-                  <Tab closable="false" text="PAR MOIS">
+                  <Tab fx:id="PanePeriod" closable="false" text="PAR PÉRIODE">
                      <content>
                         <AnchorPane minHeight="-Infinity" prefHeight="360.0" style="-fx-background-color: #FFF;">
                            <children>
-                              <HBox fx:id="hBox" alignment="CENTER" layoutX="14.0" layoutY="26.0" spacing="30.0" AnchorPane.leftAnchor="14.0">
+                              <HBox alignment="CENTER" layoutX="14.0" layoutY="26.0" spacing="30.0" AnchorPane.leftAnchor="14.0">
                                  <children>
-                                    <Label style="-fx-font-size: 16;" text="JOUR" />
+                                    <Label prefWidth="39.0" style="-fx-font-size: 16;" text="DE" />
+                                    <DatePicker fx:id="dpFrom" prefWidth="200.0" />
                                  </children>
                               </HBox>
                               <HBox alignment="CENTER" layoutX="14.0" layoutY="71.0" spacing="30.0" AnchorPane.leftAnchor="14.0">
                                  <children>
                                     <Label prefWidth="39.0" style="-fx-font-size: 16;" text="DEP" />
-                                    <ComboBox fx:id="cbDep1" onAction="#ActionComboDepartment" prefWidth="200.0" />
+                                    <ComboBox fx:id="cbDepPer" onAction="#ActionComboDepartmentPeriod" prefWidth="200.0" />
                                     <Label layoutX="10.0" layoutY="15.0" style="-fx-font-size: 16;" text="SERVICE" />
-                                    <ComboBox fx:id="cbServ1" layoutX="79.0" layoutY="10.0" prefWidth="200.0" />
+                                    <ComboBox fx:id="cbServPer" layoutX="79.0" layoutY="10.0" prefWidth="200.0" />
                                  </children>
                               </HBox>
-                              <ListSelectionView fx:id="lsCategory1" layoutX="14.0" layoutY="112.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="30.0" />
+                              <ListSelectionView fx:id="lsCategoryPer" layoutX="14.0" layoutY="112.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="30.0" />
+                              <HBox alignment="CENTER" layoutX="313.0" layoutY="26.0" spacing="30.0">
+                                 <children>
+                                    <Label prefWidth="62.0" style="-fx-font-size: 16;" text="Au" />
+                                    <DatePicker fx:id="dpTo" prefWidth="200.0" />
+                                 </children>
+                              </HBox>
                            </children>
                         </AnchorPane>
                      </content></Tab>
-                  <Tab closable="false" text="PAR PÉRIODE" />
                </tabs>
             </TabPane>
             <HBox spacing="30.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0">

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<DialogPane expanded="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="250.0" prefWidth="250.0" stylesheets="@../../resources/bootstrap3.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.ArticlesControllers.MagasinStatusController">
+   <header>
+      <AnchorPane minHeight="50.0" prefHeight="50.0" style="-fx-background-color: #EFF;">
+         <children>
+            <HBox layoutX="9.9169921875" layoutY="10.0" spacing="5.0" AnchorPane.bottomAnchor="19.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="15.0">
+               <children>
+                  <Label style="-fx-font-size: 17;" text="État de Magasin">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+         </children>
+      </AnchorPane>
+   </header>
+   <content>
+      <AnchorPane prefHeight="202.0" prefWidth="250.0" style="-fx-background-color: #FFF;">
+         <children>
+            <VBox alignment="CENTER_LEFT" layoutX="14.0" layoutY="31.0" spacing="10.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="10.0">
+               <children>
+                  <Label style="-fx-font-size: 16;" text="CATEGORY" />
+                  <ComboBox fx:id="cbCategory" maxWidth="1.7976931348623157E308" prefWidth="150.0" VBox.vgrow="ALWAYS" />
+               </children>
+            </VBox>
+            <HBox layoutX="46.0" layoutY="158.0" spacing="30.0" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="0.0">
+               <children>
+                  <Button fx:id="btnConfirm" defaultButton="true" mnemonicParsing="false" onAction="#ActionPrint" prefWidth="80.0" style="-fx-font-size: 10;" styleClass="info" text="CONFIRMER" textFill="#2005a8">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </Button>
+                  <Button cancelButton="true" mnemonicParsing="false" onAction="#ActionAnnul" prefWidth="80.0" style="-fx-font-size: 10;" styleClass="warning" text="ANNULER" textFill="#dd0000">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+      </AnchorPane>
+   </content>
+</DialogPane>

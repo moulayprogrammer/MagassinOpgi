@@ -3,10 +3,8 @@ package Controllers.ArticlesControllers;
 import BddPackage.ArticlesOperation;
 import BddPackage.CategoryOperation;
 import BddPackage.ConnectBD;
-import BddPackage.GasolineCardOperation;
 import Models.Article;
 import Models.Category;
-import Models.GasolineCard;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -26,7 +24,6 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -274,6 +271,26 @@ public class MainController implements Initializable {
 
             refreshArticles();
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void MagassinStatus(){
+        try {
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/ArticlesViews/MagasinStatusView.fxml"));
+            DialogPane temp = loader.load();
+            Dialog<ButtonType> dialog = new Dialog<>();
+            dialog.setDialogPane(temp);
+            dialog.resizableProperty().setValue(false);
+            dialog.initOwner(this.tfRecherche.getScene().getWindow());
+            dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
+            Node closeButton = dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
+            closeButton.setVisible(false);
+            dialog.showAndWait();
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

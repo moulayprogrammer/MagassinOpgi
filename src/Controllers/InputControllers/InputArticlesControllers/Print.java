@@ -263,7 +263,7 @@ public class Print {
                             "            Le Magasinier\n" +
                             "          </td>\n" +
                             "          <td style=\"width: 30%; font-size: large; font-weight: bold;\">\n" +
-                            "            Le C.S.M.G\n" +
+                            "            C.S.M.G\n" +
                             "          </td>\n" +
                             "          <td style=\"width: 30%; text-align : center; font-size: large; font-weight: bold;\">\n" +
                             "            Le D.R.H.M.G\n" +
@@ -283,7 +283,7 @@ public class Print {
 
                 if (!mainFile.exists()) FileUtils.forceMkdir(mainFile);
 
-                String outputDirectory = mainDirectoryPath + File.separator + "Bon Sortée" ;
+                String outputDirectory = mainDirectoryPath + File.separator + "Bon Réception" ;
                 File invoiceFile = new File(outputDirectory);
                 if (!invoiceFile.exists()) FileUtils.forceMkdir(invoiceFile);
 
