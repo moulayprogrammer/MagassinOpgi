@@ -335,67 +335,77 @@ public class UpdateController implements Initializable {
     private void ActionAddDemand(){
         List<StringProperty> dataSelected = tableArticle.getSelectionModel().getSelectedItem();
         if (dataSelected != null) {
-            int ex = exist(dataSelected);
-            if ( ex == -1 ){
+            if (dataTable.size() <= 10){
+                int ex = exist(dataSelected);
+                if ( ex == -1 ) {
 
-               try {
-                   Article article = articlesOperation.get(Integer.parseInt(tableArticle.getSelectionModel().getSelectedItem().get(0).getValue()));
-                   List<ComponentOutput> componentOutputs = new ArrayList<>();
-                   List<StoreCard> storeCards = new ArrayList<>();
+                    try {
+                        Article article = articlesOperation.get(Integer.parseInt(tableArticle.getSelectionModel().getSelectedItem().get(0).getValue()));
+                        List<ComponentOutput> componentOutputs = new ArrayList<>();
+                        List<StoreCard> storeCards = new ArrayList<>();
 
 
-                   FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/OutputViews/ArticlesOutputViews/AddDemandView.fxml"));
-                   DialogPane temp = loader.load();
-                   AddDemandController controller = loader.getController();
-                   controller.Init(article,componentOutputs,storeCards);
-                   Dialog<ButtonType> dialog = new Dialog<>();
-                   dialog.setDialogPane(temp);
-                   dialog.resizableProperty().setValue(false);
-                   dialog.initOwner(this.tfRecherche.getScene().getWindow());
-                   dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
-                   Node closeButton = dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
-                   closeButton.setVisible(false);
-                   dialog.showAndWait();
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/OutputViews/ArticlesOutputViews/AddDemandView.fxml"));
+                        DialogPane temp = loader.load();
+                        AddDemandController controller = loader.getController();
+                        controller.Init(article, componentOutputs, storeCards);
+                        Dialog<ButtonType> dialog = new Dialog<>();
+                        dialog.setDialogPane(temp);
+                        dialog.resizableProperty().setValue(false);
+                        dialog.initOwner(this.tfRecherche.getScene().getWindow());
+                        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
+                        Node closeButton = dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
+                        closeButton.setVisible(false);
+                        dialog.showAndWait();
 
-                   for (int i = 0; i < componentOutputs.size(); i++) {
-                       ComponentOutput componentOutput = componentOutputs.get(i);
-                       componentOutput.setIdOutput(this.selectedOutput.getId());
-                       StoreCard storeCard = storeCards.get(i);
+                        for (int i = 0; i < componentOutputs.size(); i++) {
+                            ComponentOutput componentOutput = componentOutputs.get(i);
+                            componentOutput.setIdOutput(this.selectedOutput.getId());
+                            StoreCard storeCard = storeCards.get(i);
 
-                       List<List<StringProperty>> data = new ArrayList<>();
-                       List<StringProperty> dataG = new ArrayList<>();
-                       List<StringProperty> dataQ = new ArrayList<>();
+                            List<List<StringProperty>> data = new ArrayList<>();
+                            List<StringProperty> dataG = new ArrayList<>();
+                            List<StringProperty> dataQ = new ArrayList<>();
 
-                       dataG.add(0, new SimpleStringProperty(String.valueOf(article.getId())));
-                       dataG.add(1, new SimpleStringProperty(article.getName()));
+                            dataG.add(0, new SimpleStringProperty(String.valueOf(article.getId())));
+                            dataG.add(1, new SimpleStringProperty(article.getName()));
 
-                       dataQ.add(0, new SimpleStringProperty(String.valueOf(componentOutput.getQteDem())));
-                       dataQ.add(1, new SimpleStringProperty(String.valueOf(componentOutput.getQteServ())));
+                            dataQ.add(0, new SimpleStringProperty(String.valueOf(componentOutput.getQteDem())));
+                            dataQ.add(1, new SimpleStringProperty(String.valueOf(componentOutput.getQteServ())));
 
-                       dataG.add(2, new SimpleStringProperty(String.format(Locale.FRANCE, "%,.2f", storeCard.getPrice())));
-                       dataG.add(3, new SimpleStringProperty(String.format(Locale.FRANCE, "%,.2f", (storeCard.getPrice() * componentOutput.getQteServ()))));
+                            dataG.add(2, new SimpleStringProperty(String.format(Locale.FRANCE, "%,.2f", storeCard.getPrice())));
+                            dataG.add(3, new SimpleStringProperty(String.format(Locale.FRANCE, "%,.2f", (storeCard.getPrice() * componentOutput.getQteServ()))));
 
-                       data.add(dataG);
-                       data.add(dataQ);
+                            data.add(dataG);
+                            data.add(dataQ);
 
-                       priceList.add((storeCard.getPrice() * componentOutput.getQteServ()));
-                       dataTable.add(data);
-                       int idCO = insertComponentOutput(componentOutput);
-                       componentOutput.setId(idCO);
-                       addQteConsumedStore(storeCard);
-                   }
+                            priceList.add((storeCard.getPrice() * componentOutput.getQteServ()));
+                            dataTable.add(data);
+                            int idCO = insertComponentOutput(componentOutput);
+                            componentOutput.setId(idCO);
+                            addQteConsumedStore(storeCard);
+                        }
 
-                   if (componentOutputs.size() != 0){
-                       stores.put(article.getId(),storeCards);
-                       outputs.put(article.getId(),componentOutputs);
-                   }
+                        if (componentOutputs.size() != 0) {
+                            stores.put(article.getId(), storeCards);
+                            outputs.put(article.getId(), componentOutputs);
+                        }
 
-               }catch (Exception e){
-                   e.printStackTrace();
-               }
-               tableDemands.setItems(dataTable);
-               refreshProduct();
-               sumTotalTableSales();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    tableDemands.setItems(dataTable);
+                    refreshProduct();
+                    sumTotalTableSales();
+                }
+            }else {
+                Alert alertWarning = new Alert(Alert.AlertType.WARNING);
+                alertWarning.setHeaderText("ATTENTION ");
+                alertWarning.setContentText("vous avez dépassé le nombre maximum d'article");
+                alertWarning.initOwner(this.tfRecherche.getScene().getWindow());
+                Button okButton = (Button) alertWarning.getDialogPane().lookupButton(ButtonType.OK);
+                okButton.setText("D'ACCORD");
+                alertWarning.showAndWait();
             }
         }
     }

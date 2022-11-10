@@ -24,11 +24,15 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import org.apache.commons.io.FileUtils;
+import org.apache.pdfbox.Loader;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.printing.PDFPageable;
 import org.controlsfx.control.ListSelectionView;
 
 
 import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
+import java.awt.print.PrinterJob;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.net.URL;
@@ -892,8 +896,16 @@ public class ConsumptionStatusController implements Initializable {
                 HtmlConverter.convertToPdf(HTMLFacture.toString(), pdf, converterProperties);
 
                 pdf.close();
-                Desktop.getDesktop().open(new File(path));
+//                Desktop.getDesktop().open(new File(path));
 
+                PDDocument document = Loader.loadPDF(new File(path));
+                PrinterJob job = PrinterJob.getPrinterJob();
+                job.setPageable(new PDFPageable(document));
+
+                if (job.printDialog())
+                {
+                    job.print();
+                }
             }
         }catch (Exception e){
             e.printStackTrace();

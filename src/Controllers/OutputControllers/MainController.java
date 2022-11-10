@@ -1,6 +1,7 @@
 package Controllers.OutputControllers;
 
 import BddPackage.*;
+import Controllers.OutputControllers.DechargeControllers.PrintController;
 import Controllers.OutputControllers.OutputArticlesControllers.Print;
 import Controllers.OutputControllers.OutputArticlesControllers.UpdateController;
 import Models.*;
@@ -563,8 +564,22 @@ public class MainController implements Initializable {
                         List<StringProperty> data  = tableDecharge.getSelectionModel().getSelectedItem();
                         if (data != null){
                             try {
-                                Decharge decharge = dechargeOperation.get(Integer.parseInt(data.get(0).getValue()));
 
+
+                                /*FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/OutputViews/DechargeViews/PrintView.fxml"));
+                                DialogPane temp = loader.load();
+                                PrintController controller = new PrintController();
+                                controller.Init(decharge);
+                                Dialog<ButtonType> dialog = new Dialog<>();
+                                dialog.setDialogPane(temp);
+                                dialog.resizableProperty().setValue(false);
+                                dialog.initOwner(this.tfRecherche.getScene().getWindow());
+                                dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
+                                Node closeButton = dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
+                                closeButton.setVisible(false);
+                                dialog.showAndWait();*/
+
+                                Decharge decharge = dechargeOperation.get(Integer.parseInt(data.get(0).getValue()));
                                 Controllers.OutputControllers.DechargeControllers.Print print = new Controllers.OutputControllers.DechargeControllers.Print(decharge);
                                 print.CreatePdfFacture();
                             } catch (Exception e) {

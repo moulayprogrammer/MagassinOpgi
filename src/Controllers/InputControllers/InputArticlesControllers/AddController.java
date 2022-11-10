@@ -191,7 +191,7 @@ public class AddController implements Initializable {
     @FXML
     private void ActionAddProvider(){
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/InputViews/InputArticlesViews/AddProviderView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/ConfigurationViews/ProviderViews/AddView.fxml"));
             DialogPane temp = loader.load();
             Dialog<ButtonType> dialog = new Dialog<>();
             dialog.setDialogPane(temp);
@@ -272,47 +272,57 @@ public class AddController implements Initializable {
         List<StringProperty> dataSelected = tableArticle.getSelectionModel().getSelectedItem();
 
         if (dataSelected != null) {
-            int ex = exist(dataSelected);
-            if ( ex == -1 ){
-                try {
-                    Article article = articlesOperation.getWithCatUnit(Integer.parseInt(tableArticle.getSelectionModel().getSelectedItem().get(0).getValue()));
-                    ComponentInput componentInput = new ComponentInput();
+            if (dataTable.size() <= 15) {
+                int ex = exist(dataSelected);
+                if (ex == -1) {
+                    try {
+                        Article article = articlesOperation.getWithCatUnit(Integer.parseInt(tableArticle.getSelectionModel().getSelectedItem().get(0).getValue()));
+                        ComponentInput componentInput = new ComponentInput();
 
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/InputViews/InputArticlesViews/AddPorchesView.fxml"));
-                    DialogPane temp = loader.load();
-                    AddPorchesController controller = loader.getController();
-                    controller.Init(article,componentInput);
-                    Dialog<ButtonType> dialog = new Dialog<>();
-                    dialog.setDialogPane(temp);
-                    dialog.resizableProperty().setValue(false);
-                    dialog.initOwner(this.tfRecherche.getScene().getWindow());
-                    dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
-                    Node closeButton = dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
-                    closeButton.setVisible(false);
-                    dialog.showAndWait();
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/InputViews/InputArticlesViews/AddPorchesView.fxml"));
+                        DialogPane temp = loader.load();
+                        AddPorchesController controller = loader.getController();
+                        controller.Init(article, componentInput);
+                        Dialog<ButtonType> dialog = new Dialog<>();
+                        dialog.setDialogPane(temp);
+                        dialog.resizableProperty().setValue(false);
+                        dialog.initOwner(this.tfRecherche.getScene().getWindow());
+                        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
+                        Node closeButton = dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
+                        closeButton.setVisible(false);
+                        dialog.showAndWait();
 
 
-                    if (componentInput.getPrice() != 0){
+                        if (componentInput.getPrice() != 0) {
 
-                        List<StringProperty> data = new ArrayList<>();
-                        data.add(0, new SimpleStringProperty(String.valueOf(article.getId())));
-                        data.add(1, new SimpleStringProperty(article.getName()));
-                        data.add(2, new SimpleStringProperty(article.getUnit()));
-                        data.add(3, new SimpleStringProperty(String.valueOf(componentInput.getQte())));
-                        data.add(4, new SimpleStringProperty(String.format(Locale.FRANCE, "%,.2f", componentInput.getPrice())));
-                        data.add(5, new SimpleStringProperty(String.format(Locale.FRANCE, "%,.2f", (componentInput.getPrice() * componentInput.getQte()))));
+                            List<StringProperty> data = new ArrayList<>();
+                            data.add(0, new SimpleStringProperty(String.valueOf(article.getId())));
+                            data.add(1, new SimpleStringProperty(article.getName()));
+                            data.add(2, new SimpleStringProperty(article.getUnit()));
+                            data.add(3, new SimpleStringProperty(String.valueOf(componentInput.getQte())));
+                            data.add(4, new SimpleStringProperty(String.format(Locale.FRANCE, "%,.2f", componentInput.getPrice())));
+                            data.add(5, new SimpleStringProperty(String.format(Locale.FRANCE, "%,.2f", (componentInput.getPrice() * componentInput.getQte()))));
 
-                        priceList.add(componentInput.getPrice());
-                        componentInputs.add(componentInput);
-                        dataTable.add(data);
+                            priceList.add(componentInput.getPrice());
+                            componentInputs.add(componentInput);
+                            dataTable.add(data);
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
+                tablePorches.setItems(dataTable);
+                sumTotalTablePorches();
+            }else {
+                Alert alertWarning = new Alert(Alert.AlertType.WARNING);
+                alertWarning.setHeaderText("ATTENTION ");
+                alertWarning.setContentText("vous avez dépassé le nombre maximum d'article");
+                alertWarning.initOwner(this.tfRecherche.getScene().getWindow());
+                Button okButton = (Button) alertWarning.getDialogPane().lookupButton(ButtonType.OK);
+                okButton.setText("D'ACCORD");
+                alertWarning.showAndWait();
             }
-            tablePorches.setItems(dataTable);
-            sumTotalTablePorches();
         }
     }
 

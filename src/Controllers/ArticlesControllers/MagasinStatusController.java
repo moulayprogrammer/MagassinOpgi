@@ -98,28 +98,28 @@ public class MagasinStatusController implements Initializable {
                         .append("<head>\n" )
                         .append("<style>\n" )
 
-                        .append("@page {\n" )
-                        .append("margin: 15mm 10mm 10mm 15mm;\n" )
-                        .append("size: A4;" )
+                        .append("@page {" )
+                        .append("margin: 15mm 10mm 10mm 15mm;" )
+                        .append("size: A4;")
                         .append("}" )
 
-                        .append("html {\n" )
-                        .append("font-family: 'Times New Roman';\n" )
-                        .append("background-color: white;\n" )
-                        .append("}\n")
+                        .append("html {")
+                        .append("font-family: 'Times New Roman';")
+                        .append("background-color: white;")
+                        .append("}")
 
-                        .append(".table-art{\n" )
-                        .append("border: 1px solid black;\n" )
-                        .append("border-collapse: collapse;\n" )
-                        .append("min-width: 100%;\n" )
-                        .append("width: 100%;\n" )
-                        .append("text-align: center;\n" )
-                        .append("font-size: 10pt;\n" )
-                        .append("}\n")
+                        .append(".table-art{")
+                        .append("border: 1px solid black;")
+                        .append("border-collapse: collapse;")
+                        .append("min-width: 100%;")
+                        .append("width: 100%;")
+                        .append("text-align: center;")
+                        .append("font-size: 10pt;")
+                        .append("}")
 
-                        .append(".th-art{\n" )
-                        .append("border: solid black;\n" )
-                        .append("border-width: 1px ;\n" )
+                        .append(".th-art{")
+                        .append("border: solid black;")
+                        .append("border-width: 1px ;" )
                         .append("font-size: medium;\n" )
                         .append("font-weight: bold;\n" )
                         .append("}\n" )
@@ -225,7 +225,7 @@ public class MagasinStatusController implements Initializable {
                             .append("</td>\n" )
 
                             .append("<td class=\"td-art\">")
-                            .append(String.format(Locale.FRANCE, "%,.2f", tot) )
+                            .append(String.format(Locale.FRANCE, "%,.2f", tot))
                             .append("</td>\n" )
                             .append("</tr>\n");
                 }
@@ -282,12 +282,10 @@ public class MagasinStatusController implements Initializable {
                 }catch (Exception e){
                     e.printStackTrace();
                 }
-
             }
         }catch (Exception e){
             e.printStackTrace();
         }
-
     }
 
     @FXML

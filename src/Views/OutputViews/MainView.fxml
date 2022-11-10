@@ -65,7 +65,7 @@
                      <graphic>
                         <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../Icons/excel.png" />
+                              <Image url="@../../Icons/pdf.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -74,7 +74,7 @@
                      <graphic>
                         <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../Icons/excel.png" />
+                              <Image url="@../../Icons/print.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -91,12 +91,12 @@
                               <Font name="System Bold" size="14.0" />
                            </font>
                         </Label>
-                        <ImageView onMouseClicked="#ActionSearchDate" fitHeight="20.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="20.0" fitWidth="23.0" onMouseClicked="#ActionSearchDate" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../Icons/recherche.png.png" />
                            </image>
                         </ImageView>
-                        <ImageView onMouseClicked="#ActionRefreshDate" fitHeight="19.0" fitWidth="19.0" onMousePressed="#ActionRefreshDate" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="19.0" fitWidth="19.0" onMouseClicked="#ActionRefreshDate" onMousePressed="#ActionRefreshDate" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../Icons/refresh.jpeg" />
                            </image>
