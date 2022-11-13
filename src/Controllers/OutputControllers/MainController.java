@@ -1,7 +1,6 @@
 package Controllers.OutputControllers;
 
 import BddPackage.*;
-import Controllers.OutputControllers.DechargeControllers.PrintController;
 import Controllers.OutputControllers.OutputArticlesControllers.Print;
 import Controllers.OutputControllers.OutputArticlesControllers.UpdateController;
 import Models.*;
@@ -11,6 +10,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -19,6 +19,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -54,6 +55,10 @@ public class MainController implements Initializable {
     TableColumn<List<StringProperty>,String> clIdDecharge,clDateDecharge,clNameDecharge ,clNameDechargeur,clDepDecharge,clServDecharge;
     @FXML
     TableColumn<List<StringProperty>,String> clIdBR,clNumBR,clDateBR ,clEmployee,clNumCN,clNumBN,clMontantBRG;
+    @FXML
+    Button btnPdf, btnPrintStatus;
+    @FXML
+    ImageView btnPrint;
 
     private final ConnectBD connectBD = new ConnectBD();
     private Connection conn;
@@ -528,10 +533,12 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    private void ActionPrint(){
+    private void ActionPrint(MouseEvent event){
 
         try {
             String tabId = tabPane.getSelectionModel().getSelectedItem().getId();
+            boolean printB = event.getSource().equals(btnPrint);
+
             switch (tabId){
                 case "tabSortie":
                     try {
@@ -540,7 +547,7 @@ public class MainController implements Initializable {
                             try {
                                 Output output = outputOperation.get(Integer.parseInt(data.get(0).getValue()));
 
-                                Print print = new Print(output);
+                                Print print = new Print(output,printB);
                                 print.CreatePdfFacture();
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -564,23 +571,9 @@ public class MainController implements Initializable {
                         List<StringProperty> data  = tableDecharge.getSelectionModel().getSelectedItem();
                         if (data != null){
                             try {
-
-
-                                /*FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/OutputViews/DechargeViews/PrintView.fxml"));
-                                DialogPane temp = loader.load();
-                                PrintController controller = new PrintController();
-                                controller.Init(decharge);
-                                Dialog<ButtonType> dialog = new Dialog<>();
-                                dialog.setDialogPane(temp);
-                                dialog.resizableProperty().setValue(false);
-                                dialog.initOwner(this.tfRecherche.getScene().getWindow());
-                                dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
-                                Node closeButton = dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
-                                closeButton.setVisible(false);
-                                dialog.showAndWait();*/
-
                                 Decharge decharge = dechargeOperation.get(Integer.parseInt(data.get(0).getValue()));
-                                Controllers.OutputControllers.DechargeControllers.Print print = new Controllers.OutputControllers.DechargeControllers.Print(decharge);
+
+                                Controllers.OutputControllers.DechargeControllers.Print print = new Controllers.OutputControllers.DechargeControllers.Print(decharge,printB);
                                 print.CreatePdfFacture();
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -605,7 +598,7 @@ public class MainController implements Initializable {
                             try {
                                 RechargeGasolineCard gasolineCard = rechargeGasolineCardOperation.get(Integer.parseInt(data.get(0).getValue()));
 
-                                Controllers.OutputControllers.RechargeCarteGasolineControllers.Print print = new Controllers.OutputControllers.RechargeCarteGasolineControllers.Print(gasolineCard);
+                                Controllers.OutputControllers.RechargeCarteGasolineControllers.Print print = new Controllers.OutputControllers.RechargeCarteGasolineControllers.Print(gasolineCard, printB);
                                 print.CreatePdf();
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -633,11 +626,14 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    private void ConsumptionStatus(){
+    private void ConsumptionStatus(ActionEvent event){
         try {
+            boolean print = event.getSource().equals(btnPrintStatus);
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/OutputViews/ConsumptionStatusView.fxml"));
             DialogPane temp = loader.load();
+            ConsumptionStatusController controller = loader.getController();
+            controller.Init(print);
             Dialog<ButtonType> dialog = new Dialog<>();
             dialog.setDialogPane(temp);
             dialog.resizableProperty().setValue(false);

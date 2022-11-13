@@ -67,7 +67,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button graphicTextGap="10.0" layoutX="10.0" layoutY="53.0" mnemonicParsing="false" text="Etat De Magasin">
+                  <Button fx:id="btnPrint" graphicTextGap="10.0" layoutX="10.0" layoutY="53.0" onAction="#MagassinStatus" mnemonicParsing="false" text="Etat De Magasin">
                      <graphic>
                         <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                            <image>

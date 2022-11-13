@@ -20,6 +20,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -56,6 +57,8 @@ public class MainController implements Initializable {
     TableColumn<List<StringProperty>,String> clId,clProvider,clNumBR,clDateBR,clNumFact,clDateFact,clNumBC,clDateBC,clPrice,clConfirm;
     @FXML
     TableColumn<List<StringProperty>,String> clIdGasoline,clDateGasoline, clNumFactGasoline, clDateFactGasoline, clNumBCGasoline, clDateBCGasoline, clPriceGasoline;
+    @FXML
+    ImageView btnPrint;
 
     private final ConnectBD connectBD = new ConnectBD();
     private Connection conn;
@@ -495,8 +498,9 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    private void ActionPrint(){
+    private void ActionPrint(MouseEvent event ){
         String tabId = tabPane.getSelectionModel().getSelectedItem().getId();
+        boolean printB = event.getSource().equals(btnPrint);
         switch (tabId){
             case "tabBon":
                 try {
@@ -506,7 +510,7 @@ public class MainController implements Initializable {
                             try {
                                 Input input = inputOperation.get(Integer.parseInt(data.get(0).getValue()));
 
-                                Print print = new Print(input);
+                                Print print = new Print(input,printB);
                                 print.CreatePdfFacture();
 
                             } catch (Exception e) {

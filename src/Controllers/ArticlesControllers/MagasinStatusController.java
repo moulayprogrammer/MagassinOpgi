@@ -11,6 +11,7 @@ import com.itextpdf.html2pdf.ConverterProperties;
 import com.itextpdf.html2pdf.HtmlConverter;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -24,10 +25,14 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import org.apache.commons.io.FileUtils;
+import org.apache.pdfbox.Loader;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.printing.PDFPageable;
 import org.controlsfx.control.ListSelectionView;
 
 import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
+import java.awt.print.PrinterJob;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.net.URL;
@@ -56,13 +61,16 @@ public class MagasinStatusController implements Initializable {
 
     private final ObservableList<String> comboCategoryData = FXCollections.observableArrayList();
     ArrayList<Category> categories;
-
+    private boolean print = false;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         conn = connectBD.connect();
 
         refreshComboCategory();
 
+    }
+    public void Init(boolean print){
+        this.print = print;
     }
 
     private void refreshComboCategory() {
@@ -276,7 +284,25 @@ public class MagasinStatusController implements Initializable {
                         HtmlConverter.convertToPdf(HTMLFacture.toString(), pdf, converterProperties);
 
                         pdf.close();
-                        Desktop.getDesktop().open(new File(path));
+
+                        if (print){
+                            Platform.runLater(() -> {
+
+                                try {
+                                    PDDocument document = Loader.loadPDF(new File(path));
+                                    PrinterJob job = PrinterJob.getPrinterJob();
+                                    job.setPageable(new PDFPageable(document));
+
+                                    if (job.printDialog()) {
+                                        job.print();
+                                    }
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
+                            });
+                        }else {
+                            Desktop.getDesktop().open(new File(path));
+                        }
 
                     }
                 }catch (Exception e){

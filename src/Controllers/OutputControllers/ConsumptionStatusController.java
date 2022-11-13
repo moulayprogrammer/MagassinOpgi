@@ -11,6 +11,7 @@ import com.itextpdf.html2pdf.ConverterProperties;
 import com.itextpdf.html2pdf.HtmlConverter;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -49,7 +50,7 @@ public class ConsumptionStatusController implements Initializable {
     @FXML
     TabPane tabPane;
     @FXML
-    Tab PaneDay,PaneMonth, PanePeriod;
+    Tab PaneDay, PanePeriod;
     @FXML
     HBox hBox;
     @FXML
@@ -78,6 +79,7 @@ public class ConsumptionStatusController implements Initializable {
     private final ArrayList<String> treeSet = new ArrayList<>();
     ArrayList<Category> categories;
     private boolean carb = false;
+    private boolean print = false;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -131,6 +133,9 @@ public class ConsumptionStatusController implements Initializable {
                     break;
             }
         });
+    }
+    public void Init(boolean print){
+        this.print = print;
     }
 
     private void refreshListSelectionCategory() {
@@ -896,15 +901,24 @@ public class ConsumptionStatusController implements Initializable {
                 HtmlConverter.convertToPdf(HTMLFacture.toString(), pdf, converterProperties);
 
                 pdf.close();
-//                Desktop.getDesktop().open(new File(path));
 
-                PDDocument document = Loader.loadPDF(new File(path));
-                PrinterJob job = PrinterJob.getPrinterJob();
-                job.setPageable(new PDFPageable(document));
+                if (print){
+                    Platform.runLater(() -> {
 
-                if (job.printDialog())
-                {
-                    job.print();
+                        try {
+                            PDDocument document = Loader.loadPDF(new File(path));
+                            PrinterJob job = PrinterJob.getPrinterJob();
+                            job.setPageable(new PDFPageable(document));
+
+                            if (job.printDialog()) {
+                                job.print();
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    });
+                }else {
+                    Desktop.getDesktop().open(new File(path));
                 }
             }
         }catch (Exception e){

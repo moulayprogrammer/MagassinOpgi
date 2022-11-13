@@ -61,7 +61,7 @@
                               <Image url="@../../Icons/delete.png" />
                            </image>
                         </ImageView>
-                        <ImageView fitHeight="26.0" fitWidth="26.0" layoutX="56.0" layoutY="10.0" onMousePressed="#ActionDelete" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="btnPrint" fitHeight="26.0" fitWidth="26.0" layoutX="56.0" layoutY="10.0" onMousePressed="#ActionPrint" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../Icons/print.png" />
                            </image>

@@ -15,7 +15,7 @@ public class UsersOperation extends BDD<Users> {
     public boolean insert(Users o) {
         connectDatabase();
         boolean ins = false;
-        String query = "INSERT INTO user (username, password) VALUES (?,?)";
+        String query = "INSERT INTO USERS (username, password) VALUES (?,?)";
         try {
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.setString(1,o.getUsername());
@@ -33,7 +33,7 @@ public class UsersOperation extends BDD<Users> {
     public boolean update(Users o1, Users o2) {
         connectDatabase();
         boolean upd = false;
-        String query = "UPDATE user SET username = ?, password  = ? WHERE id = ?;";
+        String query = "UPDATE USERS SET username = ?, password  = ? WHERE id = ?;";
         try {
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.setString(1,o1.getUsername());
@@ -52,7 +52,7 @@ public class UsersOperation extends BDD<Users> {
     public boolean delete(Users o) {
         connectDatabase();
         boolean del = false;
-        String query = "DELETE FROM user WHERE id = ?;";
+        String query = "DELETE FROM USERS WHERE id = ?;";
         try {
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.setInt(1,o.getId());
@@ -69,11 +69,11 @@ public class UsersOperation extends BDD<Users> {
     public boolean isExist(Users o) {
         connectDatabase();
         boolean ex = false;
-        String query = "SELECT * FROM user WHERE username = ? AND password = ?";
+        String query = "SELECT * FROM USERS WHERE username = ? AND password = ?";
         try {
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.setString(1,o.getUsername());
-            preparedStmt.setString(2,o.getPassword());
+            preparedStmt.setString(2,String.valueOf(("@+"+o.getPassword()+"11#A").hashCode()));
             ResultSet resultSet = preparedStmt.executeQuery();
             if (resultSet.next()){
                 ex = true;
@@ -112,7 +112,7 @@ public class UsersOperation extends BDD<Users> {
     public Users get(String username, String password) {
         connectDatabase();
         Users users = new Users();
-        String query = "SELECT * FROM user WHERE username = ? AND password = ?";
+        String query = "SELECT * FROM USERS WHERE username = ? AND password = ?";
         try {
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.setString(1,username);

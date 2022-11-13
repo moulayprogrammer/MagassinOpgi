@@ -7,6 +7,7 @@ import com.itextpdf.html2pdf.ConverterProperties;
 import com.itextpdf.html2pdf.HtmlConverter;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
+import javafx.application.Platform;
 import org.apache.commons.io.FileUtils;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -37,10 +38,11 @@ public class Print {
     private Decharge decharge;
     private Employee preneur;
     private Employee recept;
-    private PrintService printService;
+    private boolean print = false;
 
-    public Print(Decharge decharge) {
+    public Print(Decharge decharge, boolean print) {
         this.decharge = decharge;
+        this.print = print;
         this.preneur = employeeOperation.get(decharge.getIdEmp());
         this.recept = employeeOperation.get(decharge.getIdEmpDech());
         this.conn = connectBD.connect();
@@ -224,17 +226,25 @@ public class Print {
                     HtmlConverter.convertToPdf(HTMLFacture.toString(), pdf, converterProperties);
 
                     pdf.close();
-//                    Desktop.getDesktop().open(new File(path));
 
-                    PDDocument document = Loader.loadPDF(new File(path));
-                    PrinterJob job = PrinterJob.getPrinterJob();
-                    job.setPageable(new PDFPageable(document));
+                    if (print){
+                        Platform.runLater(() -> {
 
-                    if (job.printDialog())
-                    {
-                        job.print();
+                            try {
+                                PDDocument document = Loader.loadPDF(new File(path));
+                                PrinterJob job = PrinterJob.getPrinterJob();
+                                job.setPageable(new PDFPageable(document));
+
+                                if (job.printDialog()) {
+                                    job.print();
+                                }
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+                        });
+                    }else {
+                        Desktop.getDesktop().open(new File(path));
                     }
-
 
                 }
             }catch (Exception e){

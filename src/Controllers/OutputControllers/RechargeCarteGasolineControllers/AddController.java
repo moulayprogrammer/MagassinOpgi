@@ -219,6 +219,12 @@ public class AddController implements Initializable {
 
                 boolean ins = insert(gasoline);
                 if (ins) {
+                    GasolineCard card = new GasolineCard();
+                    card.setId(this.selectedGasolineCard.getId());
+                    card.setLastBalance(Double.parseDouble(price));
+                    card.setLastRechargeDate(dateBC);
+                    updateGasolineCard(card);
+
                     closeDialog(this.btnInsert);
 
                 } else {
@@ -254,6 +260,18 @@ public class AddController implements Initializable {
             return insert;
         }
     }
+
+    private boolean updateGasolineCard(GasolineCard card) {
+        boolean insert = false;
+        try {
+            insert = gasolineCardOperation.setLAST_BALANCE(card);
+            return insert;
+        }catch (Exception e){
+            e.printStackTrace();
+            return insert;
+        }
+    }
+
 
     private void closeDialog(Button btn) {
         ((Stage)btn.getScene().getWindow()).close();

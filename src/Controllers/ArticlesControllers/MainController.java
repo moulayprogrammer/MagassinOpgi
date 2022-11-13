@@ -11,6 +11,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -32,6 +33,8 @@ import java.util.function.Predicate;
 
 public class MainController implements Initializable {
 
+    @FXML
+    private Button btnPrint;
     @FXML
     TextField tfRecherche;
     @FXML
@@ -276,11 +279,14 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    private void MagassinStatus(){
+    private void MagassinStatus(ActionEvent event){
         try {
+            boolean print = event.getSource().equals(btnPrint);
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/ArticlesViews/MagasinStatusView.fxml"));
             DialogPane temp = loader.load();
+            MagasinStatusController controller = loader.getController();
+            controller.Init(print);
             Dialog<ButtonType> dialog = new Dialog<>();
             dialog.setDialogPane(temp);
             dialog.resizableProperty().setValue(false);
