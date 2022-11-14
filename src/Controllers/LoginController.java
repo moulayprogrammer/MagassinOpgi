@@ -58,7 +58,7 @@ public class LoginController implements Initializable {
             } else if (loginPasswordPasswordField.getText().isEmpty()) {
                 loginPasswordPasswordField.setStyle(errorStyle);
             }
-        } else if (operation.isExist(new Users(loginUsernameTextField.getText().trim(),loginPasswordPasswordField.getText().trim()))){
+        } else if (operation.isExist(new Users(loginUsernameTextField.getText().trim(),loginPasswordPasswordField.getText()))){
 
             onCancelButtonClick();
             try {

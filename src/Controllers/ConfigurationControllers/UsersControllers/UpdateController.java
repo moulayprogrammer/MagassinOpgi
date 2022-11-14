@@ -1,5 +1,5 @@
-package Controllers.UsersControllers;/*
-package com.opgi.inventorymanagement.Controllers.UsersControllers;
+package Controllers.ConfigurationControllers.UsersControllers;/*
+package com.opgi.inventorymanagement.Controllers.ConfigurationControllers.UsersControllers;
 
 import BddPackage.UsersOperation;
 import Models.Users;

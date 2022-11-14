@@ -17,6 +17,7 @@
             <Tab fx:id="tabUnite" text="UNITE DE MESURE" />
           <Tab fx:id="tabEmployee" text="EMPLOYEE" />
             <Tab fx:id="tabGasoline" text="CARTE CARBURANT" />
+            <Tab fx:id="tabUser" text="USER" />
         </tabs>
       </TabPane>
    </center>

@@ -1,8 +1,12 @@
 Manifest-Version: 1.0
 Main-Class: Main
-Class-Path: Library/forms-7.2.3.jar Library/hyph-7.2.3.jar Library/io-7.2.3.jar Library/typography-3.0.1
- .jar Library/commons-io-2.9.0.jar Library/sqlite-jdbc-3.20.1.jar Library/slf4j-api-1.7.31.jar Library/k
- ernel-7.2.3.jar Library/svg-7.2.3.jar Library/layout-7.2.3.jar Library/styled-xml-parser-7.2.3.
- jar Library/pdfa-7.2.3.jar Library/slf4j-simple-1.7.9.jar Library/jfoenix-8.0.2.jar Library/controlsfx-
- 8.40.11.jar Library/commons-7.2.3.jar Library/sign-7.2.3.jar Library/html2pdf-4.0.3.jar
+Class-Path: Library/hyph-7.2.3.jar Library/fontbox-3.0.0-alpha3.jar Library/preflight-3.0.0-alph
+ a3.jar Library/commons-io-2.9.0.jar Library/controlsfx-8.40.11.jar Library/slf4j-simple-1.7.9.j
+ ar pdfbox-debugger-3.0.0-alpha3.jar Library/sign-7.2.3.jar Library/html2pdf-4.0.3.jar Library/i
+ o-7.2.3.jar Library/styled-xml-parser-7.2.3.jar Library/commons-logging-1.2.jar Library/slf4j-a
+ pi-1.7.31.jar Library/layout-7.2.3.jar Library/pdfbox-tools-3.0.0-alpha3.jar Library/fontbox-2.
+ 0.2.jar Library/commons-logging-1.2.jar Library/commons-7.2.3.jar Library/kernel-7.2.3.jar Library/typo
+ graphy-3.0.1.jar Library/jfoenix-8.0.2.jar Library/pdfa-7.2.3.jar Library/sqlite-jdbc-3.20.1.ja
+ r forms-7.2.3.jar Library/svg-7.2.3.jar Library/xmpbox-3.0.0-alpha3.jar Library/pdfbox-3.0.0-al
+ pha3.jar
 

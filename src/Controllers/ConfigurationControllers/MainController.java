@@ -14,7 +14,7 @@ public class MainController implements Initializable {
     @FXML
     TabPane tabPane;
     @FXML
-    Tab tabEmployee,tabProviders,tabCategory,tabUnite,tabGasoline;
+    Tab tabEmployee,tabProviders,tabCategory,tabUnite,tabGasoline,tabUser;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -38,6 +38,9 @@ public class MainController implements Initializable {
                     break;
                 case "tabGasoline":
                     ActionShowCarteGasolineScreen();
+                    break;
+                case "tabUser":
+                    ActionShowUserScreen();
                     break;
             }
         });
@@ -97,6 +100,18 @@ public class MainController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/ConfigurationViews/CarteGasolineViews/MainView.fxml"));
             BorderPane temp = loader.load();
             tabGasoline.setContent(temp);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void ActionShowUserScreen(){
+        try {
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/ConfigurationViews/UsersView/MainView.fxml"));
+            BorderPane temp = loader.load();
+            tabUser.setContent(temp);
 
         } catch (Exception e) {
             e.printStackTrace();

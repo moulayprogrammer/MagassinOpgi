@@ -37,7 +37,7 @@ public class UsersOperation extends BDD<Users> {
         try {
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.setString(1,o1.getUsername());
-            preparedStmt.setString(2,o1.getPassword());
+            preparedStmt.setString(2,String.valueOf(("@+"+o1.getPassword()+"11#A").hashCode()));
             preparedStmt.setInt(3,o2.getId());
             int update = preparedStmt.executeUpdate();
             if(update != -1) upd = true;
@@ -89,7 +89,7 @@ public class UsersOperation extends BDD<Users> {
     public ArrayList<Users> getAll() {
         connectDatabase();
         ArrayList<Users> list = new ArrayList<>();
-        String query = "SELECT * FROM  user;";
+        String query = "SELECT * FROM  USERS;";
         try {
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             ResultSet resultSet = preparedStmt.executeQuery();
