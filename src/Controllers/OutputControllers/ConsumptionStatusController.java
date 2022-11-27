@@ -723,11 +723,11 @@ public class ConsumptionStatusController implements Initializable {
                 .append("</div>")
 
                 .append("<H2 style=\"text-align: center;\">\n" )
-                .append("ETAT DE CONSOMATION DE MATIERES ET FOURNITURES\n" );
+                .append("ETAT DE CONSOMMATION DE MATIERES ET FOURNITURES\n" );
 
         switch (tabPane.getSelectionModel().getSelectedItem().getId()){
             case "PaneDay":
-                HTMLFacture.append("JOURS DE ")
+                HTMLFacture.append("JOUR DU ")
                         .append("<span>")
                         .append(dpDate.getValue().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")))
                         .append("</span> \n" )

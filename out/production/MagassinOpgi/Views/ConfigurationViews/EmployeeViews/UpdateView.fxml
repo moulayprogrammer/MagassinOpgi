@@ -63,7 +63,7 @@
                         <TextField fx:id="tfLastName" layoutX="10.0" layoutY="35.0" maxWidth="1.7976931348623157E308" prefHeight="26.0" style="-fx-pref-height: 30;" />
                         <HBox spacing="5.0">
                            <children>
-                              <ComboBox fx:id="cbDep" maxWidth="1.7976931348623157E308" minHeight="32.0" prefWidth="150.0" HBox.hgrow="ALWAYS" />
+                              <ComboBox fx:id="cbDep" onAction="#ActionComboDepartment" maxWidth="1.7976931348623157E308" minHeight="32.0" prefWidth="150.0" HBox.hgrow="ALWAYS" />
                               <Button mnemonicParsing="false" onAction="#ActionAddDepartment" styleClass="info" text="ADD" />
                            </children>
                         </HBox>

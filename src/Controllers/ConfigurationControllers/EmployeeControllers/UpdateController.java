@@ -93,7 +93,7 @@ public class UpdateController implements Initializable {
             if (index != -1){
                 int id = departments.get(index).getId();
                 refreshComboService(id);
-                cbServ.getSelectionModel().select(0);
+//                cbServ.getSelectionModel().select(0);
             }
 
         }catch (Exception e){
