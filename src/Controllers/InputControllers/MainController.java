@@ -202,17 +202,16 @@ public class MainController implements Initializable {
                             Input input = inputOperation.get(Integer.parseInt(data.get(0).getValue()));
 
                             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/InputViews/InputArticlesViews/UpdateView.fxml"));
-                            DialogPane temp = loader.load();
+                            BorderPane temp = loader.load();
                             UpdateController controller = loader.getController();
                             controller.Init(input);
-                            Dialog<ButtonType> dialog = new Dialog<>();
-                            dialog.setDialogPane(temp);
-                            dialog.resizableProperty().setValue(false);
-                            dialog.initOwner(this.tfRecherche.getScene().getWindow());
-                            dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
-                            Node closeButton = dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
-                            closeButton.setVisible(false);
-                            dialog.showAndWait();
+                            Stage stage = new Stage();
+                            stage.setScene(new Scene(temp));
+                            stage.setMaximized(true);
+                            stage.setTitle("Gestion de l'inventaire OPGI Tamanrasset");
+                            stage.getIcons().add(new Image("/Images/logo.png"));
+                            stage.initOwner(this.tfRecherche.getScene().getWindow());
+                            stage.showAndWait();
 
                             refreshInput();
 
@@ -569,15 +568,17 @@ public class MainController implements Initializable {
                             query = "SELECT INPUT.ID, INPUT.NUMBER, INPUT.DATE, PROVIDER.NAME, INPUT.NUMBER_FACTUR, INPUT.DATE_FACTUR, INPUT.NUMBER_BC, INPUT.DATE_FACTUR, \n" +
                                     "(SELECT SUM(COMPONENT_INPUT.QTE * COMPONENT_INPUT.PRICE) FROM COMPONENT_INPUT WHERE COMPONENT_INPUT.ID_INPUT = INPUT.ID) AS PRICE,\n" +
                                     "(SELECT ID FROM STORE_CARD WHERE STORE_CARD.ID_INPUT = INPUT.ID) AS CONFIRM \n" +
-                                    "FROM INPUT, PROVIDER WHERE INPUT.ID_PROVIDER = PROVIDER.ID AND INPUT.DATE BETWEEN ? AND ?;";
+                                    "FROM INPUT, PROVIDER WHERE INPUT.ID_PROVIDER = PROVIDER.ID AND INPUT.DATE BETWEEN ? AND ? " +
+                                    "ORDER BY INPUT.DATE ;";
                             preparedStmt = conn.prepareStatement(query);
                             preparedStmt.setDate(1, Date.valueOf(dateFrom));
                             preparedStmt.setDate(2, Date.valueOf(dateTo));
                         }else {
-                            query = "SELECT INPUT.ID, INPUT.NUMBER, INPUT.DATE, PROVIDER.NAME, INPUT.NUMBER_FACTUR, INPUT.DATE_FACTUR, INPUT.NUMBER_BC, INPUT.DATE_FACTUR, \n" +
+                            query = "SELECT INPUT.ID, INPUT.NUMBER, INPUT.DATE, PROVIDER.NAME, INPUT.NUMBER_FACTUR, INPUT.DATE_FACTUR, INPUT.NUMBER_BC, INPUT.DATE_BC, \n" +
                                     "(SELECT SUM(COMPONENT_INPUT.QTE * COMPONENT_INPUT.PRICE) FROM COMPONENT_INPUT WHERE COMPONENT_INPUT.ID_INPUT = INPUT.ID) AS PRICE,\n" +
                                     "(SELECT ID FROM STORE_CARD WHERE STORE_CARD.ID_INPUT = INPUT.ID) AS CONFIRM \n" +
-                                    "FROM INPUT, PROVIDER WHERE INPUT.ID_PROVIDER = PROVIDER.ID;";
+                                    "FROM INPUT, PROVIDER WHERE INPUT.ID_PROVIDER = PROVIDER.ID " +
+                                    "ORDER BY INPUT.DATE ;";
                             preparedStmt = conn.prepareStatement(query);
                         }
                         resultSet = preparedStmt.executeQuery();
@@ -592,7 +593,7 @@ public class MainController implements Initializable {
                                 data.add(new SimpleStringProperty(resultSet.getString("NUMBER_FACTUR")));
                                 data.add(new SimpleStringProperty(resultSet.getDate("DATE_FACTUR").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
                                 data.add(new SimpleStringProperty(resultSet.getString("NUMBER_BC")));
-                                data.add(new SimpleStringProperty(resultSet.getDate("DATE_FACTUR").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
+                                data.add(new SimpleStringProperty(resultSet.getDate("DATE_BC").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
                                 data.add(new SimpleStringProperty(String.format(Locale.FRANCE, "%,.2f", resultSet.getDouble("PRICE"))));
                                 data.add(new SimpleStringProperty("Confirmé"));
 
@@ -602,10 +603,11 @@ public class MainController implements Initializable {
                         break;
                     case 3:
                         if (dateFrom != null && dateTo != null) {
-                            query = "SELECT INPUT.ID, INPUT.NUMBER, INPUT.DATE, PROVIDER.NAME, INPUT.NUMBER_FACTUR, INPUT.DATE_FACTUR, INPUT.NUMBER_BC, INPUT.DATE_FACTUR, \n" +
+                            query = "SELECT INPUT.ID, INPUT.NUMBER, INPUT.DATE, PROVIDER.NAME, INPUT.NUMBER_FACTUR, INPUT.DATE_FACTUR, INPUT.NUMBER_BC, INPUT.DATE_BC, \n" +
                                     "(SELECT SUM(COMPONENT_INPUT.QTE * COMPONENT_INPUT.PRICE) FROM COMPONENT_INPUT WHERE COMPONENT_INPUT.ID_INPUT = INPUT.ID) AS PRICE,\n" +
                                     "(SELECT ID FROM STORE_CARD WHERE STORE_CARD.ID_INPUT = INPUT.ID) AS CONFIRM \n" +
-                                    "FROM INPUT, PROVIDER WHERE INPUT.ID_PROVIDER = PROVIDER.ID AND INPUT.DATE BETWEEN ? AND ?;";
+                                    "FROM INPUT, PROVIDER WHERE INPUT.ID_PROVIDER = PROVIDER.ID AND INPUT.DATE BETWEEN ? AND ? " +
+                                    "ORDER BY INPUT.DATE ;";
                             preparedStmt = conn.prepareStatement(query);
                             preparedStmt.setDate(1, Date.valueOf(dateFrom));
                             preparedStmt.setDate(2, Date.valueOf(dateTo));
@@ -613,7 +615,8 @@ public class MainController implements Initializable {
                             query = "SELECT INPUT.ID, INPUT.NUMBER, INPUT.DATE, PROVIDER.NAME, INPUT.NUMBER_FACTUR, INPUT.DATE_FACTUR, INPUT.NUMBER_BC, INPUT.DATE_FACTUR, \n" +
                                     "(SELECT SUM(COMPONENT_INPUT.QTE * COMPONENT_INPUT.PRICE) FROM COMPONENT_INPUT WHERE COMPONENT_INPUT.ID_INPUT = INPUT.ID) AS PRICE,\n" +
                                     "(SELECT ID FROM STORE_CARD WHERE STORE_CARD.ID_INPUT = INPUT.ID) AS CONFIRM \n" +
-                                    "FROM INPUT, PROVIDER WHERE INPUT.ID_PROVIDER = PROVIDER.ID;";
+                                    "FROM INPUT, PROVIDER WHERE INPUT.ID_PROVIDER = PROVIDER.ID " +
+                                    "ORDER BY INPUT.DATE ;";
                             preparedStmt = conn.prepareStatement(query);
                         }
                         resultSet = preparedStmt.executeQuery();
@@ -628,7 +631,7 @@ public class MainController implements Initializable {
                                 data.add(new SimpleStringProperty(resultSet.getString("NUMBER_FACTUR")));
                                 data.add(new SimpleStringProperty(resultSet.getDate("DATE_FACTUR").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
                                 data.add(new SimpleStringProperty(resultSet.getString("NUMBER_BC")));
-                                data.add(new SimpleStringProperty(resultSet.getDate("DATE_FACTUR").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
+                                data.add(new SimpleStringProperty(resultSet.getDate("DATE_BC").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
                                 data.add(new SimpleStringProperty(String.format(Locale.FRANCE, "%,.2f", resultSet.getDouble("PRICE"))));
                                 data.add(new SimpleStringProperty("Non confirmé"));
 
@@ -662,19 +665,21 @@ public class MainController implements Initializable {
                 PreparedStatement preparedStmt;
 
                 if (dateFrom != null && dateTo != null) {
-                    query = "SELECT INPUT.ID, INPUT.NUMBER, INPUT.DATE, PROVIDER.NAME, INPUT.NUMBER_FACTUR, INPUT.DATE_FACTUR, INPUT.NUMBER_BC, INPUT.DATE_FACTUR, \n" +
+                    query = "SELECT INPUT.ID, INPUT.NUMBER, INPUT.DATE, PROVIDER.NAME, INPUT.NUMBER_FACTUR, INPUT.DATE_FACTUR, INPUT.NUMBER_BC, INPUT.DATE_BC, \n" +
                             "(SELECT SUM(COMPONENT_INPUT.QTE * COMPONENT_INPUT.PRICE) FROM COMPONENT_INPUT WHERE COMPONENT_INPUT.ID_INPUT = INPUT.ID) AS PRICE,\n" +
                             "(SELECT ID FROM STORE_CARD WHERE STORE_CARD.ID_INPUT = INPUT.ID) AS CONFIRM \n" +
-                            "FROM INPUT, PROVIDER WHERE INPUT.ID_PROVIDER = ? AND INPUT.ID_PROVIDER = PROVIDER.ID AND INPUT.DATE BETWEEN ? AND ? ;";
+                            "FROM INPUT, PROVIDER WHERE INPUT.ID_PROVIDER = ? AND INPUT.ID_PROVIDER = PROVIDER.ID AND INPUT.DATE BETWEEN ? AND ? " +
+                            "ORDER BY INPUT.DATE ;";
                     preparedStmt = conn.prepareStatement(query);
                     preparedStmt.setInt(1,providers.get(select).getId());
                     preparedStmt.setDate(2, Date.valueOf(dateFrom));
                     preparedStmt.setDate(3, Date.valueOf(dateTo));
                 }else {
-                    query = "SELECT INPUT.ID, INPUT.NUMBER, INPUT.DATE, PROVIDER.NAME, INPUT.NUMBER_FACTUR, INPUT.DATE_FACTUR, INPUT.NUMBER_BC, INPUT.DATE_FACTUR, \n" +
+                    query = "SELECT INPUT.ID, INPUT.NUMBER, INPUT.DATE, PROVIDER.NAME, INPUT.NUMBER_FACTUR, INPUT.DATE_FACTUR, INPUT.NUMBER_BC, INPUT.DATE_BC, \n" +
                             "(SELECT SUM(COMPONENT_INPUT.QTE * COMPONENT_INPUT.PRICE) FROM COMPONENT_INPUT WHERE COMPONENT_INPUT.ID_INPUT = INPUT.ID) AS PRICE,\n" +
                             "(SELECT ID FROM STORE_CARD WHERE STORE_CARD.ID_INPUT = INPUT.ID) AS CONFIRM \n" +
-                            "FROM INPUT, PROVIDER WHERE INPUT.ID_PROVIDER = ? AND INPUT.ID_PROVIDER = PROVIDER.ID ;";
+                            "FROM INPUT, PROVIDER WHERE INPUT.ID_PROVIDER = ? AND INPUT.ID_PROVIDER = PROVIDER.ID " +
+                            " ORDER BY INPUT.DATE ;";
                     preparedStmt = conn.prepareStatement(query);
                     preparedStmt.setInt(1,providers.get(select).getId());
                 }
@@ -692,7 +697,7 @@ public class MainController implements Initializable {
                     data.add(new SimpleStringProperty(resultSet.getString("NUMBER_FACTUR")));
                     data.add(new SimpleStringProperty(resultSet.getDate("DATE_FACTUR").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
                     data.add(new SimpleStringProperty(resultSet.getString("NUMBER_BC")));
-                    data.add(new SimpleStringProperty(resultSet.getDate("DATE_FACTUR").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
+                    data.add(new SimpleStringProperty(resultSet.getDate("DATE_BC").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
                     data.add(new SimpleStringProperty(String.format(Locale.FRANCE, "%,.2f", resultSet.getDouble("PRICE"))));
                     if (resultSet.getInt("CONFIRM") != 0) data.add(new SimpleStringProperty("Confirmé"));
                     else data.add(new SimpleStringProperty("Non confirmé"));
@@ -722,10 +727,11 @@ public class MainController implements Initializable {
                     if (conn.isClosed()) conn = connectBD.connect();
                     dataTable.clear();
 
-                    String query = "SELECT INPUT.ID, INPUT.NUMBER, INPUT.DATE, PROVIDER.NAME, INPUT.NUMBER_FACTUR, INPUT.DATE_FACTUR, INPUT.NUMBER_BC, INPUT.DATE_FACTUR, \n" +
+                    String query = "SELECT INPUT.ID, INPUT.NUMBER, INPUT.DATE, PROVIDER.NAME, INPUT.NUMBER_FACTUR, INPUT.DATE_FACTUR, INPUT.NUMBER_BC, INPUT.DATE_BC, \n" +
                             "(SELECT SUM(COMPONENT_INPUT.QTE * COMPONENT_INPUT.PRICE) FROM COMPONENT_INPUT WHERE COMPONENT_INPUT.ID_INPUT = INPUT.ID) AS PRICE,\n" +
                             "(SELECT ID FROM STORE_CARD WHERE STORE_CARD.ID_INPUT = INPUT.ID) AS CONFIRM \n" +
-                            "FROM INPUT, PROVIDER WHERE INPUT.ID_PROVIDER = PROVIDER.ID AND INPUT.DATE BETWEEN ? AND ?;";
+                            "FROM INPUT, PROVIDER WHERE INPUT.ID_PROVIDER = PROVIDER.ID AND INPUT.DATE BETWEEN ? AND ? " +
+                            "ORDER BY INPUT.DATE ;";
                     PreparedStatement preparedStmt = conn.prepareStatement(query);
                     preparedStmt.setDate(1, Date.valueOf(dateFrom));
                     preparedStmt.setDate(2, Date.valueOf(dateTo));
@@ -741,7 +747,7 @@ public class MainController implements Initializable {
                         data.add(new SimpleStringProperty(resultSet.getString("NUMBER_FACTUR")));
                         data.add(new SimpleStringProperty(resultSet.getDate("DATE_FACTUR").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
                         data.add(new SimpleStringProperty(resultSet.getString("NUMBER_BC")));
-                        data.add(new SimpleStringProperty(resultSet.getDate("DATE_FACTUR").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
+                        data.add(new SimpleStringProperty(resultSet.getDate("DATE_BC").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
                         data.add(new SimpleStringProperty(String.format(Locale.FRANCE, "%,.2f", resultSet.getDouble("PRICE"))));
                         if (resultSet.getInt("CONFIRM") != 0) data.add(new SimpleStringProperty("Confirmé"));
                         else data.add(new SimpleStringProperty("Non confirmé"));
@@ -789,18 +795,20 @@ public class MainController implements Initializable {
             PreparedStatement preparedStmt;
 
             if (dateFrom != null && dateTo != null) {
-                query = "SELECT INPUT.ID, INPUT.NUMBER, INPUT.DATE, PROVIDER.NAME, INPUT.NUMBER_FACTUR, INPUT.DATE_FACTUR, INPUT.NUMBER_BC, INPUT.DATE_FACTUR, \n" +
+                query = "SELECT INPUT.ID, INPUT.NUMBER, INPUT.DATE, PROVIDER.NAME, INPUT.NUMBER_FACTUR, INPUT.DATE_FACTUR, INPUT.NUMBER_BC, INPUT.DATE_BC, \n" +
                         "(SELECT SUM(COMPONENT_INPUT.QTE * COMPONENT_INPUT.PRICE) FROM COMPONENT_INPUT WHERE COMPONENT_INPUT.ID_INPUT = INPUT.ID) AS PRICE,\n" +
                         "(SELECT ID FROM STORE_CARD WHERE STORE_CARD.ID_INPUT = INPUT.ID) AS CONFIRM \n" +
-                        "FROM INPUT, PROVIDER WHERE INPUT.ID_PROVIDER = PROVIDER.ID AND INPUT.DATE BETWEEN ? AND ?;";
+                        "FROM INPUT, PROVIDER WHERE INPUT.ID_PROVIDER = PROVIDER.ID AND INPUT.DATE BETWEEN ? AND ? " +
+                        "ORDER BY INPUT.DATE ;";
                 preparedStmt = conn.prepareStatement(query);
                 preparedStmt.setDate(1, Date.valueOf(dateFrom));
                 preparedStmt.setDate(2, Date.valueOf(dateTo));
             }else {
-                query = "SELECT INPUT.ID, INPUT.NUMBER, INPUT.DATE, PROVIDER.NAME, INPUT.NUMBER_FACTUR, INPUT.DATE_FACTUR, INPUT.NUMBER_BC, INPUT.DATE_FACTUR, \n" +
+                query = "SELECT INPUT.ID, INPUT.NUMBER, INPUT.DATE, PROVIDER.NAME, INPUT.NUMBER_FACTUR, INPUT.DATE_FACTUR, INPUT.NUMBER_BC, INPUT.DATE_BC, \n" +
                         "(SELECT SUM(COMPONENT_INPUT.QTE * COMPONENT_INPUT.PRICE) FROM COMPONENT_INPUT WHERE COMPONENT_INPUT.ID_INPUT = INPUT.ID) AS PRICE,\n" +
                         "(SELECT ID FROM STORE_CARD WHERE STORE_CARD.ID_INPUT = INPUT.ID) AS CONFIRM \n" +
-                        "FROM INPUT, PROVIDER WHERE INPUT.ID_PROVIDER = PROVIDER.ID;";
+                        "FROM INPUT, PROVIDER WHERE INPUT.ID_PROVIDER = PROVIDER.ID " +
+                        "ORDER BY INPUT.DATE ;";
                 preparedStmt = conn.prepareStatement(query);
             }
             ResultSet resultSet = preparedStmt.executeQuery();
@@ -815,7 +823,7 @@ public class MainController implements Initializable {
                 data.add( new SimpleStringProperty(resultSet.getString("NUMBER_FACTUR")));
                 data.add( new SimpleStringProperty(resultSet.getDate("DATE_FACTUR").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
                 data.add( new SimpleStringProperty(resultSet.getString("NUMBER_BC")));
-                data.add( new SimpleStringProperty(resultSet.getDate("DATE_FACTUR").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
+                data.add( new SimpleStringProperty(resultSet.getDate("DATE_BC").toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
                 data.add( new SimpleStringProperty(String.format(Locale.FRANCE, "%,.2f", resultSet.getDouble("PRICE") )));
                 if (resultSet.getInt("CONFIRM") != 0) data.add( new SimpleStringProperty("Confirmé"));
                 else data.add( new SimpleStringProperty("Non confirmé"));

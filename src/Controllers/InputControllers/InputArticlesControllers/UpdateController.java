@@ -2,6 +2,8 @@ package Controllers.InputControllers.InputArticlesControllers;
 
 import BddPackage.*;
 import Models.*;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,8 +16,13 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class UpdateController implements Initializable {
@@ -23,22 +30,40 @@ public class UpdateController implements Initializable {
     @FXML
     DatePicker dpBRDate,dpFactDate,dpBCDate;
     @FXML
+    Label lbSumTotal;
+    @FXML
     ComboBox<String> cbProvider;
     @FXML
     TextField tfRecherche,tfNumBR,tfNumFact,tfNumBC;
     @FXML
     Button btnUpdate;
+    @FXML
+    TableView<List<StringProperty>>  tablePorches;
+    @FXML
+    TableColumn<List<StringProperty>,String> tcId,tcName,tcUnit,tcPriceU,tcQte,tcPriceTotal;
 
+    private final ConnectBD connectBD = new ConnectBD();
+    private Connection conn;
     private final InputOperation operation = new InputOperation();
     private final StoreCardTempOperation storeCardTempOperation = new StoreCardTempOperation();
     private final ProviderOperation providerOperation = new ProviderOperation();
+    private final ObservableList<List<StringProperty>> dataTable = FXCollections.observableArrayList();
     private final ObservableList<String> comboProviderData = FXCollections.observableArrayList();
     private ArrayList<Provider> providers = new ArrayList<>();
+    private final List<Double> priceList = new ArrayList<>();
     private Provider providerSelected;
     private Input inputSelected;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        conn = connectBD.connect();
+
+        tcId.setCellValueFactory(data -> data.getValue().get(0));
+        tcName.setCellValueFactory(data -> data.getValue().get(1));
+        tcUnit.setCellValueFactory(data -> data.getValue().get(2));
+        tcQte.setCellValueFactory(data -> data.getValue().get(3));
+        tcPriceU.setCellValueFactory(data -> data.getValue().get(4));
+        tcPriceTotal.setCellValueFactory(data -> data.getValue().get(5));
 
         refreshComboProviders();
     }
@@ -58,6 +83,8 @@ public class UpdateController implements Initializable {
         dpBCDate.setValue(input.getDateBC());
 
         cbProvider.getSelectionModel().select(providerSelected.getName());
+
+        refreshComponent();
     }
 
     @FXML
@@ -68,6 +95,52 @@ public class UpdateController implements Initializable {
         }
     }
 
+    private void refreshComponent(){
+        try {
+            if (this.conn.isClosed()) conn = connectBD.connect();
+            dataTable.clear();
+
+            String query = "SELECT COMPONENT_INPUT.ID_ARTICLE, ARTICLE.NAME, UNIT.NAME AS NAME_UNIT, COMPONENT_INPUT.PRICE, COMPONENT_INPUT.QTE\n" +
+                    "FROM COMPONENT_INPUT,ARTICLE,UNIT WHERE COMPONENT_INPUT.ID_INPUT = ? AND COMPONENT_INPUT.ID_ARTICLE = ARTICLE.ID \n" +
+                    "AND ARTICLE.ID_UNIT = UNIT.ID;";
+            PreparedStatement preparedStmt = conn.prepareStatement(query);
+            preparedStmt.setInt(1,this.inputSelected.getId());
+            ResultSet resultSet = preparedStmt.executeQuery();
+            while (resultSet.next()){
+
+                List<StringProperty> data = new ArrayList<>();
+                data.add(0, new SimpleStringProperty(String.valueOf(resultSet.getInt("ID_ARTICLE"))));
+                data.add(1, new SimpleStringProperty(resultSet.getString("NAME")));
+                data.add(2, new SimpleStringProperty(resultSet.getString("NAME_UNIT")));
+                data.add(3, new SimpleStringProperty(String.valueOf(resultSet.getInt("QTE"))));
+                data.add(4, new SimpleStringProperty(String.format(Locale.FRANCE, "%,.2f", resultSet.getDouble("PRICE"))));
+                data.add(5, new SimpleStringProperty(String.format(Locale.FRANCE, "%,.2f", (resultSet.getDouble("PRICE") * resultSet.getInt("QTE")))));
+
+                priceList.add(resultSet.getDouble("PRICE"));
+                dataTable.add(data);
+            }
+            tablePorches.setItems(dataTable);
+            sumTotalTablePorches();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void sumTotalTablePorches(){
+
+        double totalPrice = 0.0;
+        int totalling = 0;
+
+        for (int i = 0; i < dataTable.size() ; i++) {
+            int qte = Integer.parseInt(dataTable.get(i).get(3).getValue());
+            totalling += qte;
+            double price = priceList.get(i);
+            totalPrice += (price * qte);
+        }
+        double totalFacture = totalPrice;
+        lbSumTotal.setText(String.format(Locale.FRANCE, "%,.2f", totalPrice));
+//        lbSumWeight.setText(String.valueOf(totalling));
+    }
 
     private void refreshComboProviders() {
         clearCombo();

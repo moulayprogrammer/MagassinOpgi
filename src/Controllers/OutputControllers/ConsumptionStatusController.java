@@ -796,7 +796,7 @@ public class ConsumptionStatusController implements Initializable {
                     for (String ss : lsCategorySelected) {
                         if (list.get(0).getValue().equals(ss)){
                             HTMLFacture.append("<td class=\"td-art\" >")
-                                    .append(list.get(1).getValue())
+                                    .append(String.format(Locale.FRANCE, "%,.2f", Double.parseDouble(list.get(1).getValue())))
                                     .append("</td>\n");
                             double val = Double.parseDouble(list.get(1).getValue());
                             total += val;
@@ -810,7 +810,7 @@ public class ConsumptionStatusController implements Initializable {
 
             }else {
                 HTMLFacture.append("<td class=\"td-art\" >")
-                        .append(consGas.get(s))
+                        .append(String.format(Locale.FRANCE, "%,.2f", consGas.get(s)))
                         .append("</td>\n");
                 total += consGas.get(s);
                 double t = totals.get("Carburants");
@@ -824,7 +824,7 @@ public class ConsumptionStatusController implements Initializable {
                 }
             }
             HTMLFacture.append("<td class=\"td-art\" >")
-                    .append(total)
+                    .append(String.format(Locale.FRANCE, "%,.2f", total))
                     .append("</td>\n");
 
             HTMLFacture.append("</tr>\n" );
@@ -837,18 +837,18 @@ public class ConsumptionStatusController implements Initializable {
                 .append("</td>\n");
         if (carb) {
             HTMLFacture.append("<td class=\"td-art\" >")
-                    .append(totals.get("Carburants"))
+                    .append(String.format(Locale.FRANCE, "%,.2f", totals.get("Carburants")))
                     .append("</td>\n");
             totalGen += totals.get("Carburants");
         }
         for (String s : lsCategorySelected){
             HTMLFacture.append("<td class=\"td-art\" >")
-                    .append(totals.get(s))
+                    .append(String.format(Locale.FRANCE, "%,.2f", totals.get(s)))
                     .append("</td>\n");
             totalGen += totals.get(s);
         }
         HTMLFacture.append("<td class=\"td-art\" >")
-                .append(totalGen)
+                .append(String.format(Locale.FRANCE, "%,.2f", totalGen))
                 .append("</td>\n");
         HTMLFacture.append("</tr>\n" );
 
