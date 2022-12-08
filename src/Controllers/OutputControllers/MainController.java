@@ -656,7 +656,7 @@ public class MainController implements Initializable {
             String query = "SELECT OUTPUT.ID, OUTPUT.NUMBER, OUTPUT.DATE, EMPLOYEE.FIRST_NAME, EMPLOYEE.LAST_NAME, SERVICE.NAME AS NAME_SERV , DEP.NAME AS NAME_DEP,\n" +
                     "(SELECT SUM(COMPONENT_OUTPUT.QTE_SERV * STORE_CARD.PRICE) FROM COMPONENT_OUTPUT,STORE_CARD \n" +
                     "WHERE COMPONENT_OUTPUT.ID_OUTPUT = OUTPUT.ID AND COMPONENT_OUTPUT.ID_STORE = STORE_CARD.ID) AS MONTANT \n" +
-                    "FROM OUTPUT,EMPLOYEE,SERVICE,DEP WHERE OUTPUT.ID_EMP = EMPLOYEE.ID AND EMPLOYEE.ID_SERVICE = SERVICE.ID AND SERVICE.ID_DEP = DEP.ID" +
+                    "FROM OUTPUT,EMPLOYEE,SERVICE,DEP WHERE OUTPUT.ID_EMP = EMPLOYEE.ID AND EMPLOYEE.ID_SERVICE = SERVICE.ID AND SERVICE.ID_DEP = DEP.ID "  +
                     "ORDER BY OUTPUT.DATE;";
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             ResultSet resultSet = preparedStmt.executeQuery();
@@ -812,7 +812,7 @@ public class MainController implements Initializable {
                             "(SELECT SUM(COMPONENT_OUTPUT.QTE_SERV * STORE_CARD.PRICE) FROM COMPONENT_OUTPUT,STORE_CARD \n" +
                             "WHERE COMPONENT_OUTPUT.ID_OUTPUT = OUTPUT.ID AND COMPONENT_OUTPUT.ID_STORE = STORE_CARD.ID) AS MONTANT \n" +
                             "FROM OUTPUT,EMPLOYEE,SERVICE,DEP WHERE DEP.ID = ? AND OUTPUT.ID_EMP = EMPLOYEE.ID AND EMPLOYEE.ID_SERVICE = SERVICE.ID \n" +
-                            "AND SERVICE.ID_DEP = DEP.ID AND OUTPUT.DATE BETWEEN ? AND ?" +
+                            "AND SERVICE.ID_DEP = DEP.ID AND OUTPUT.DATE BETWEEN ? AND ? " +
                             "ORDER BY OUTPUT.DATE ;";
                     preparedStmt = conn.prepareStatement(query);
                     preparedStmt.setInt(1,departments.get(select).getId());
@@ -823,7 +823,7 @@ public class MainController implements Initializable {
                             "(SELECT SUM(COMPONENT_OUTPUT.QTE_SERV * STORE_CARD.PRICE) FROM COMPONENT_OUTPUT,STORE_CARD \n" +
                             "WHERE COMPONENT_OUTPUT.ID_OUTPUT = OUTPUT.ID AND COMPONENT_OUTPUT.ID_STORE = STORE_CARD.ID) AS MONTANT \n" +
                             "FROM OUTPUT,EMPLOYEE,SERVICE,DEP WHERE DEP.ID = ? AND OUTPUT.ID_EMP = EMPLOYEE.ID AND EMPLOYEE.ID_SERVICE = SERVICE.ID \n" +
-                            "AND SERVICE.ID_DEP = DEP.ID" +
+                            "AND SERVICE.ID_DEP = DEP.ID " +
                             "ORDER BY OUTPUT.DATE ;";
                     preparedStmt = conn.prepareStatement(query);
                     preparedStmt.setInt(1,departments.get(select).getId());
@@ -887,7 +887,7 @@ public class MainController implements Initializable {
                             "(SELECT SUM(COMPONENT_OUTPUT.QTE_SERV * STORE_CARD.PRICE) FROM COMPONENT_OUTPUT,STORE_CARD \n" +
                             "WHERE COMPONENT_OUTPUT.ID_OUTPUT = OUTPUT.ID AND COMPONENT_OUTPUT.ID_STORE = STORE_CARD.ID) AS MONTANT \n" +
                             "FROM OUTPUT,EMPLOYEE,SERVICE,DEP WHERE SERVICE.ID = ? AND OUTPUT.ID_EMP = EMPLOYEE.ID AND EMPLOYEE.ID_SERVICE = SERVICE.ID \n" +
-                            "AND SERVICE.ID_DEP = DEP.ID" +
+                            "AND SERVICE.ID_DEP = DEP.ID " +
                             "ORDER BY OUTPUT.DATE ;";
                     preparedStmt = conn.prepareStatement(query);
                     preparedStmt.setInt(1,services.get(select).getId());
