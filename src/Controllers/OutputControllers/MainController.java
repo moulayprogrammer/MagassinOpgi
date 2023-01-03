@@ -657,7 +657,7 @@ public class MainController implements Initializable {
                     "(SELECT SUM(COMPONENT_OUTPUT.QTE_SERV * STORE_CARD.PRICE) FROM COMPONENT_OUTPUT,STORE_CARD \n" +
                     "WHERE COMPONENT_OUTPUT.ID_OUTPUT = OUTPUT.ID AND COMPONENT_OUTPUT.ID_STORE = STORE_CARD.ID) AS MONTANT \n" +
                     "FROM OUTPUT,EMPLOYEE,SERVICE,DEP WHERE OUTPUT.ID_EMP = EMPLOYEE.ID AND EMPLOYEE.ID_SERVICE = SERVICE.ID AND SERVICE.ID_DEP = DEP.ID "  +
-                    "ORDER BY OUTPUT.DATE;";
+                    "ORDER BY OUTPUT.NUMBER DESC;";
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             ResultSet resultSet = preparedStmt.executeQuery();
             while (resultSet.next()){
@@ -813,7 +813,7 @@ public class MainController implements Initializable {
                             "WHERE COMPONENT_OUTPUT.ID_OUTPUT = OUTPUT.ID AND COMPONENT_OUTPUT.ID_STORE = STORE_CARD.ID) AS MONTANT \n" +
                             "FROM OUTPUT,EMPLOYEE,SERVICE,DEP WHERE DEP.ID = ? AND OUTPUT.ID_EMP = EMPLOYEE.ID AND EMPLOYEE.ID_SERVICE = SERVICE.ID \n" +
                             "AND SERVICE.ID_DEP = DEP.ID AND OUTPUT.DATE BETWEEN ? AND ? " +
-                            "ORDER BY OUTPUT.DATE ;";
+                            "ORDER BY OUTPUT.NUMBER DESC ;";
                     preparedStmt = conn.prepareStatement(query);
                     preparedStmt.setInt(1,departments.get(select).getId());
                     preparedStmt.setDate(2, Date.valueOf(dateFrom));
@@ -824,7 +824,7 @@ public class MainController implements Initializable {
                             "WHERE COMPONENT_OUTPUT.ID_OUTPUT = OUTPUT.ID AND COMPONENT_OUTPUT.ID_STORE = STORE_CARD.ID) AS MONTANT \n" +
                             "FROM OUTPUT,EMPLOYEE,SERVICE,DEP WHERE DEP.ID = ? AND OUTPUT.ID_EMP = EMPLOYEE.ID AND EMPLOYEE.ID_SERVICE = SERVICE.ID \n" +
                             "AND SERVICE.ID_DEP = DEP.ID " +
-                            "ORDER BY OUTPUT.DATE ;";
+                            "ORDER BY OUTPUT.NUMBER DESC ;";
                     preparedStmt = conn.prepareStatement(query);
                     preparedStmt.setInt(1,departments.get(select).getId());
                 }
@@ -877,7 +877,7 @@ public class MainController implements Initializable {
                             "WHERE COMPONENT_OUTPUT.ID_OUTPUT = OUTPUT.ID AND COMPONENT_OUTPUT.ID_STORE = STORE_CARD.ID) AS MONTANT \n" +
                             "FROM OUTPUT,EMPLOYEE,SERVICE,DEP WHERE SERVICE.ID = ? AND OUTPUT.ID_EMP = EMPLOYEE.ID AND EMPLOYEE.ID_SERVICE = SERVICE.ID \n" +
                             "AND SERVICE.ID_DEP = DEP.ID AND OUTPUT.DATE BETWEEN ? AND ? " +
-                            "ORDER BY OUTPUT.DATE ;";
+                            "ORDER BY OUTPUT.NUMBER DESC ;";
                     preparedStmt = conn.prepareStatement(query);
                     preparedStmt.setInt(1,services.get(select).getId());
                     preparedStmt.setDate(2, Date.valueOf(dateFrom));
@@ -888,7 +888,7 @@ public class MainController implements Initializable {
                             "WHERE COMPONENT_OUTPUT.ID_OUTPUT = OUTPUT.ID AND COMPONENT_OUTPUT.ID_STORE = STORE_CARD.ID) AS MONTANT \n" +
                             "FROM OUTPUT,EMPLOYEE,SERVICE,DEP WHERE SERVICE.ID = ? AND OUTPUT.ID_EMP = EMPLOYEE.ID AND EMPLOYEE.ID_SERVICE = SERVICE.ID \n" +
                             "AND SERVICE.ID_DEP = DEP.ID " +
-                            "ORDER BY OUTPUT.DATE ;";
+                            "ORDER BY OUTPUT.NUMBER DESC ;";
                     preparedStmt = conn.prepareStatement(query);
                     preparedStmt.setInt(1,services.get(select).getId());
                 }
@@ -938,7 +938,7 @@ public class MainController implements Initializable {
                             "WHERE COMPONENT_OUTPUT.ID_OUTPUT = OUTPUT.ID AND COMPONENT_OUTPUT.ID_STORE = STORE_CARD.ID) AS MONTANT \n" +
                             "FROM OUTPUT,EMPLOYEE,SERVICE,DEP WHERE OUTPUT.ID_EMP = EMPLOYEE.ID AND EMPLOYEE.ID_SERVICE = SERVICE.ID \n" +
                             "AND SERVICE.ID_DEP = DEP.ID AND OUTPUT.DATE BETWEEN ? AND ? " +
-                            "ORDER BY OUTPUT.DATE ;";
+                            "ORDER BY OUTPUT.NUMBER DESC ;";
                     PreparedStatement preparedStmt = conn.prepareStatement(query);
                     preparedStmt.setDate(1, Date.valueOf(dateFrom));
                     preparedStmt.setDate(2, Date.valueOf(dateTo));

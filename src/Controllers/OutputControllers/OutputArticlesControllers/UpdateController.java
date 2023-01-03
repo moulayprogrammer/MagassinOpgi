@@ -234,7 +234,7 @@ public class UpdateController implements Initializable {
                     storeCard.setDateStore(resultSet.getDate("DATE_STORE").toLocalDate());
                     storeCard.setPrice(resultSet.getDouble("PRICE"));
                     storeCard.setQteStored(resultSet.getInt("QTE_STORED"));
-                    storeCard.setQteConsumed(resultSet.getInt("QTE_CONSUMED"));
+                    storeCard.setQteConsumed(resultSet.getInt("QTE_SERV"));
 
                     storeCards.add(storeCard);
 

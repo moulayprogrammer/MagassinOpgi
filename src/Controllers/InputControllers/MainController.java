@@ -569,7 +569,7 @@ public class MainController implements Initializable {
                                     "(SELECT SUM(COMPONENT_INPUT.QTE * COMPONENT_INPUT.PRICE) FROM COMPONENT_INPUT WHERE COMPONENT_INPUT.ID_INPUT = INPUT.ID) AS PRICE,\n" +
                                     "(SELECT ID FROM STORE_CARD WHERE STORE_CARD.ID_INPUT = INPUT.ID) AS CONFIRM \n" +
                                     "FROM INPUT, PROVIDER WHERE INPUT.ID_PROVIDER = PROVIDER.ID AND INPUT.DATE BETWEEN ? AND ? " +
-                                    "ORDER BY INPUT.DATE ;";
+                                    "ORDER BY INPUT.NUMBER DESC ;";
                             preparedStmt = conn.prepareStatement(query);
                             preparedStmt.setDate(1, Date.valueOf(dateFrom));
                             preparedStmt.setDate(2, Date.valueOf(dateTo));
@@ -578,7 +578,7 @@ public class MainController implements Initializable {
                                     "(SELECT SUM(COMPONENT_INPUT.QTE * COMPONENT_INPUT.PRICE) FROM COMPONENT_INPUT WHERE COMPONENT_INPUT.ID_INPUT = INPUT.ID) AS PRICE,\n" +
                                     "(SELECT ID FROM STORE_CARD WHERE STORE_CARD.ID_INPUT = INPUT.ID) AS CONFIRM \n" +
                                     "FROM INPUT, PROVIDER WHERE INPUT.ID_PROVIDER = PROVIDER.ID " +
-                                    "ORDER BY INPUT.DATE ;";
+                                    "ORDER BY INPUT.NUMBER DESC ;";
                             preparedStmt = conn.prepareStatement(query);
                         }
                         resultSet = preparedStmt.executeQuery();
@@ -607,7 +607,7 @@ public class MainController implements Initializable {
                                     "(SELECT SUM(COMPONENT_INPUT.QTE * COMPONENT_INPUT.PRICE) FROM COMPONENT_INPUT WHERE COMPONENT_INPUT.ID_INPUT = INPUT.ID) AS PRICE,\n" +
                                     "(SELECT ID FROM STORE_CARD WHERE STORE_CARD.ID_INPUT = INPUT.ID) AS CONFIRM \n" +
                                     "FROM INPUT, PROVIDER WHERE INPUT.ID_PROVIDER = PROVIDER.ID AND INPUT.DATE BETWEEN ? AND ? " +
-                                    "ORDER BY INPUT.DATE ;";
+                                    "ORDER BY INPUT.NUMBER DESC ;";
                             preparedStmt = conn.prepareStatement(query);
                             preparedStmt.setDate(1, Date.valueOf(dateFrom));
                             preparedStmt.setDate(2, Date.valueOf(dateTo));
@@ -616,7 +616,7 @@ public class MainController implements Initializable {
                                     "(SELECT SUM(COMPONENT_INPUT.QTE * COMPONENT_INPUT.PRICE) FROM COMPONENT_INPUT WHERE COMPONENT_INPUT.ID_INPUT = INPUT.ID) AS PRICE,\n" +
                                     "(SELECT ID FROM STORE_CARD WHERE STORE_CARD.ID_INPUT = INPUT.ID) AS CONFIRM \n" +
                                     "FROM INPUT, PROVIDER WHERE INPUT.ID_PROVIDER = PROVIDER.ID " +
-                                    "ORDER BY INPUT.DATE ;";
+                                    "ORDER BY INPUT.NUMBER DESC ;";
                             preparedStmt = conn.prepareStatement(query);
                         }
                         resultSet = preparedStmt.executeQuery();
@@ -669,7 +669,7 @@ public class MainController implements Initializable {
                             "(SELECT SUM(COMPONENT_INPUT.QTE * COMPONENT_INPUT.PRICE) FROM COMPONENT_INPUT WHERE COMPONENT_INPUT.ID_INPUT = INPUT.ID) AS PRICE,\n" +
                             "(SELECT ID FROM STORE_CARD WHERE STORE_CARD.ID_INPUT = INPUT.ID) AS CONFIRM \n" +
                             "FROM INPUT, PROVIDER WHERE INPUT.ID_PROVIDER = ? AND INPUT.ID_PROVIDER = PROVIDER.ID AND INPUT.DATE BETWEEN ? AND ? " +
-                            "ORDER BY INPUT.DATE ;";
+                            "ORDER BY INPUT.NUMBER DESC ;";
                     preparedStmt = conn.prepareStatement(query);
                     preparedStmt.setInt(1,providers.get(select).getId());
                     preparedStmt.setDate(2, Date.valueOf(dateFrom));
@@ -679,7 +679,7 @@ public class MainController implements Initializable {
                             "(SELECT SUM(COMPONENT_INPUT.QTE * COMPONENT_INPUT.PRICE) FROM COMPONENT_INPUT WHERE COMPONENT_INPUT.ID_INPUT = INPUT.ID) AS PRICE,\n" +
                             "(SELECT ID FROM STORE_CARD WHERE STORE_CARD.ID_INPUT = INPUT.ID) AS CONFIRM \n" +
                             "FROM INPUT, PROVIDER WHERE INPUT.ID_PROVIDER = ? AND INPUT.ID_PROVIDER = PROVIDER.ID " +
-                            " ORDER BY INPUT.DATE ;";
+                            " ORDER BY INPUT.NUMBER DESC ;";
                     preparedStmt = conn.prepareStatement(query);
                     preparedStmt.setInt(1,providers.get(select).getId());
                 }
@@ -731,7 +731,7 @@ public class MainController implements Initializable {
                             "(SELECT SUM(COMPONENT_INPUT.QTE * COMPONENT_INPUT.PRICE) FROM COMPONENT_INPUT WHERE COMPONENT_INPUT.ID_INPUT = INPUT.ID) AS PRICE,\n" +
                             "(SELECT ID FROM STORE_CARD WHERE STORE_CARD.ID_INPUT = INPUT.ID) AS CONFIRM \n" +
                             "FROM INPUT, PROVIDER WHERE INPUT.ID_PROVIDER = PROVIDER.ID AND INPUT.DATE BETWEEN ? AND ? " +
-                            "ORDER BY INPUT.DATE ;";
+                            "ORDER BY INPUT.NUMBER DESC ;";
                     PreparedStatement preparedStmt = conn.prepareStatement(query);
                     preparedStmt.setDate(1, Date.valueOf(dateFrom));
                     preparedStmt.setDate(2, Date.valueOf(dateTo));
@@ -799,7 +799,7 @@ public class MainController implements Initializable {
                         "(SELECT SUM(COMPONENT_INPUT.QTE * COMPONENT_INPUT.PRICE) FROM COMPONENT_INPUT WHERE COMPONENT_INPUT.ID_INPUT = INPUT.ID) AS PRICE,\n" +
                         "(SELECT ID FROM STORE_CARD WHERE STORE_CARD.ID_INPUT = INPUT.ID) AS CONFIRM \n" +
                         "FROM INPUT, PROVIDER WHERE INPUT.ID_PROVIDER = PROVIDER.ID AND INPUT.DATE BETWEEN ? AND ? " +
-                        "ORDER BY INPUT.DATE ;";
+                        "ORDER BY INPUT.NUMBER DESC ;";
                 preparedStmt = conn.prepareStatement(query);
                 preparedStmt.setDate(1, Date.valueOf(dateFrom));
                 preparedStmt.setDate(2, Date.valueOf(dateTo));
@@ -808,7 +808,7 @@ public class MainController implements Initializable {
                         "(SELECT SUM(COMPONENT_INPUT.QTE * COMPONENT_INPUT.PRICE) FROM COMPONENT_INPUT WHERE COMPONENT_INPUT.ID_INPUT = INPUT.ID) AS PRICE,\n" +
                         "(SELECT ID FROM STORE_CARD WHERE STORE_CARD.ID_INPUT = INPUT.ID) AS CONFIRM \n" +
                         "FROM INPUT, PROVIDER WHERE INPUT.ID_PROVIDER = PROVIDER.ID " +
-                        "ORDER BY INPUT.DATE ;";
+                        "ORDER BY INPUT.NUMBER DESC ;";
                 preparedStmt = conn.prepareStatement(query);
             }
             ResultSet resultSet = preparedStmt.executeQuery();
